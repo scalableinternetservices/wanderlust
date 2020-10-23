@@ -25,10 +25,24 @@ interface Context {
 export const graphqlRoot: Resolvers<Context> = {
   Query: {
     self: (_, args, ctx) => ctx.user,
+    user: async (_, { userName }) => {
+      return (await User.findOne({ where: { name: userName } })) || null
+    },
+    users: async () => User.find(),
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
   },
   Mutation: {
+    addUser: async (_, { user }, _ctx) => {
+      const { name, email } = user
+
+      const newUser = new User()
+      newUser.name = name
+      newUser.email = email
+      await newUser.save()
+
+      return true
+    },
     answerSurvey: async (_, { input }, ctx) => {
       const { answer, questionId } = input
       const question = check(await SurveyQuestion.findOne({ where: { id: questionId }, relations: ['survey'] }))

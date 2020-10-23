@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { GraphQLResolveInfo } from 'graphql'
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -14,8 +15,13 @@ export interface Scalars {
 
 export interface Mutation {
   __typename?: 'Mutation'
+  addUser: Scalars['Boolean']
   answerSurvey: Scalars['Boolean']
   nextSurveyQuestion?: Maybe<Survey>
+}
+
+export interface MutationAddUserArgs {
+  user: User
 }
 
 export interface MutationAnswerSurveyArgs {
@@ -29,8 +35,14 @@ export interface MutationNextSurveyQuestionArgs {
 export interface Query {
   __typename?: 'Query'
   self?: Maybe<User>
+  user?: Maybe<User>
+  users: Array<User>
   surveys: Array<Survey>
   survey?: Maybe<Survey>
+}
+
+export interface QueryUserArgs {
+  userName: Scalars['String']
 }
 
 export interface QuerySurveyArgs {
@@ -200,6 +212,12 @@ export type MutationResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
 > = {
+  addUser?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationAddUserArgs, 'user'>
+  >
   answerSurvey?: Resolver<
     ResolversTypes['Boolean'],
     ParentType,
@@ -219,6 +237,13 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
   self?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
+  user?: Resolver<
+    Maybe<ResolversTypes['User']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUserArgs, 'userName'>
+  >
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
   surveys?: Resolver<Array<ResolversTypes['Survey']>, ParentType, ContextType>
   survey?: Resolver<
     Maybe<ResolversTypes['Survey']>,

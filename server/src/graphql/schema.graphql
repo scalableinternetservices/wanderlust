@@ -17,12 +17,16 @@ schema {
 type Query {
   # Returns the logged-in user making the query, or null if anonymous.
   self: User
-
+  user (userName: String!): User
+  users: [User!]!
   surveys: [Survey!]!
   survey (surveyId: Int!): Survey
 }
 
 type Mutation {
+
+  addUser (user: UserInput!): Boolean!
+
   # Records an answer to a survey question presented in class.
   answerSurvey (input: SurveyInput!): Boolean!
 
@@ -34,6 +38,7 @@ type Subscription {
   surveyUpdates (surveyId: Int!): Survey
 }
 
+# The code below is from the old stuff
 type User {
   id: Int!
   userType: UserType!
@@ -87,5 +92,10 @@ type SurveyAnswer {
 input SurveyInput {
   questionId: Int!
   answer: String!
+}
+
+input UserInput {
+  name: String!
+  email: String!
 }
 
