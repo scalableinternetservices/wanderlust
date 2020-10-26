@@ -17,6 +17,8 @@ schema {
 type Query {
   # Returns the logged-in user making the query, or null if anonymous.
   self: User
+  art (artName: String!): Art
+  arts: [Art!]!
   user (userName: String!): User
   users: [User!]!
   surveys: [Survey!]!
@@ -24,7 +26,10 @@ type Query {
 }
 
 type Mutation {
+  # Adds an user's art
+  addArt (art: ArtInput!): Boolean!
 
+  # Creates a user
   addUser (user: UserInput!): Boolean!
 
   # Records an answer to a survey question presented in class.
@@ -38,13 +43,37 @@ type Subscription {
   surveyUpdates (surveyId: Int!): Survey
 }
 
-# The code below is from the old stuff
 type User {
-  id: Int!
-  userType: UserType!
-  email: String!
-  name: String!
+	username: String!
+	email: String!
+  password: String!
+	artworkCreated: [Art!]!
+	placesVisited: [Loc!]!
+	artSeen: [Art!]!
 }
+
+type Art{
+	name: String!
+	creator: User!
+	createdAt: String!
+	location: Loc!
+	data: String!
+	type: ArtType!
+}
+
+type Loc{
+	lat: Float!
+	lon: Float!
+}
+
+enum ArtType{
+  Text
+  Image
+  Audio
+  Video
+}
+
+### The code below is from the old stuff
 
 enum UserType { ADMIN, USER }
 
@@ -95,7 +124,20 @@ input SurveyInput {
 }
 
 input UserInput {
-  name: String!
+  username: String!
   email: String!
+  password: String!
 }
 
+input ArtInput {
+  name: String!
+  creator: String!
+  location: LocInput!
+  data: String!
+  type: ArtType!
+}
+
+input LocInput {
+  lat: Float!
+  lon: Float!
+}
