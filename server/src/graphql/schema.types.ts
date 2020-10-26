@@ -80,7 +80,6 @@ export interface SurveyQuestion {
 export interface User {
   __typename?: 'User'
   id: Scalars['Int']
-  userType: UserType
   email: Scalars['String']
   name: Scalars['String']
 }
