@@ -8,13 +8,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { User as GraphqlUser, UserType } from '../graphql/schema.types'
 import { Art } from './Art'
 
 @Entity()
-export class User extends BaseEntity implements GraphqlUser {
-  __typename?: 'User' | undefined
-  userType: UserType
+export class User extends BaseEntity /*implements GraphqlUser*/ {
   @PrimaryGeneratedColumn()
   id: number
 
