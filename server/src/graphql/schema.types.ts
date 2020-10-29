@@ -89,13 +89,13 @@ export interface ArtInput {
   __typename?: 'ArtInput'
   name: Scalars['String']
   creator: Scalars['String']
-  location: LocInput
+  location: LocationInput
   data: Scalars['String']
   type: ArtType
 }
 
-export interface LocInput {
-  lon: Scalars['Float']
+export interface LocationInput {
+  lng: Scalars['Float']
   lat: Scalars['Float']
 }
 
@@ -118,23 +118,23 @@ export interface User {
   email: Scalars['String']
   username: Scalars['String']
   artworkCreated: Array<Art>
-  placesVisited: Array<Loc>
+  placesVisited: Array<Location>
   artSeen: Array<Art>
 }
 
-export interface Art{
+export interface Art {
   __typename?: 'Art'
   name: Scalars['String']
   creator: User
-  location: Loc
+  location: Location
   data: Scalars['String']
   type: ArtType
   createdAt: Scalars['String']
 }
 
-export interface Loc{
-  __typename?: 'Loc'
-  lon: Scalars['Float']
+export interface Location {
+  __typename?: 'Location'
+  lng: Scalars['Float']
   lat: Scalars['Float']
 }
 
@@ -230,7 +230,7 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>
   User: ResolverTypeWrapper<User>
   Art: ResolverTypeWrapper<Art>
-  Loc: ResolverTypeWrapper<Loc>
+  Location: ResolverTypeWrapper<Location>
   ArtType: ArtType
   Int: ResolverTypeWrapper<Scalars['Int']>
   UserType: UserType
@@ -264,18 +264,8 @@ export type MutationResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
 > = {
-  addUser?: Resolver<
-    ResolversTypes['Boolean'],
-    ParentType,
-    ContextType,
-    RequireFields<MutationAddUserArgs, 'user'>
-  >
-  addArt: Resolver<
-    ResolversTypes['Boolean'],
-    ParentType,
-    ContextType,
-    RequireFields<MutationAddArtArgs, 'art'>
-  >
+  addUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddUserArgs, 'user'>>
+  addArt: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddArtArgs, 'art'>>
   answerSurvey?: Resolver<
     ResolversTypes['Boolean'],
     ParentType,
@@ -295,19 +285,9 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
   self?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
-  art?: Resolver<
-    Maybe<ResolversTypes['Art']>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryArtArgs, 'artName'>
-  >
+  art?: Resolver<Maybe<ResolversTypes['Art']>, ParentType, ContextType, RequireFields<QueryArtArgs, 'artName'>>
   arts?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
-  user?: Resolver<
-    Maybe<ResolversTypes['User']>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryUserArgs, 'userName'>
-  >
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'userName'>>
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
   surveys?: Resolver<Array<ResolversTypes['Survey']>, ParentType, ContextType>
   survey?: Resolver<
@@ -373,8 +353,8 @@ export type ArtResolvers<
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>
   createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>
-	location: Resolver<ResolversTypes['Loc'], ParentType, ContextType>
-	data: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  location: Resolver<ResolversTypes['Location'], ParentType, ContextType>
+  data: Resolver<ResolversTypes['String'], ParentType, ContextType>
   type: Resolver<ResolversTypes['ArtType'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }

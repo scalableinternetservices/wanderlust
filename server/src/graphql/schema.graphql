@@ -48,7 +48,7 @@ type User {
 	email: String!
   password: String!
 	artworkCreated: [Art!]!
-	placesVisited: [Loc!]!
+	placesVisited: [Location!]!
 	artSeen: [Art!]!
 }
 
@@ -56,14 +56,14 @@ type Art{
 	name: String!
 	creator: User!
 	createdAt: String!
-	location: Loc!
+	location: Location!
 	data: String!
 	type: ArtType!
 }
 
-type Loc{
+type Location{
 	lat: Float!
-	lon: Float!
+	lng: Float!
 }
 
 enum ArtType{
@@ -132,12 +132,12 @@ input UserInput {
 input ArtInput {
   name: String!
   creator: String!
-  location: LocInput!
+  location: LocationInput!
   data: String!
   type: ArtType!
 }
 
-input LocInput {
+input LocationInput {
   lat: Float!
-  lon: Float!
+  lng: Float!
 }
