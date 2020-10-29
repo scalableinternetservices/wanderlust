@@ -5,6 +5,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
@@ -14,6 +15,11 @@ import { Art } from './Art'
 export class User extends BaseEntity /*implements GraphqlUser*/ {
   @PrimaryGeneratedColumn()
   id: number
+
+  @Column({
+    length: 100,
+  })
+  username: string
 
   @CreateDateColumn()
   timeCreated: Date
@@ -26,12 +32,17 @@ export class User extends BaseEntity /*implements GraphqlUser*/ {
   })
   email: string
 
-  @Column({
-    length: 100,
-  })
-  name: string
+  @Column()
+  password: string
+
+  @OneToMany(type => Art, art => art.creator)
+  artworkCreated: Art[]
+
+  @ManyToMany(type => Location)
+  @JoinTable()
+  placesVisited: Location[]
 
   @ManyToMany(type => Art)
   @JoinTable()
-  artSeen: Art
+  artSeen: Art[]
 }

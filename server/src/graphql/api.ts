@@ -16,7 +16,7 @@ class UwuUser {
     this.artSeen = []
   }
   artworkCreated: UwuArt[]
-  placesVisited: UwuLoc[]
+  placesVisited: UwuLocation[]
   artSeen: UwuArt[]
 }
 
@@ -26,15 +26,15 @@ class UwuArt {
     public creator: UwuUser,
     public data: string,
     public type: ArtType,
-    public location: UwuLoc
+    public location: UwuLocation
   ) {
     this.createdAt = 'Database-senpai should set this'
   }
   createdAt: string
 }
 
-class UwuLoc {
-  constructor(public lon: number, public lat: number) {}
+class UwuLocation {
+  constructor(public lng: number, public lat: number) {}
 }
 
 const users: UwuUser[] = []

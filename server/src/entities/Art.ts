@@ -1,10 +1,16 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { User } from './User'
 
 @Entity()
 export class Art extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
+
+  @Column()
+  name: string
+
+  @CreateDateColumn()
+  timeCreated: Date
 
   @Column()
   lat: number
@@ -16,9 +22,11 @@ export class Art extends BaseEntity {
   path: string
 
   @Column()
+  type: string
+
+  @Column()
   numReports: number
 
-  @OneToOne(type => User)
-  @JoinColumn()
-  createdById: User
+  @ManyToOne(type => User, user => user.artworkCreated)
+  creator: User
 }
