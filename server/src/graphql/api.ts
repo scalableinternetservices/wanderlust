@@ -6,7 +6,39 @@ import { Survey } from '../entities/Survey'
 import { SurveyAnswer } from '../entities/SurveyAnswer'
 import { SurveyQuestion } from '../entities/SurveyQuestion'
 import { User } from '../entities/User'
-import { Resolvers } from './schema.types'
+import { ArtType, Resolvers } from './schema.types'
+
+// datuhbase
+class UwuUser {
+  constructor(public username: string, public email: string) {
+    this.artworkCreated = []
+    this.placesVisited = []
+    this.artSeen = []
+  }
+  artworkCreated: UwuArt[]
+  placesVisited: UwuLocation[]
+  artSeen: UwuArt[]
+}
+
+class UwuArt {
+  constructor(
+    public name: string,
+    public creator: UwuUser,
+    public data: string,
+    public type: ArtType,
+    public location: UwuLocation
+  ) {
+    this.createdAt = 'Database-senpai should set this'
+  }
+  createdAt: string
+}
+
+class UwuLocation {
+  constructor(public lng: number, public lat: number) {}
+}
+
+const users: UwuUser[] = []
+const arts: UwuArt[] = []
 
 export const pubsub = new PubSub()
 
@@ -24,11 +56,47 @@ interface Context {
 
 export const graphqlRoot: Resolvers<Context> = {
   Query: {
-    self: (_, args, ctx) => ctx.user,
+    self: (_, args, ctx) => {
+      // We will use this line when the db is updated
+      // return ctx.user
+      return users.find(user => user.email === ctx.user?.email) || null
+    },
+    art: async (_, { artName }) => {
+      // We will use this line when the database is updated
+      // return (await Art.findOne({ where: { name: userName } })) || null
+      return arts.find(art => art.name === artName) || null
+    },
+    arts: async () => arts,
+    user: async (_, { userName }) => {
+      // We will use this line when the database is updated
+      // return (await User.findOne({ where: { name: userName } })) || null
+      return users.find(user => user.username === userName) || null
+    },
+    users: async () => users,
     survey: async (_, { surveyId }) => (await Survey.findOne({ where: { id: surveyId } })) || null,
     surveys: () => Survey.find(),
   },
   Mutation: {
+    addUser: async (_, { user }, _ctx) => {
+      const { username, email } = user
+      // create new resource (this will all change with DB)
+      const newUser = new UwuUser(username, email)
+      users.push(newUser)
+      return true
+    },
+    addArt: async (_, { art }, _ctx) => {
+      const { name, creator, data, type, location } = art
+      // create new resource (this will all change with DB)
+      const creatorUser = users.find(user => user.username === creator)
+      if (!creatorUser) {
+        return false
+      }
+      const newArt = new UwuArt(name, creatorUser, data, type, location)
+      arts.push(newArt)
+      creatorUser.artworkCreated.push(newArt)
+      creatorUser.artSeen.push(newArt)
+      return true
+    },
     answerSurvey: async (_, { input }, ctx) => {
       const { answer, questionId } = input
       const question = check(await SurveyQuestion.findOne({ where: { id: questionId }, relations: ['survey'] }))

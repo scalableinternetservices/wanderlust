@@ -1,10 +1,25 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
-import { User as GraphqlUser, UserType } from '../graphql/schema.types'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
+import { Art } from './Art'
 
 @Entity()
-export class User extends BaseEntity implements GraphqlUser {
+export class User extends BaseEntity /*implements GraphqlUser*/ {
   @PrimaryGeneratedColumn()
   id: number
+
+  @Column({
+    length: 100,
+  })
+  username: string
 
   @CreateDateColumn()
   timeCreated: Date
@@ -17,16 +32,17 @@ export class User extends BaseEntity implements GraphqlUser {
   })
   email: string
 
-  @Column({
-    type: 'enum',
-    enum: UserType,
-    default: UserType.User,
-  })
-  userType: UserType
+  @Column()
+  password: string
 
-  @Column({
-    length: 100,
-    nullable: true,
-  })
-  name: string
+  @OneToMany(type => Art, art => art.creator)
+  artworkCreated: Art[]
+
+  @ManyToMany(type => Location)
+  @JoinTable()
+  placesVisited: Location[]
+
+  @ManyToMany(type => Art)
+  @JoinTable()
+  artSeen: Art[]
 }
