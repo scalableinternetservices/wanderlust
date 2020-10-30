@@ -7,6 +7,9 @@ Welcome to Geo Exploration!
 |:--:|:--:|:--:|:--:|:--:|
 | *Connie Chen* | *Robert Geil* | *Megha Ilango* | *Eugene Lo* | *Timothy Rediehs* |
 
+## Website Flow
+[Link to Figma](https://www.figma.com/file/psXHkp6BKMsGRi1Zo1VSYB/Website-Flow?node-id=0%3A1)
+
 ## Dependencies
 
 For the [Quickstart](https://github.com/rothfels/bespin#Quickstart), you will need:
