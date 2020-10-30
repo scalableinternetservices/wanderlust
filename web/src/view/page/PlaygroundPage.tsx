@@ -2,7 +2,6 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { Login } from '../auth/Login'
 import { AppRouteParams, PlaygroundApp } from '../nav/route'
-import { Surveys } from '../playground/Surveys'
 import { Page } from './Page'
 
 interface PlaygroundPageProps extends RouteComponentProps, AppRouteParams {}
@@ -16,8 +15,6 @@ function getPlaygroundApp(app?: PlaygroundApp) {
     return <div>choose an app</div>
   }
   switch (app) {
-    case PlaygroundApp.SURVEYS:
-      return <Surveys />
     case PlaygroundApp.LOGIN:
       return <Login />
     default:

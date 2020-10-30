@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { Art } from './Art'
+import { Location } from './Location'
 
 @Entity()
 export class User extends BaseEntity /*implements GraphqlUser*/ {
