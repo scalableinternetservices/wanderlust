@@ -23,11 +23,11 @@ export interface Query {
 }
 
 export interface QueryArtArgs {
-  id: Scalars['ID']
+  id: Scalars['Int']
 }
 
 export interface QueryUserArgs {
-  id: Scalars['ID']
+  id: Scalars['Int']
 }
 
 export interface QueryNearbyArgs {
@@ -45,22 +45,21 @@ export interface MutationAddArtArgs {
 
 export interface User {
   __typename?: 'User'
-  id: Scalars['ID']
+  id: Scalars['Int']
   username: Scalars['String']
   email: Scalars['String']
   artworkCreated: Array<Art>
-  placesVisited: Array<Location>
   artSeen: Array<Art>
 }
 
 export interface Art {
   __typename?: 'Art'
-  id: Scalars['ID']
+  id: Scalars['Int']
   name: Scalars['String']
   creator: User
   createdAt: Scalars['String']
   location: Location
-  data: Scalars['String']
+  uri: Scalars['String']
   type: ArtType
 }
 
@@ -84,7 +83,7 @@ export enum UserType {
 
 export interface ArtInput {
   name: Scalars['String']
-  creator: Scalars['String']
+  creatorId: Scalars['Int']
   location: LocationInput
   data: Scalars['String']
   type: ArtType
@@ -173,7 +172,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>
-  ID: ResolverTypeWrapper<Scalars['ID']>
+  Int: ResolverTypeWrapper<Scalars['Int']>
   Mutation: ResolverTypeWrapper<{}>
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>
   User: ResolverTypeWrapper<User>
@@ -190,7 +189,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {}
-  ID: Scalars['ID']
+  Int: Scalars['Int']
   Mutation: {}
   Boolean: Scalars['Boolean']
   User: User
@@ -225,11 +224,10 @@ export type UserResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
 > = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   artworkCreated?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
-  placesVisited?: Resolver<Array<ResolversTypes['Location']>, ParentType, ContextType>
   artSeen?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
@@ -238,12 +236,12 @@ export type ArtResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Art'] = ResolversParentTypes['Art']
 > = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   location?: Resolver<ResolversTypes['Location'], ParentType, ContextType>
-  data?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   type?: Resolver<ResolversTypes['ArtType'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }

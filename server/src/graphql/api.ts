@@ -1,40 +1,9 @@
 import { readFileSync } from 'fs'
 import { PubSub } from 'graphql-yoga'
 import path from 'path'
-import { ArtType, Resolvers } from './schema.types'
-
-// datuhbase
-class UwuUser {
-  constructor(public id: string, public username: string, public email: string) {
-    this.artworkCreated = []
-    this.placesVisited = []
-    this.artSeen = []
-  }
-  artworkCreated: UwuArt[]
-  placesVisited: UwuLocation[]
-  artSeen: UwuArt[]
-}
-
-class UwuArt {
-  constructor(
-    public id: string,
-    public name: string,
-    public creator: UwuUser,
-    public data: string,
-    public type: ArtType,
-    public location: UwuLocation
-  ) {
-    this.createdAt = 'Database-senpai should set this'
-  }
-  createdAt: string
-}
-
-class UwuLocation {
-  constructor(public lng: number, public lat: number) {}
-}
-
-const users: UwuUser[] = []
-const arts: UwuArt[] = []
+import { Art } from '../entities/Art'
+import { User } from '../entities/User'
+import { Resolvers } from './schema.types'
 
 export const pubsub = new PubSub()
 
@@ -50,25 +19,39 @@ interface Context {
   pubsub: PubSub
 }
 
+function storeFile(data: string): string {
+  // Store data
+  // Retrieve uri
+  return "NotImplemented"
+}
+
 export const graphqlRoot: Resolvers<Context> = {
   Query: {
     self: (_, args, ctx) => {
       // We will use this line when the db is updated
-      // return ctx.user
-      return users.find(user => user.email === ctx.user?.email) || null
+      return ctx.user
+      // return users.find(user => user.email === ctx.user?.email) || null
     },
     art: async (_, { id }) => {
       // We will use this line when the database is updated
-      // return (await Art.findOne({ where: { name: userName } })) || null
-      return arts.find(art => art.id === id) || null
+      return (await Art.findOne({ where: { id: id } })) || null
+      // return arts.find(art => art.id === id) || null
     },
-    arts: async () => arts,
+    arts: async () => {
+      const thing = await Art.find()
+      console.log(thing)
+      return thing
+    },
     user: async (_, { id }) => {
       // We will use this line when the database is updated
-      // return (await User.findOne({ where: { name: userName } })) || null
-      return users.find(user => user.id === id) || null
+      return (await User.findOne({ where: { id: id } })) || null
+      // return users.find(user => user.id === id) || null
     },
-    users: async () => users,
+    users: async () => {
+      const thing = await User.find()
+      console.log(thing[0].artworkCreated)
+      return thing
+    },
     nearby: async (_, { loc }) => {
       console.log(loc)
       return []
@@ -76,16 +59,23 @@ export const graphqlRoot: Resolvers<Context> = {
   },
   Mutation: {
     addArt: async (_, { art }, _ctx) => {
-      const { name, creator, data, type, location } = art
+      const { name, creatorId, data, type, location } = art
       // create new resource (this will all change with DB)
-      const creatorUser = users.find(user => user.username === creator)
-      if (!creatorUser) {
+      const creator = await User.findOne({ where: { id: creatorId } })
+      if (!creator) {
         return false
       }
-      const newArt = new UwuArt('id, fix this', name, creatorUser, data, type, location)
-      arts.push(newArt)
-      creatorUser.artworkCreated.push(newArt)
-      creatorUser.artSeen.push(newArt)
+      let newArt = new Art()
+      newArt.name = name
+      newArt.creator = creator
+      creator.artworkCreated.push(newArt)
+      newArt.type = type
+      newArt.location = location
+      newArt.numReports = 0
+      newArt.uri = storeFile(data)
+
+      await newArt.save()
+      await creator.save()
       return true
     },
   },

@@ -17,9 +17,9 @@ schema {
 type Query {
   # Returns the logged-in user making the query, or null if anonymous.
   self: User
-  art (id: ID!): Art
+  art (id: Int!): Art
   arts: [Art!]!
-  user (id: ID!): User
+  user (id: Int!): User
   users: [User!]!
   nearby (loc: LocationInput!): [Art!]!
 }
@@ -32,21 +32,20 @@ type Mutation {
 # type Subscription {}
 
 type User {
-  id: ID!
+  id: Int!
 	username: String!
 	email: String!
 	artworkCreated: [Art!]!
-	placesVisited: [Location!]!
 	artSeen: [Art!]!
 }
 
 type Art{
-  id: ID!
+  id: Int!
 	name: String!
 	creator: User!
 	createdAt: String!
 	location: Location!
-	data: String!
+	uri: String!
 	type: ArtType!
 }
 
@@ -68,7 +67,7 @@ enum UserType { ADMIN, USER }
 
 input ArtInput {
   name: String!
-  creator: String!
+  creatorId: Int!
   location: LocationInput!
   data: String!
   type: ArtType!
