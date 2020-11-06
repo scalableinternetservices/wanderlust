@@ -1,10 +1,7 @@
-import { BaseEntity, Entity, PrimaryColumn } from 'typeorm'
-
-@Entity()
-export class Location extends BaseEntity {
-  @PrimaryColumn()
+import { Column } from "typeorm";
+export class Location {
+  @Column()
   lat: number
-
-  @PrimaryColumn()
+  @Column()
   lng: number
 }

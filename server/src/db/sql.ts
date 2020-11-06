@@ -23,6 +23,7 @@ export async function initORM() {
     synchronize: true,
     logging: false,
     entities: [User, Session, Survey, SurveyQuestion, SurveyAnswer, Art, Location],
+    legacySpatialSupport: false,
     extra: {
       connectionLimit: 5,
     },
