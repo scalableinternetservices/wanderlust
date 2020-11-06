@@ -1,4 +1,6 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { ArtType } from '../graphql/schema.types'
+import { Location } from './Location'
 import { User } from './User'
 
 @Entity()
@@ -10,23 +12,29 @@ export class Art extends BaseEntity {
   name: string
 
   @CreateDateColumn()
-  timeCreated: Date
+  createdAt: string
+
+  @Column(type => Location)
+  location: Location;
 
   @Column()
-  lat: number
+  uri: string
 
-  @Column()
-  lng: number
+  @Column({
+    type: "enum",
+    enum: ArtType
+  })
+  type: ArtType
 
-  @Column()
-  path: string
-
-  @Column()
-  type: string
-
-  @Column()
+  @Column({
+    default: 0
+  })
   numReports: number
 
-  @ManyToOne(type => User, user => user.artworkCreated)
+  @ManyToOne(() => User, user => user.artworkCreated)
+  @JoinColumn({ name: "creatorId" })
   creator: User
+
+  @Column({ nullable: false })
+  creatorId: number
 }

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { GraphQLResolveInfo } from 'graphql'
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -13,29 +12,6 @@ export interface Scalars {
   Float: number
 }
 
-export interface Mutation {
-  __typename?: 'Mutation'
-  addUser: Scalars['Boolean']
-  answerSurvey: Scalars['Boolean']
-  nextSurveyQuestion?: Maybe<Survey>
-}
-
-export interface MutationAddUserArgs {
-  user: User
-}
-
-export interface MutationAddArtArgs {
-  art: ArtInput
-}
-
-export interface MutationAnswerSurveyArgs {
-  input: SurveyInput
-}
-
-export interface MutationNextSurveyQuestionArgs {
-  surveyId: Scalars['Int']
-}
-
 export interface Query {
   __typename?: 'Query'
   self?: Maybe<User>
@@ -43,111 +19,79 @@ export interface Query {
   arts: Array<Art>
   user?: Maybe<User>
   users: Array<User>
-  surveys: Array<Survey>
-  survey?: Maybe<Survey>
-}
-
-export interface QueryUserArgs {
-  userName: Scalars['String']
+  nearby: Array<Art>
 }
 
 export interface QueryArtArgs {
-  artName: Scalars['String']
+  id: Scalars['Int']
 }
 
-export interface QuerySurveyArgs {
-  surveyId: Scalars['Int']
+export interface QueryUserArgs {
+  id: Scalars['Int']
 }
 
-export interface Subscription {
-  __typename?: 'Subscription'
-  surveyUpdates?: Maybe<Survey>
+export interface QueryNearbyArgs {
+  loc: LocationInput
 }
 
-export interface SubscriptionSurveyUpdatesArgs {
-  surveyId: Scalars['Int']
+export interface Mutation {
+  __typename?: 'Mutation'
+  addArt: Scalars['Boolean']
 }
 
-export interface Survey {
-  __typename?: 'Survey'
+export interface MutationAddArtArgs {
+  art: ArtInput
+}
+
+export interface User {
+  __typename?: 'User'
+  id: Scalars['Int']
+  username: Scalars['String']
+  email: Scalars['String']
+  artworkCreated: Array<Art>
+  artSeen: Array<Art>
+}
+
+export interface Art {
+  __typename?: 'Art'
   id: Scalars['Int']
   name: Scalars['String']
-  isStarted: Scalars['Boolean']
-  isCompleted: Scalars['Boolean']
-  currentQuestion?: Maybe<SurveyQuestion>
-  questions: Array<Maybe<SurveyQuestion>>
+  creatorId: Scalars['Int']
+  createdAt: Scalars['String']
+  location: Location
+  uri: Scalars['String']
+  type: ArtType
 }
 
-export interface SurveyAnswer {
-  __typename?: 'SurveyAnswer'
-  id: Scalars['Int']
-  answer: Scalars['String']
-  question: SurveyQuestion
+export interface Location {
+  __typename?: 'Location'
+  lat: Scalars['Float']
+  lng: Scalars['Float']
+}
+
+export enum ArtType {
+  Text = 'Text',
+  Image = 'Image',
+  Audio = 'Audio',
+  Video = 'Video',
+}
+
+export enum UserType {
+  Admin = 'ADMIN',
+  User = 'USER',
 }
 
 export interface ArtInput {
-  __typename?: 'ArtInput'
   name: Scalars['String']
-  creator: Scalars['String']
+  creatorId: Scalars['Int']
   location: LocationInput
   data: Scalars['String']
   type: ArtType
 }
 
 export interface LocationInput {
-  lng: Scalars['Float']
   lat: Scalars['Float']
-}
-
-export interface SurveyInput {
-  questionId: Scalars['Int']
-  answer: Scalars['String']
-}
-
-export interface SurveyQuestion {
-  __typename?: 'SurveyQuestion'
-  id: Scalars['Int']
-  prompt: Scalars['String']
-  choices?: Maybe<Array<Scalars['String']>>
-  answers: Array<SurveyAnswer>
-  survey: Survey
-}
-
-export interface User {
-  __typename?: 'User'
-  email: Scalars['String']
-  username: Scalars['String']
-  artworkCreated: Array<Art>
-  placesVisited: Array<Location>
-  artSeen: Array<Art>
-}
-
-export interface Art {
-  __typename?: 'Art'
-  name: Scalars['String']
-  creator: User
-  location: Location
-  data: Scalars['String']
-  type: ArtType
-  createdAt: Scalars['String']
-}
-
-export interface Location {
-  __typename?: 'Location'
   lng: Scalars['Float']
-  lat: Scalars['Float']
-}
-
-export enum ArtType {
-  Text = 'TEXT',
-  Image = 'IMAGE',
-  Audio = 'AUDIO',
-  Video = 'VIDEO',
-}
-
-export enum UserType {
-  Admin = 'ADMIN',
-  User = 'USER',
 }
 
 export type ResolverTypeWrapper<T> = Promise<T> | T
@@ -228,56 +172,33 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>
+  Int: ResolverTypeWrapper<Scalars['Int']>
+  Mutation: ResolverTypeWrapper<{}>
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>
   User: ResolverTypeWrapper<User>
+  String: ResolverTypeWrapper<Scalars['String']>
   Art: ResolverTypeWrapper<Art>
   Location: ResolverTypeWrapper<Location>
+  Float: ResolverTypeWrapper<Scalars['Float']>
   ArtType: ArtType
-  Int: ResolverTypeWrapper<Scalars['Int']>
   UserType: UserType
-  String: ResolverTypeWrapper<Scalars['String']>
-  Survey: ResolverTypeWrapper<Survey>
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>
-  SurveyQuestion: ResolverTypeWrapper<SurveyQuestion>
-  SurveyAnswer: ResolverTypeWrapper<SurveyAnswer>
-  Mutation: ResolverTypeWrapper<{}>
-  SurveyInput: SurveyInput
-  Subscription: ResolverTypeWrapper<{}>
+  ArtInput: ArtInput
+  LocationInput: LocationInput
 }
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {}
-  Art: Art
-  User: User
   Int: Scalars['Int']
-  String: Scalars['String']
-  Survey: Survey
-  Boolean: Scalars['Boolean']
-  SurveyQuestion: SurveyQuestion
-  SurveyAnswer: SurveyAnswer
   Mutation: {}
-  SurveyInput: SurveyInput
-  Subscription: {}
-}
-
-export type MutationResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
-> = {
-  addUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddUserArgs, 'user'>>
-  addArt: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddArtArgs, 'art'>>
-  answerSurvey?: Resolver<
-    ResolversTypes['Boolean'],
-    ParentType,
-    ContextType,
-    RequireFields<MutationAnswerSurveyArgs, 'input'>
-  >
-  nextSurveyQuestion?: Resolver<
-    Maybe<ResolversTypes['Survey']>,
-    ParentType,
-    ContextType,
-    RequireFields<MutationNextSurveyQuestionArgs, 'surveyId'>
-  >
+  Boolean: Scalars['Boolean']
+  User: User
+  String: Scalars['String']
+  Art: Art
+  Location: Location
+  Float: Scalars['Float']
+  ArtInput: ArtInput
+  LocationInput: LocationInput
 }
 
 export type QueryResolvers<
@@ -285,78 +206,18 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
   self?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
-  art?: Resolver<Maybe<ResolversTypes['Art']>, ParentType, ContextType, RequireFields<QueryArtArgs, 'artName'>>
+  art?: Resolver<Maybe<ResolversTypes['Art']>, ParentType, ContextType, RequireFields<QueryArtArgs, 'id'>>
   arts?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'userName'>>
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
-  surveys?: Resolver<Array<ResolversTypes['Survey']>, ParentType, ContextType>
-  survey?: Resolver<
-    Maybe<ResolversTypes['Survey']>,
-    ParentType,
-    ContextType,
-    RequireFields<QuerySurveyArgs, 'surveyId'>
-  >
+  nearby?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType, RequireFields<QueryNearbyArgs, 'loc'>>
 }
 
-export type SubscriptionResolvers<
+export type MutationResolvers<
   ContextType = any,
-  ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']
+  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
 > = {
-  surveyUpdates?: SubscriptionResolver<
-    Maybe<ResolversTypes['Survey']>,
-    'surveyUpdates',
-    ParentType,
-    ContextType,
-    RequireFields<SubscriptionSurveyUpdatesArgs, 'surveyId'>
-  >
-}
-
-export type SurveyResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['Survey'] = ResolversParentTypes['Survey']
-> = {
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  isStarted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
-  isCompleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
-  currentQuestion?: Resolver<Maybe<ResolversTypes['SurveyQuestion']>, ParentType, ContextType>
-  questions?: Resolver<Array<Maybe<ResolversTypes['SurveyQuestion']>>, ParentType, ContextType>
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>
-}
-
-export type SurveyAnswerResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['SurveyAnswer'] = ResolversParentTypes['SurveyAnswer']
-> = {
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-  answer?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  question?: Resolver<ResolversTypes['SurveyQuestion'], ParentType, ContextType>
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>
-}
-
-export type SurveyQuestionResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['SurveyQuestion'] = ResolversParentTypes['SurveyQuestion']
-> = {
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-  prompt?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  choices?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>
-  answers?: Resolver<Array<ResolversTypes['SurveyAnswer']>, ParentType, ContextType>
-  survey?: Resolver<ResolversTypes['Survey'], ParentType, ContextType>
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>
-}
-
-export type ArtResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['Art'] = ResolversParentTypes['Art']
-> = {
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>
-  createdAt: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  location: Resolver<ResolversTypes['Location'], ParentType, ContextType>
-  data: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  type: Resolver<ResolversTypes['ArtType'], ParentType, ContextType>
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+  addArt?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddArtArgs, 'art'>>
 }
 
 export type UserResolvers<
@@ -364,20 +225,42 @@ export type UserResolvers<
   ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']
 > = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-  userType?: Resolver<ResolversTypes['UserType'], ParentType, ContextType>
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  artworkCreated?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
+  artSeen?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
+
+export type ArtResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Art'] = ResolversParentTypes['Art']
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  creatorId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  location?: Resolver<ResolversTypes['Location'], ParentType, ContextType>
+  uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  type?: Resolver<ResolversTypes['ArtType'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+}
+
+export type LocationResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Location'] = ResolversParentTypes['Location']
+> = {
+  lat?: Resolver<ResolversTypes['Float'], ParentType, ContextType>
+  lng?: Resolver<ResolversTypes['Float'], ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 
 export type Resolvers<ContextType = any> = {
-  Mutation?: MutationResolvers<ContextType>
   Query?: QueryResolvers<ContextType>
-  Subscription?: SubscriptionResolvers<ContextType>
-  Survey?: SurveyResolvers<ContextType>
-  SurveyAnswer?: SurveyAnswerResolvers<ContextType>
-  SurveyQuestion?: SurveyQuestionResolvers<ContextType>
+  Mutation?: MutationResolvers<ContextType>
   User?: UserResolvers<ContextType>
+  Art?: ArtResolvers<ContextType>
+  Location?: LocationResolvers<ContextType>
 }
 
 /**

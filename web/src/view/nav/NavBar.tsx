@@ -27,8 +27,8 @@ const otherTabs = [
     path: getPath(Route.PROJECTS),
   },
   {
-    name: 'playground',
-    path: getPath(Route.PLAYGROUND),
+    name: 'map',
+    path: getPath(Route.MAP),
   },
 ]
 
