@@ -1,7 +1,8 @@
-import { Location } from 'server/src/graphql/schema.types'
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { marshalLocation, unmarshalLocation } from './transformers/ArtTransformers'
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { ArtType } from '../graphql/schema.types'
+import { Location } from './Location'
 import { User } from './User'
+
 @Entity()
 export class Art extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -13,19 +14,16 @@ export class Art extends BaseEntity {
   @CreateDateColumn()
   createdAt: string
 
-  @Column({
-    type: 'point',
-    transformer: {
-      from: (loc: string) => unmarshalLocation(loc),
-      to: (loc: Location) => marshalLocation(loc)
-    }
-  })
+  @Column(type => Location)
   location: Location;
 
   @Column()
   uri: string
 
-  @Column('int')
+  @Column({
+    type: "enum",
+    enum: ArtType
+  })
   type: ArtType
 
   @Column({
@@ -34,12 +32,9 @@ export class Art extends BaseEntity {
   numReports: number
 
   @ManyToOne(() => User, user => user.artworkCreated)
+  @JoinColumn({ name: "creatorId" })
   creator: User
-}
 
-enum ArtType {
-  Text,
-  Image,
-  Audio,
-  Video
+  @Column({ nullable: false })
+  creatorId: number
 }

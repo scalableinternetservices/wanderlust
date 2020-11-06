@@ -1226,15 +1226,15 @@
             "deprecationReason": null
           },
           {
-            "name": "creator",
+            "name": "creatorId",
             "description": null,
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "OBJECT",
-                "name": "User",
+                "kind": "SCALAR",
+                "name": "Int",
                 "ofType": null
               }
             },

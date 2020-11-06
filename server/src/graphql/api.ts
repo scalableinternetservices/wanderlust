@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs'
 import { PubSub } from 'graphql-yoga'
 import path from 'path'
+import { getManager } from 'typeorm'
 import { Art } from '../entities/Art'
 import { User } from '../entities/User'
 import { Resolvers } from './schema.types'
@@ -28,13 +29,13 @@ function storeFile(data: string): string {
 export const graphqlRoot: Resolvers<Context> = {
   Query: {
     self: (_, args, ctx) => {
-      // We will use this line when the db is updated
       return ctx.user
       // return users.find(user => user.email === ctx.user?.email) || null
     },
     art: async (_, { id }) => {
-      // We will use this line when the database is updated
-      return (await Art.findOne({ where: { id: id } })) || null
+      const thing = (await Art.findOne({ where: { id: id } })) || null
+      console.log(thing)
+      return thing
       // return arts.find(art => art.id === id) || null
     },
     arts: async () => {
@@ -53,8 +54,13 @@ export const graphqlRoot: Resolvers<Context> = {
       return thing
     },
     nearby: async (_, { loc }) => {
-      console.log(loc)
-      return []
+      // This can be made more flexible
+      const result = await getManager()
+        .createQueryBuilder(Art, "art")
+        .where("(abs(art.location.lat - :lat) < 20) AND (abs(art.location.lng - :lng) < 20)", { lat: loc.lat, lng: loc.lng })
+        .limit(25)
+        .getMany()
+      return result
     },
   },
   Mutation: {
