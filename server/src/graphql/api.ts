@@ -4,6 +4,7 @@ import path from 'path'
 import { getManager } from 'typeorm'
 import { Art } from '../entities/Art'
 import { User } from '../entities/User'
+import { storeFile } from '../s3/storeFile'
 import { Resolvers } from './schema.types'
 
 export const pubsub = new PubSub()
@@ -18,12 +19,6 @@ interface Context {
   request: Request
   response: Response
   pubsub: PubSub
-}
-
-function storeFile(data: string): string {
-  // Store data
-  // Retrieve uri
-  return "NotImplemented"
 }
 
 export const graphqlRoot: Resolvers<Context> = {
@@ -56,8 +51,11 @@ export const graphqlRoot: Resolvers<Context> = {
     nearby: async (_, { loc }) => {
       // This can be made more flexible
       const result = await getManager()
-        .createQueryBuilder(Art, "art")
-        .where("(abs(art.location.lat - :lat) < 0.02) AND (abs(art.location.lng - :lng) < 0.02)", { lat: loc.lat, lng: loc.lng })
+        .createQueryBuilder(Art, 'art')
+        .where('(abs(art.location.lat - :lat) < 0.02) AND (abs(art.location.lng - :lng) < 0.02)', {
+          lat: loc.lat,
+          lng: loc.lng,
+        })
         .limit(25)
         .getMany()
       return result
@@ -71,14 +69,14 @@ export const graphqlRoot: Resolvers<Context> = {
       if (!creator) {
         return false
       }
-      let newArt = new Art()
+      const newArt = new Art()
       newArt.name = name
       newArt.creator = creator
       creator.artworkCreated.push(newArt)
       newArt.type = type
       newArt.location = location
       newArt.numReports = 0
-      newArt.uri = storeFile(data)
+      newArt.uri = await storeFile(data, type)
 
       await newArt.save()
       await creator.save()
