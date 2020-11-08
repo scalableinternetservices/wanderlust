@@ -1,5 +1,7 @@
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
+import { H2 } from '../../style/header'
+import { Spacer } from '../../style/spacer'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // import type * as LT from 'react-leaflet'
 import { Map } from '../map/Map'
@@ -19,7 +21,13 @@ export function MapPage(props: MapPageProps) {
   }
   return (
     <Page>
+      <Spacer $h3 />
+      <H2>current location</H2>
+      <Spacer $h4 />
       <Map />
+      <Spacer $h3 />
+      <H2>artwork near you</H2>
+      <Spacer $h4 />
       {/* <div id="map-container" style={{ height: 180 }}>
         {!Leaflet ? (
           <div>Loading</div>
