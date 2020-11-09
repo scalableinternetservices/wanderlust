@@ -51,10 +51,10 @@ export function AppBody() {
   return (
     <>
       <Router className={bodyClass}>
-        <Redirect noThrow from="app" to="index" />
+        <Redirect noThrow from="app" to="map" />
         <Redirect noThrow from="app/playground" to="surveys" />
-        <HomePage path={Route.HOME} />
         <MapPage path={Route.MAP} />
+        <HomePage path={Route.HOME} />
         <LecturesPage path={Route.LECTURES} />
         <ProjectsPage path={Route.PROJECTS} />
         <PlaygroundPage path={Route.PLAYGROUND} />
@@ -67,7 +67,7 @@ export function AppBody() {
   )
 }
 
-const bodyClass = 'flex flex-column items-center mh2 mh3-ns mh5-l pt6 min-vh-100 sans-serif'
+const bodyClass = 'flex flex-column items-center mh2 mh3-ns mh5-l pt5 min-vh-100 avenir'
 
 const Footer = style('footer', 'fixed flex items-center bottom-0 w-100')
 

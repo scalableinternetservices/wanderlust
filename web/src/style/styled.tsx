@@ -4,9 +4,9 @@ import * as React from 'react'
 import { forwardRef } from 'react'
 import { createStyled, StyleObject, StyletronComponent, withStyleDeep } from 'styletron-react'
 import { driver, getInitialStyle } from 'styletron-standard'
-import { defaultTheme, Theme } from '../../../common/src/theme'
+import { Theme, wanderlustTheme } from '../../../common/src/theme'
 
-export const ThemeContext = React.createContext(defaultTheme)
+export const ThemeContext = React.createContext(wanderlustTheme)
 
 const wrapper = (StyledComponent: any) =>
   forwardRef(function WithTheme(props: any, ref: any) {

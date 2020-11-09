@@ -4,6 +4,7 @@ export interface ITheme {
   colors: {
     primary: Color
     secondary: Color
+    tertiary: Color
     success: Color
     danger: Color
     warning: Color
@@ -51,10 +52,11 @@ export class Theme implements ITheme {
   }
 }
 
-export const defaultTheme = new Theme(
+export const wanderlustTheme = new Theme(
   {
-    primary: Color.blue,
-    secondary: Color.gray,
+    primary: Color.wanderlustPrimary,
+    secondary: Color.wanderlustSecondary,
+    tertiary: Color.wanderlustTertiary,
     success: Color.green,
     danger: Color.red,
     warning: Color.yellow,
