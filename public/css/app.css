@@ -68,11 +68,3 @@
      opacity: 1;
    }
  }
-
- /*
-  * H*cking leaflet!!
-  */
-.leaflet-container{
-  height: 200px;
-  width: 80vw;
-}
