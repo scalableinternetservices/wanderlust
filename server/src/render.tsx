@@ -69,6 +69,8 @@ export function renderApp(req: Request, res: Response) {
             <link rel="shortcut icon" href={`/app/assets/favicon${Config.isProd ? '' : '-dev'}.ico`} />
             <link rel="stylesheet" href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css" />
             <link rel="stylesheet" href="/app/css/app.css" />
+            {/* Fonts */}
+            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet" />
             <script
               dangerouslySetInnerHTML={{
                 __html: `window.app = {
@@ -122,7 +124,8 @@ export const staticHtml = `<html lang="en">
     ></script>
     <link rel="shortcut icon" href="/app/assets/favicon${Config.isProd ? '' : '-dev'}.ico">
     <link rel="stylesheet" href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css" />
-    <link rel="stylesheet" href="/app/css/app.css" >
+    <link rel="stylesheet" href="/app/css/app.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet" />
     <script>
       window.app = {
         serverRendered: false,

@@ -28,7 +28,7 @@ function ClientMap({ Leaflet, location }: ClientMapProps) {
     ssr: false,
   })
   return (
-    <Leaflet.Map center={[location.lat, location.lng]} zoom={19}>
+    <Leaflet.Map className="vh-50" center={[location.lat, location.lng]} zoom={19}>
       <Leaflet.TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

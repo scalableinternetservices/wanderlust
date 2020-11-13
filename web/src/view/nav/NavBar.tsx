@@ -12,7 +12,7 @@ import { link } from './Link'
 import { getLoginPath, getPath, getSignupPath, getSurveyPath, Route } from './route'
 
 const title = {
-  name: 'CS188',
+  name: 'wanderlust',
   path: getPath(Route.HOME),
   title: true,
 }
@@ -118,9 +118,9 @@ function SubNav() {
 
 const Nav = style(
   'nav',
-  'flex white items-center list pa2 ph4 ph5-ns ph7-l avenir f4',
+  'flex white items-center list pa1 ph4 ph5-ns ph7-l avenir f4',
   (p: { $isSubNav?: boolean }) => ({
-    background: `linear-gradient(90deg, ${'#005587'} 0%, ${'#2774AE'} 100%)`,
+    background: '#a26ea1',
     opacity: '0.9',
     paddingTop: p.$isSubNav ? 0 : undefined,
     paddingBottom: p.$isSubNav ? 0 : undefined,
