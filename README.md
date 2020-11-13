@@ -134,6 +134,16 @@ Define your ORM models in `server/src/entities`. Tables will automatically get c
 
 Define migrations in `server/src/db/migrations`. They will automatically get run before your server starts. The starter project ships with an initial migration. Add new migrations by checking in additional migration files using the naming convention `VX.X__Description.sql`. The server only runs migrations which haven't already been run successfully. The server will fail before accepting connections if any migrations fail. You must manually correct the failed migrations to get the server into a healthy state.
 
+### Accessing Database in Development
+The database is run inside of the `wanderlust_db_1` docker container. So if you want to access or modify the DB directly, you must gain access to that container using the following.
+```bash
+docker exec -it wanderlust_db_1 /bin/bash
+```
+After, you can get a database shell with the following.
+```bash
+mysql -u root -ppassword wanderlust
+```
+
 ## Deploy your app to AWS
 
 ### Create a Honeycomb account
