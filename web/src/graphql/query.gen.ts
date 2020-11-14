@@ -34,6 +34,7 @@ export interface FetchNearbyMap_nearby_location {
 
 export interface FetchNearbyMap_nearby {
   __typename: "Art";
+  id: number;
   name: string;
   location: FetchNearbyMap_nearby_location;
 }
@@ -44,6 +45,32 @@ export interface FetchNearbyMap {
 
 export interface FetchNearbyMapVariables {
   loc: LocationInput;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL query operation: FetchArtwork
+// ====================================================
+
+export interface FetchArtwork_nearby_location {
+  __typename: "Location";
+  lat: number;
+  lng: number;
+}
+
+export interface FetchArtwork_nearby {
+  __typename: "Art";
+  id: number;
+  name: string;
+  location: FetchArtwork_nearby_location;
+}
+
+export interface FetchArtwork {
+  nearby: FetchArtwork_nearby[];
 }
 
 /* tslint:disable */
