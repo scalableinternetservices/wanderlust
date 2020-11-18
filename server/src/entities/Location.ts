@@ -1,7 +1,7 @@
 import { Column } from "typeorm";
 export class Location {
-  @Column()
+  @Column('decimal', { precision: 16, scale: 8 })
   lat: number
-  @Column()
+  @Column('decimal', { precision: 16, scale: 8 })
   lng: number
 }
