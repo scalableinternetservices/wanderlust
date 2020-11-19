@@ -32,7 +32,7 @@ export function MapPage(props: MapPageProps) {
   }
 
   const loadingText = loading ? <div>loading...</div> : null
-  const artworkPreviews =
+  const artworkCards =
     !data || data.nearby.length === 0 ? (
       <div className="f4 avenir pl2">no artwork nearby!</div>
     ) : (
@@ -67,9 +67,9 @@ export function MapPage(props: MapPageProps) {
       <H2>artwork near you</H2>
       <Spacer $h4 />
 
-      <div className="w-80-l center flex flex-row-l flex-column justify-around items-center">
+      <div className="w-80-l center flex flex-wrap-l flex-row-l flex-column justify-start-l justify-around items-center">
         {loadingText}
-        {artworkPreviews}
+        {artworkCards}
       </div>
 
       {/* <div id="map-container" style={{ height: 180 }}>

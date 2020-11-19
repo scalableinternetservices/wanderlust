@@ -15,13 +15,14 @@ export function Map({ getLocation, updateLocation, artworks }: MapProps) {
   if (typeof window !== 'undefined') {
     Leaflet = require('react-leaflet')
   }
-  if (typeof navigator !== 'undefined') {
+  if (typeof navigator !== 'undefined' && navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(c => {
       updateLocation(c.coords.latitude, c.coords.longitude)
     })
   }
 
   const location = getLocation()
+  console.log(location)
   if (!location || !Leaflet) return <div>Please enable location services!</div>
   return <ClientMap Leaflet={Leaflet} location={location} artworks={artworks} />
 }
