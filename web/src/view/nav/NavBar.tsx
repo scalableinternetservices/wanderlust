@@ -30,6 +30,10 @@ const otherTabs = [
     name: 'map',
     path: getPath(Route.MAP),
   },
+  {
+    name: 'log out',
+    path: getPath(Route.WELCOME),
+  },
 ]
 
 export function NavBar() {
