@@ -41,11 +41,13 @@ server.express.use('/app', cors(), expressStatic(path.join(__dirname, '../../pub
 const asyncRoute = (fn: RequestHandler) => (...args: Parameters<RequestHandler>) =>
   fn(args[0], args[1], args[2]).catch(args[2])
 
+// TODO - redirect to /welcome
 server.express.get('/', (req, res) => {
   console.log('GET /')
   res.redirect('/app')
 })
 
+// TODO - only allow if users are authenticated
 server.express.get('/app/*', (req, res) => {
   console.log('GET /app')
   renderApp(req, res)
@@ -61,6 +63,7 @@ server.express.post(
     let user = new User()
     user.email = req.body.email
     user.username = req.body.name
+    user.password = req.body.password
 
     // save the User model to the database, refresh `user` to get ID
     user = await user.save()

@@ -8,6 +8,8 @@ import { getApolloClient } from '../graphql/apolloClient'
 import { FetchUserContext } from '../graphql/query.gen'
 import { style } from '../style/styled'
 import { fetchUser } from './auth/fetchUser'
+import { Login } from './auth/Login'
+import { Signup } from './auth/Signup'
 import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
 import { HomePage } from './page/HomePage'
@@ -61,6 +63,8 @@ export function AppBody() {
         <ProjectsPage path={Route.PROJECTS} />
         <PlaygroundPage path={Route.PLAYGROUND} />
         <PlaygroundPage path={Route.PLAYGROUND_APP} />
+        <Login path={Route.LOGIN} />
+        <Signup path={Route.SIGNUP} />
       </Router>
       <Footer>
         <FooterText>&copy; 2020 Wanderlust</FooterText>

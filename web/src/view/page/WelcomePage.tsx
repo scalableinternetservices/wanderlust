@@ -2,12 +2,18 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { H2 } from '../../style/header'
 import { style } from '../../style/styled'
-import { AppRouteParams, getLoginPath, getSignupPath } from '../nav/route'
+import { UserContext } from '../auth/user'
+import { AppRouteParams, getLoginPath, getPath, getSignupPath, Route } from '../nav/route'
 
 interface WelcomePageProps extends RouteComponentProps, AppRouteParams {}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function WelcomePage(props: WelcomePageProps) {
+  const { user } = React.useContext(UserContext)
+  let href = getLoginPath()
+  if (user) {
+    href = getPath(Route.HOME)
+  }
   return (
     <div className="flex-column items-center justify-center">
       <div>
@@ -17,7 +23,7 @@ export function WelcomePage(props: WelcomePageProps) {
       <img src={require('../../../../imgs/logo.svg')} />
       <div className="flex flex-column">
         <div className="flex justify-center">
-          <LoginButton href={getLoginPath()}>Login</LoginButton>
+          <LoginButton href={href}>Login</LoginButton>
         </div>
         <div className="flex justify-center">
           <SignUpButton href={getSignupPath()}>Sign Up</SignUpButton>
