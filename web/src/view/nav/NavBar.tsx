@@ -34,6 +34,10 @@ const otherTabs = [
     name: 'log out',
     path: getPath(Route.WELCOME),
   },
+  {
+    name: 'upload',
+    path: getPath(Route.UPLOAD),
+  },
 ]
 
 export function NavBar() {
