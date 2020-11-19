@@ -9,6 +9,8 @@ export const fetchMap = gql`
         lat
         lng
       }
+      type
+      uri
     }
   }
 `

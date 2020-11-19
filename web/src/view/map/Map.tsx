@@ -1,7 +1,7 @@
 import * as React from 'react'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type * as LT from 'react-leaflet'
-import { Artwork } from '../page/MapPage'
+import { ArtworkProps as Artwork } from '../artwork/ArtworkCard'
 
 interface MapProps {
   getLocation: () => { lat: number; lng: number } | null
