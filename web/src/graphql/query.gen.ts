@@ -37,6 +37,8 @@ export interface FetchNearbyMap_nearby {
   id: number;
   name: string;
   location: FetchNearbyMap_nearby_location;
+  type: ArtType;
+  uri: string;
 }
 
 export interface FetchNearbyMap {
@@ -52,35 +54,16 @@ export interface FetchNearbyMapVariables {
 // @generated
 // This file was automatically generated and should not be edited.
 
-// ====================================================
-// GraphQL query operation: FetchArtwork
-// ====================================================
-
-export interface FetchArtwork_nearby_location {
-  __typename: "Location";
-  lat: number;
-  lng: number;
-}
-
-export interface FetchArtwork_nearby {
-  __typename: "Art";
-  id: number;
-  name: string;
-  location: FetchArtwork_nearby_location;
-}
-
-export interface FetchArtwork {
-  nearby: FetchArtwork_nearby[];
-}
-
-/* tslint:disable */
-/* eslint-disable */
-// @generated
-// This file was automatically generated and should not be edited.
-
 //==============================================================
 // START Enums and Input Objects
 //==============================================================
+
+export enum ArtType {
+  Audio = "Audio",
+  Image = "Image",
+  Text = "Text",
+  Video = "Video",
+}
 
 export interface LocationInput {
   lat: number;
