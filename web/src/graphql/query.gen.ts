@@ -34,8 +34,11 @@ export interface FetchNearbyMap_nearby_location {
 
 export interface FetchNearbyMap_nearby {
   __typename: "Art";
+  id: number;
   name: string;
   location: FetchNearbyMap_nearby_location;
+  type: ArtType;
+  uri: string;
 }
 
 export interface FetchNearbyMap {
@@ -54,6 +57,13 @@ export interface FetchNearbyMapVariables {
 //==============================================================
 // START Enums and Input Objects
 //==============================================================
+
+export enum ArtType {
+  Audio = "Audio",
+  Image = "Image",
+  Text = "Text",
+  Video = "Video",
+}
 
 export interface LocationInput {
   lat: number;

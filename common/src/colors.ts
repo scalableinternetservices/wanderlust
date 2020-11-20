@@ -12,6 +12,11 @@ export const Colors = {
   silver: '#a4a3a8',
   snow: '#f5f5f6',
   white: '#ffffff',
+
+  // wanderlust-specific colors
+  wanderlustPrimary: '#a26ea1',
+  wanderlustSecondary: '#f18a9b',
+  wanderlustTertiary: '#ffb480',
 }
 
 export type ColorName = keyof typeof Colors
@@ -30,6 +35,11 @@ export const ColorsRGB = {
   silver: hexToRgb(Colors.snow)!,
   snow: hexToRgb(Colors.snow)!,
   white: hexToRgb(Colors.white)!,
+
+  // wanderlust-specific colors
+  wanderlustPrimary: hexToRgb(Colors.wanderlustPrimary),
+  wanderlustSecondary: hexToRgb(Colors.wanderlustSecondary),
+  wanderlustTertiary: hexToRgb(Colors.wanderlustTertiary),
 }
 
 export const LightColors = {
@@ -78,6 +88,10 @@ export const ContrastColors = {
   silver: Colors.black,
   snow: Colors.ink,
   white: Colors.ink,
+
+  wanderlustPrimary: Colors.wanderlustSecondary,
+  wanderlustSecondary: Colors.wanderlustPrimary,
+  wanderlustTertiary: Colors.wanderlustPrimary,
 }
 
 /**
@@ -177,7 +191,22 @@ export class Color implements GetStyles {
   public static black = new Color('black')
   public static gray = new Color('silver')
   public static white = new Color('white')
-  public static all = [Color.blue, Color.green, Color.yellow, Color.red, Color.black, Color.gray, Color.white]
+  public static wanderlustPrimary = new Color('wanderlustPrimary')
+  public static wanderlustSecondary = new Color('wanderlustSecondary')
+  public static wanderlustTertiary = new Color('wanderlustTertiary')
+
+  public static all = [
+    Color.blue,
+    Color.green,
+    Color.yellow,
+    Color.red,
+    Color.black,
+    Color.gray,
+    Color.white,
+    Color.wanderlustPrimary,
+    Color.wanderlustSecondary,
+    Color.wanderlustTertiary,
+  ]
 
   private getStyle?: GetStyles = undefined
 

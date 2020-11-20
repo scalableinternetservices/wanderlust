@@ -52,7 +52,7 @@ export const graphqlRoot: Resolvers<Context> = {
       // This can be made more flexible
       const result = await getManager()
         .createQueryBuilder(Art, 'art')
-        .where('(abs(art.location.lat - :lat) < 20) AND (abs(art.location.lng - :lng) < 20)', {
+        .where('(abs(art.location.lat - :lat) < 0.02) AND (abs(art.location.lng - :lng) < 0.02)', {
           lat: loc.lat,
           lng: loc.lng,
         })

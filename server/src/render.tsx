@@ -1,4 +1,5 @@
-import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
+import { SchemaLink } from '@apollo/client/link/schema'
 import { getDataFromTree } from '@apollo/client/react/ssr'
 import { isRedirect, ServerLocation } from '@reach/router'
 import 'cross-fetch/polyfill' // enables fetch in node
@@ -11,24 +12,10 @@ import { Config } from './config'
 
 const Styletron = require('styletron-engine-monolithic')
 
-export function renderApp(req: Request, res: Response) {
+export function renderApp(req: Request, res: Response, schema: any) {
   const apolloClient = new ApolloClient({
     ssrMode: true,
-    link: new HttpLink({
-      uri: `http://127.0.0.1:${Config.appserverPort}/graphql`,
-      credentials: 'same-origin',
-      fetch: async (uri: any, options: any) => {
-        const reqBody = JSON.parse(options!.body! as string)
-        const opName = reqBody.operationName
-        const actionName = reqBody.variables?.action?.actionName
-        const authToken = req.cookies.authToken
-        const headers = authToken ? { ...options.headers, 'x-authtoken': authToken } : options.headers
-        return fetch(`${uri}?opName=${opName}${actionName ? `&actionName=${actionName}` : ''}`, {
-          ...options,
-          headers,
-        })
-      },
-    }),
+    link: new SchemaLink({ schema }),
     cache: new InMemoryCache(),
   })
 
@@ -69,6 +56,8 @@ export function renderApp(req: Request, res: Response) {
             <link rel="shortcut icon" href={`/app/assets/favicon${Config.isProd ? '' : '-dev'}.ico`} />
             <link rel="stylesheet" href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css" />
             <link rel="stylesheet" href="/app/css/app.css" />
+            {/* Fonts */}
+            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet" />
             <script
               dangerouslySetInnerHTML={{
                 __html: `window.app = {
@@ -122,7 +111,8 @@ export const staticHtml = `<html lang="en">
     ></script>
     <link rel="shortcut icon" href="/app/assets/favicon${Config.isProd ? '' : '-dev'}.ico">
     <link rel="stylesheet" href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css" />
-    <link rel="stylesheet" href="/app/css/app.css" >
+    <link rel="stylesheet" href="/app/css/app.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet" />
     <script>
       window.app = {
         serverRendered: false,
