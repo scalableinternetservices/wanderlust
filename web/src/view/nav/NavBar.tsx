@@ -60,7 +60,7 @@ export function NavBar() {
 
   return (
     <>
-      <div className="fixed top-0 left-0 w-100 avenir">
+      <div className="fixed top-0 left-0 w-100 avenir" style={{ zIndex: 2 }}>
         {/* mount point for NavMenu */}
         <div id="nav-modal" />
         <Nav>
