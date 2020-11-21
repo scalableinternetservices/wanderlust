@@ -2,7 +2,7 @@ import AWS from 'aws-sdk'
 import { v4 as uuid4 } from 'uuid'
 import { ArtType } from '../graphql/schema.types'
 const s3 = new AWS.S3()
-const s3Bucket = 'wanderlust-test-bucket'
+const s3Bucket = 'wanderlust-images'
 if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
   console.error('environment variables AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY are not set.')
 }
