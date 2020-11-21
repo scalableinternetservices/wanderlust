@@ -63,7 +63,7 @@ export const graphqlRoot: Resolvers<Context> = {
   },
   Mutation: {
     addArt: async (_, { art }, _ctx) => {
-      const { name, creatorId, data, type, location } = art
+      const { name, creatorId, data, location } = art
       // create new resource (this will all change with DB)
       const creator = await User.findOne({ where: { id: creatorId } })
       if (!creator) {
@@ -73,10 +73,12 @@ export const graphqlRoot: Resolvers<Context> = {
       newArt.name = name
       newArt.creator = creator
       creator.artworkCreated.push(newArt)
-      newArt.type = type
       newArt.location = location
       newArt.numReports = 0
-      newArt.uri = await storeFile(data, type)
+
+      const [uri, artType] = await storeFile(data)
+      newArt.uri = uri
+      newArt.type = artType
 
       await newArt.save()
       await creator.save()
