@@ -23,3 +23,6 @@ terraform.tfstate.backup
 
 # Env files
 .env*
+
+# Terraform state
+terraform.tfstate

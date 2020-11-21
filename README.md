@@ -1,18 +1,18 @@
 # wanderlust
-
-Welcome to Geo Exploration!
-
-## Group Members
-| ![image](https://avatars2.githubusercontent.com/u/33800628?s=460&u=ffa76aecab9b4cde26216471a067bdefb9fa157e&v=4) | ![image](https://avatars3.githubusercontent.com/u/29148216?s=460&u=b70b8798e228dcbe36d2943f55fd18301641c932&v=4)| ![image](https://avatars2.githubusercontent.com/u/66443542?s=460&u=4f09865f506da1460ac7fc7e2946c297d35ef22d&v=4) | ![images](https://avatars3.githubusercontent.com/u/44016385?s=460&u=e0a011a023961c19922ab5b186977d5bae3bbd6e&v=4)| ![image](https://media-exp1.licdn.com/dms/image/C5603AQElVaV8jxLYeA/profile-displayphoto-shrink_400_400/0?e=1608163200&v=beta&t=WZ7vg2MFz7Vak7VVOJqowCsRxC06sfj1MqP8sMOfx54) |
-|:--:|:--:|:--:|:--:|:--:|
-| *Connie Chen* | *Robert Geil* | *Megha Ilango* | *Eugene Lo* | *Timothy Rediehs* |
-
-## Website Flow
+import * as React from 'react'
+import { ColorName, Colors } from '../../../../common/src/colors'
+import { H1, H2, H3 } from '../../style/header'
+import { Spacer } from '../../style/spacer'
+import { style } from '../../style/styled'
+import { BodyText } from '../../style/text'
+import { Link } from '../nav/Link'
+import { AppRouteParams, getPath, Route } from '../nav/route'
+import { Page } from './Page'
 [Link to Figma](https://www.figma.com/file/psXHkp6BKMsGRi1Zo1VSYB/Website-Flow?node-id=0%3A1)
 
 ## Dependencies
 
-For the [Quickstart](https://github.com/rothfels/bespin#Quickstart), you will need:
+For the [Quickstart](https://github.com/scalableinternetsystems/wanderlust#Quickstart), you will need:
 
 - [Node.js 12.x](https://nodejs.org/en/download/)
 - [Docker](https://docs.docker.com/get-docker/)
@@ -36,7 +36,7 @@ nvm alias default 12
 
 ## Quickstart
 
-First, install [the Quickstart dependencies](https://github.com/rothfels/bespin#Dependencies).
+First, install [the Quickstart dependencies](https://github.com/scalableinternetsystems/wanderlust#Dependencies).
 
 ### Choose your team slug
 
@@ -44,7 +44,7 @@ Choose a short, alphanumeric [*slug*](https://en.wikipedia.org/wiki/Clean_URL#Sl
 
 ### Get the starter project
 
-Clone and initialize the starter project. You'll need to have `node` and `npm` installed first. See [dependencies](https://github.com/rothfels/bespin#dependencies).
+Clone and initialize the starter project. You'll need to have `node` and `npm` installed first. See [dependencies](https://github.com/scalableinternetsystems/wanderlust#dependencies).
 
 ```
 source <(curl -s https://cs188.cloudcity.computer/app/script/init-project.sh)
@@ -54,14 +54,6 @@ This will create a directory with the name of your project slug and install the 
 
 If you run into an error sourcing the init script above, you may run the steps manually:
 
-```
-git clone https://github.com/rothfels/bespin.git <your project slug>
-cd <your project slug>
-rm -rf .git
-<find/replace "bespin" with your project slug>
-git init
-npm install
-```
 
 Open the project directory in VS Code. Install the recommended extensions then reload VS Code.
 
