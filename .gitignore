@@ -20,3 +20,9 @@ terraform.tfstate.backup
 # other
 .DS_Store
 .vscode
+
+# Env files
+.env*
+
+# Terraform state
+terraform.tfstate
