@@ -4,6 +4,7 @@ import * as React from 'react'
 import { FetchNearbyMap, FetchNearbyMapVariables } from '../../graphql/query.gen'
 import { H2 } from '../../style/header'
 import { Spacer } from '../../style/spacer'
+import { ArtworkCard, ArtworkProps as Artwork } from '../artwork/ArtworkCard'
 import { fetchMap } from '../map/fetchMap'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // import type * as LT from 'react-leaflet'
@@ -12,12 +13,6 @@ import { AppRouteParams } from '../nav/route'
 import { Page } from './Page'
 
 interface MapPageProps extends RouteComponentProps, AppRouteParams {}
-
-export interface Artwork {
-  id: number
-  location: { lat: number; lng: number }
-  name: string
-}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function MapPage(props: MapPageProps) {
@@ -36,12 +31,12 @@ export function MapPage(props: MapPageProps) {
     // navigator.geolocation.getCurrentPosition(c => setLocation([c.coords.latitude, c.coords.longitude]))
   }
 
-  const loadingText = loading ? <div>loading...</div> : <div></div>
-  const artworkPreviews =
+  const loadingText = loading ? <div>loading...</div> : null
+  const artworkCards =
     !data || data.nearby.length === 0 ? (
-      <div className="f4 avenir">no artwork nearby!</div>
+      <div className="f4 avenir pl2">no artwork nearby!</div>
     ) : (
-      data?.nearby.map(art => <div key={art.id}>{art.name}</div>)
+      data?.nearby.map(art => <ArtworkCard key={art.id} {...art} />)
     )
 
   return (
@@ -60,18 +55,21 @@ export function MapPage(props: MapPageProps) {
                     id: art.id,
                     location: art.location,
                     name: art.name,
+                    type: art.type,
+                    uri: art.uri,
                   } as Artwork)
               )
             : []
         }
       />
+
       <Spacer $h3 />
       <H2>artwork near you</H2>
       <Spacer $h4 />
 
-      <div className="flex flex-column items-start pl2">
+      <div className="w-80-l center flex flex-wrap-l flex-row-l flex-column justify-start-l justify-around items-center">
         {loadingText}
-        {artworkPreviews}
+        {artworkCards}
       </div>
 
       {/* <div id="map-container" style={{ height: 180 }}>

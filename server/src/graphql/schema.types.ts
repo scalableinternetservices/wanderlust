@@ -86,7 +86,6 @@ export interface ArtInput {
   creatorId: Scalars['Int']
   location: LocationInput
   data: Scalars['String']
-  type: ArtType
 }
 
 export interface LocationInput {

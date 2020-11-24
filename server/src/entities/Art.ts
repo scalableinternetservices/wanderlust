@@ -15,24 +15,24 @@ export class Art extends BaseEntity {
   createdAt: string
 
   @Column(type => Location)
-  location: Location;
+  location: Location
 
   @Column()
   uri: string
 
   @Column({
-    type: "enum",
-    enum: ArtType
+    type: 'enum',
+    enum: ArtType,
   })
   type: ArtType
 
   @Column({
-    default: 0
+    default: 0,
   })
   numReports: number
 
   @ManyToOne(() => User, user => user.artworkCreated)
-  @JoinColumn({ name: "creatorId" })
+  @JoinColumn({ name: 'creatorId' })
   creator: User
 
   @Column({ nullable: false })
