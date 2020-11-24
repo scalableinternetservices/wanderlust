@@ -41,7 +41,6 @@ server.express.use('/app', cors(), expressStatic(path.join(__dirname, '../../pub
 const asyncRoute = (fn: RequestHandler) => (...args: Parameters<RequestHandler>) =>
   fn(args[0], args[1], args[2]).catch(args[2])
 
-// TODO - redirect to /welcome
 server.express.get('/', (req, res) => {
   console.log('GET /')
   res.redirect('/app')
@@ -83,8 +82,8 @@ server.express.post(
     const email = req.body.email
     const password = req.body.password
 
-    const user = await User.findOne({ where: { email } })
-    if (!user || password !== Config.adminPassword) {
+    const user = await User.findOne({ where: { email, password } })
+    if (!user) {
       res.status(403).send('Forbidden')
       return
     }

@@ -1,10 +1,9 @@
-import { RouteComponentProps } from '@reach/router'
+import { navigate, RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { useContext, useEffect, useState } from 'react'
 import { check } from '../../../../common/src/util'
 import { Button } from '../../style/button'
 import { Input } from '../../style/input'
-import { Spacer } from '../../style/spacer'
 import { AppRouteParams } from '../nav/route'
 import { handleError } from '../toast/error'
 import { toastErr } from '../toast/toast'
@@ -45,7 +44,7 @@ export function Login(props: LoginPageProps) {
   }
 
   if (user) {
-    return <Logout />
+    navigate('/app').catch(handleError)
   }
 
   return (
@@ -69,26 +68,26 @@ export function Login(props: LoginPageProps) {
   )
 }
 
-function Logout() {
-  function logout() {
-    return fetch('/auth/logout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then(res => {
-        check(res.ok, 'response status ' + res.status)
-        window.location.reload()
-      })
-      .catch(handleError)
-  }
+// function Logout() {
+//   function logout() {
+//     return fetch('/auth/logout', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//     })
+//       .then(res => {
+//         check(res.ok, 'response status ' + res.status)
+//         window.location.reload()
+//       })
+//       .catch(handleError)
+//   }
 
-  return (
-    <>
-      <Spacer $h5 />
-      <Button onClick={logout}>Logout</Button>
-    </>
-  )
-}
+//   return (
+//     <>
+//       <Spacer $h5 />
+//       <Button onClick={logout}>Logout</Button>
+//     </>
+//   )
+// }
 
 function validateEmail(email: string) {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -102,7 +101,6 @@ function validate(
 ) {
   const validEmail = validateEmail(email)
   const validPassword = Boolean(password)
-  console.log('valid', validEmail, validPassword)
   setError({ email: !validEmail, password: !validPassword })
   return validEmail && validPassword
 }

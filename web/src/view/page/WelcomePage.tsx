@@ -17,10 +17,10 @@ export function WelcomePage(props: WelcomePageProps) {
   return (
     <div className="flex-column items-center justify-center">
       <div>
-        <img src={require('../../../../imgs/wanderlust.svg')} />
+        <img src={require('../../imgs/wanderlust.svg')} />
       </div>
       <H2 className="flex justify-center">draw your story</H2>
-      <img src={require('../../../../imgs/logo.svg')} />
+      <img src={require('../../imgs/logo.svg')} />
       <div className="flex flex-column">
         <div className="flex justify-center">
           <LoginButton href={href}>Login</LoginButton>

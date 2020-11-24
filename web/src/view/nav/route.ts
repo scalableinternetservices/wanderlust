@@ -37,6 +37,10 @@ export function getPlaygroundPath() {
   return getPath(Route.PLAYGROUND)
 }
 
+export function getWelcomePath() {
+  return getPath(Route.WELCOME)
+}
+
 /**
  * Example: getPath(ROUTES.TASK) returns "/leasing/tasks" while getPath(ROUTES.TASK, {taskId: 5}) returns "leasing/tasks/task/5".
  *

@@ -83,7 +83,6 @@ function validate(
   const validEmail = validateEmail(email)
   const validName = Boolean(name)
   const validPassword = Boolean(password)
-  console.log('valid', validEmail, validName, validPassword)
   setError({ email: !validEmail, name: !validName, password: !validPassword })
   return validEmail && validName && validPassword
 }

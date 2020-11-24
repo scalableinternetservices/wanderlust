@@ -6,9 +6,10 @@ import { useMediaQuery } from 'react-responsive'
 import { breakpoints } from '../../style/breakpoints'
 import { MenuIcon } from '../../style/icons'
 import { style } from '../../style/styled'
+import { logout } from '../auth/logout'
 import { addToastListener, removeToastListener, Toast, ToastType } from '../toast/toast'
 import { link } from './Link'
-import { getPath, Route } from './route'
+import { getPath, getWelcomePath, Route } from './route'
 
 const title = {
   name: 'wanderlust',
@@ -29,12 +30,8 @@ const otherTabs = [
     name: 'map',
     path: getPath(Route.MAP),
   },
-  {
-    name: 'log out',
-    path: getPath(Route.WELCOME),
-  },
 ]
-// TODO - add <Logout /> to navbar
+
 export function NavBar() {
   const location = useLocation()
   const isSmall = useMediaQuery(breakpoints.small)
@@ -76,7 +73,11 @@ export function NavBar() {
           {tabs.map((tab, i) => (
             <NavItem key={i} {...tab} />
           ))}
-
+          {!isSmall && (
+            <LogoutButton onClick={() => logout()} href={getWelcomePath()}>
+              logout
+            </LogoutButton>
+          )}
           {isSmall && <NavMenu show={showMenu} onClick={() => setShowMenu(!showMenu)} />}
         </Nav>
         {/* <SubNav /> */}
@@ -96,6 +97,9 @@ function NavMenu(props: { show: boolean; onClick: () => void }) {
             {otherTabs.map((tab, i) => (
               <NavItem key={i} {...tab} />
             ))}
+            <LogoutButton onClick={() => logout()} href={getWelcomePath()}>
+              logout
+            </LogoutButton>
           </NavMenuModal>
         </Modal>
       )}
@@ -118,6 +122,8 @@ function NavMenu(props: { show: boolean; onClick: () => void }) {
 //     </Nav>
 //   )
 // }
+
+const LogoutButton = style('a', 'link near-white hover-bg-black-10 pa2 br2')
 
 const Nav = style(
   'nav',
