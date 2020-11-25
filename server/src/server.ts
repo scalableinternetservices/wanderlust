@@ -42,14 +42,23 @@ const asyncRoute = (fn: RequestHandler) => (...args: Parameters<RequestHandler>)
   fn(args[0], args[1], args[2]).catch(args[2])
 
 server.express.get('/', (req, res) => {
-  console.log('GET /')
-  res.redirect('/app')
+  const authToken = req.cookies.authToken
+  if (authToken) {
+    console.log('GET /')
+    res.redirect('/app')
+  } else {
+    res.status(403).send('Forbidden')
+  }
 })
 
-// TODO - only allow if users are authenticated
 server.express.get('/app/*', (req, res) => {
-  console.log('GET /app')
-  renderApp(req, res, server.executableSchema)
+  const authToken = req.cookies.authToken
+  if (req.url == '/app/welcome' || req.url == '/app/login' || req.url == '/app/signup' || authToken) {
+    console.log('GET /app')
+    renderApp(req, res, server.executableSchema)
+  } else {
+    res.status(403).send('Forbidden')
+  }
 })
 
 const SESSION_DURATION = 30 * 24 * 60 * 60 * 1000 // 30 days
@@ -82,7 +91,7 @@ server.express.post(
     const email = req.body.email
     const password = req.body.password
 
-    const user = await User.findOne({ where: { email, password } })
+    const user = await User.findOne({ email, password })
     if (!user) {
       res.status(403).send('Forbidden')
       return
