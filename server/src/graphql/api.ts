@@ -15,7 +15,7 @@ export function getSchema() {
 }
 
 interface Context {
-  user: any // TODO: Change this to a real type
+  user?: User
   request: Request
   response: Response
   pubsub: PubSub
@@ -23,9 +23,8 @@ interface Context {
 
 export const graphqlRoot: Resolvers<Context> = {
   Query: {
-    self: (_, args, ctx) => {
-      return ctx.user
-      // return users.find(user => user.email === ctx.user?.email) || null
+    self: async (_, args, ctx) => {
+      return ctx.user || null
     },
     art: async (_, { id }) => {
       const thing = (await Art.findOne({ where: { id: id } })) || null
@@ -64,15 +63,11 @@ export const graphqlRoot: Resolvers<Context> = {
   Mutation: {
     addArt: async (_, { art }, _ctx) => {
       const { name, creatorId, data, location } = art
-      // create new resource (this will all change with DB)
-      const creator = await User.findOne({ where: { id: creatorId } })
-      if (!creator) {
-        return false
-      }
+      if (!_ctx.user || creatorId !== _ctx.user.id) return false
+      const creator = _ctx.user
       const newArt = new Art()
       newArt.name = name
       newArt.creator = creator
-      creator.artworkCreated.push(newArt)
       newArt.location = location
       newArt.numReports = 0
 
@@ -80,8 +75,7 @@ export const graphqlRoot: Resolvers<Context> = {
       newArt.uri = uri
       newArt.type = artType
 
-      await newArt.save()
-      await creator.save()
+      await newArt.save({ reload: false, transaction: false })
       return true
     },
   },
