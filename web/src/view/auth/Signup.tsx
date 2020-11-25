@@ -2,9 +2,10 @@ import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { check } from '../../../../common/src/util'
-import { Button } from '../../style/button'
+import { H1 } from '../../style/header'
 import { Input } from '../../style/input'
-import { AppRouteParams } from '../nav/route'
+import { style } from '../../style/styled'
+import { AppRouteParams, getWelcomePath } from '../nav/route'
 import { toastErr } from '../toast/toast'
 
 interface SignupPageProps extends RouteComponentProps, AppRouteParams {}
@@ -43,31 +44,47 @@ export function Signup(props: SignupPageProps) {
   }
 
   return (
-    <>
-      <div className="mt3">
-        <label className="db fw4 lh-copy f6" htmlFor="email">
-          Email address
-        </label>
-        <Input $hasError={err.email} $onChange={setEmail} $onSubmit={login} name="email" type="email" />
+    <div className="flex-column items-center justify-center pl4 pr4">
+      <a href={getWelcomePath()}>
+        <img src={require('../../../../public/imgs/arrowLeft.svg')} className="mb2" />
+      </a>
+      <H1 className="flex">sign up</H1>
+      <div>
+        <img className="vh-30 mw5" src={require('../../../../public/imgs/signup.svg')} />
       </div>
       <div className="mt3">
-        <label className="db fw4 lh-copy f6" htmlFor="name">
-          Name
-        </label>
-        <Input $hasError={err.name} $onChange={setName} $onSubmit={login} name="name" />
+        <Input
+          $hasError={err.email}
+          $onChange={setEmail}
+          $onSubmit={login}
+          name="email"
+          type="email"
+          placeholder="email"
+        />
       </div>
       <div className="mt3">
-        <label className="db fw4 lh-copy f6" htmlFor="password">
-          Password
-        </label>
-        <Input $hasError={err.password} $onChange={setPassword} $onSubmit={login} name="name" />
+        <Input $hasError={err.name} $onChange={setName} $onSubmit={login} name="name" placeholder="name" />
       </div>
       <div className="mt3">
-        <Button onClick={login}>Sign Up</Button>
+        <Input
+          $hasError={err.password}
+          $onChange={setPassword}
+          $onSubmit={login}
+          name="password"
+          type="password"
+          placeholder="password"
+        />
       </div>
-    </>
+      <div className="flex justify-center mt3">
+        <SignUpButton onClick={login}>Sign Up</SignUpButton>
+      </div>
+    </div>
   )
 }
+
+const SignUpButton = style('a', 'f6 link dim br-pill ph3 pv2 mb2 dib white w-40 tc', {
+  backgroundColor: '#A26EA1',
+})
 
 function validateEmail(email: string) {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
