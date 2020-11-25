@@ -4,7 +4,8 @@ import * as React from 'react'
 import { FetchNearbyMap, FetchNearbyMapVariables } from '../../graphql/query.gen'
 import { H2 } from '../../style/header'
 import { Spacer } from '../../style/spacer'
-import { ArtworkCard, ArtworkProps as Artwork } from '../artwork/ArtworkCard'
+import { ArtworkCard } from '../artwork/ArtworkCard'
+import { ArtworkProps as Artwork } from '../artwork/ArtworkProps'
 import { fetchMap } from '../map/fetchMap'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // import type * as LT from 'react-leaflet'
@@ -67,7 +68,7 @@ export function MapPage(props: MapPageProps) {
       <H2>artwork near you</H2>
       <Spacer $h4 />
 
-      <div className="w-80-l center flex flex-wrap-l flex-row-l flex-column justify-start-l justify-around items-center">
+      <div className="w-90-l center flex flex-wrap-l flex-row-l flex-column justify-center-l justify-around items-center">
         {loadingText}
         {artworkCards}
       </div>
