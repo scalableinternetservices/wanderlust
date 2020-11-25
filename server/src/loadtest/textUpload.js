@@ -1,8 +1,8 @@
 import http from 'k6/http'
 import { check, sleep } from 'k6'
-
+let host = `http://${__ENV.HOST || 'localhost:3000'}`
 function getUploadPage() {
-  let res = http.get('http://localhost:3000/')
+  let res = http.get(host)
   check(res, { 'status was 200': r => r.status == 200 })
 }
 
@@ -22,10 +22,10 @@ function uploadArtwork() {
   let params = {
     headers: {
       'Content-Type': 'application/json',
-      'x-authtoken': '87a6a66c-9526-4589-8288-e527b7b3a01a',
+      'x-authtoken': 'f845f391-66c6-40f5-b101-975adffb41bb',
     },
   }
-  let res = http.post('http://localhost:3000/graphql', JSON.stringify({ query: query }), params)
+  let res = http.post(`${host}/graphql`, JSON.stringify({ query: query }), params)
   console.log(res.body)
   check(res, { 'status was 200': r => r.status == 200 })
   check(res, { 'created mutation': r => !JSON.parse(r.body).errors })
