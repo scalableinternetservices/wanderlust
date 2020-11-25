@@ -1,14 +1,14 @@
-# module "mysql" {
-#   source = "./modules/mysql"
-# }
-
 module "s3" {
   source = "./modules/s3"
 }
 
-# module "redis" {
-#   source = "./modules/redis"
+# module "mysql" {
+#   source = "./modules/mysql"
 # }
+
+# # module "redis" {
+# #   source = "./modules/redis"
+# # }
 
 # resource "aws_ecs_cluster" "wanderlust" {
 #   name = "wanderlust"
@@ -40,16 +40,16 @@ module "s3" {
 #   appserver_host = module.webserver.host
 # }
 
-# module "websocket_api" {
-#   source         = "./modules/websocket_api"
-#   appserver_host = module.webserver.host
-# }
+# # module "websocket_api" {
+# #   source         = "./modules/websocket_api"
+# #   appserver_host = module.webserver.host
+# # }
 
-# module "lambda" {
-#   source = "./modules/lambda"
+# # module "lambda" {
+# #   source = "./modules/lambda"
 
-#   honeycomb_key = <insert key here>
+# #   honeycomb_key = <insert key here>
 
-#   mysql_host = module.mysql.host
-#   redis_host = module.redis.host
-# }
+# #   mysql_host = module.mysql.host
+# #   redis_host = module.redis.host
+# # }
