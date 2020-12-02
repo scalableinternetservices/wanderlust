@@ -30,6 +30,10 @@ export interface QueryUserArgs {
   id: Scalars['Int']
 }
 
+export interface QueryUsersArgs {
+  ids?: Maybe<Array<Scalars['Int']>>
+}
+
 export interface QueryNearbyArgs {
   loc: LocationInput
 }
@@ -208,7 +212,7 @@ export type QueryResolvers<
   art?: Resolver<Maybe<ResolversTypes['Art']>, ParentType, ContextType, RequireFields<QueryArtArgs, 'id'>>
   arts?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>
-  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, never>>
   nearby?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType, RequireFields<QueryNearbyArgs, 'loc'>>
 }
 
