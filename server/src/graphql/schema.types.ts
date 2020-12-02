@@ -19,7 +19,6 @@ export interface Query {
   arts: Array<Art>
   user?: Maybe<User>
   users: Array<User>
-  userNames: Array<User>
   nearby: Array<Art>
 }
 

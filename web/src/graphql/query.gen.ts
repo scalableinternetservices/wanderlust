@@ -35,6 +35,8 @@ export interface FetchNearbyMap_nearby_location {
 export interface FetchNearbyMap_nearby {
   __typename: "Art";
   id: number;
+  createdAt: string;
+  creatorId: number;
   name: string;
   location: FetchNearbyMap_nearby_location;
   type: ArtType;
@@ -58,17 +60,17 @@ export interface FetchNearbyMapVariables {
 // GraphQL query operation: FetchUserName
 // ====================================================
 
-export interface FetchUserName_userNames {
+export interface FetchUserName_users {
   __typename: "User";
   username: string;
 }
 
 export interface FetchUserName {
-  userNames: FetchUserName_userNames[];
+  users: FetchUserName_users[];
 }
 
 export interface FetchUserNameVariables {
-  ids: number[];
+  ids?: number[] | null;
 }
 
 /* tslint:disable */

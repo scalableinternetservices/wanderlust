@@ -2,12 +2,13 @@ import Backdrop from '@material-ui/core/Backdrop'
 import Modal from '@material-ui/core/Modal'
 import Slide from '@material-ui/core/Slide'
 import * as React from 'react'
+import { wanderlustTheme } from '../../../../common/src/theme'
 import { H1, H3, H4 } from '../../style/header'
 import { Spacer } from '../../style/spacer'
 import { style } from '../../style/styled'
 import { ArtworkProps } from './ArtworkProps'
 
-export function ArtworkCard({ name, location, type, uri }: ArtworkProps) {
+export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkProps) {
   // TODO: Fetch art content from S3 using uri property
   const [open, setOpen] = React.useState(false)
 
@@ -23,15 +24,23 @@ export function ArtworkCard({ name, location, type, uri }: ArtworkProps) {
     handleModalOpen()
   }
 
+  const localDate = new Date(parseInt(createdAt))
+
   const body = (
     <ArtModalBody>
       <H1 id="artwork-title">{name}</H1>
       <Spacer $h3 />
-      <div className="w-90 h5 ba b--silver"></div>
+      <div className="w-90 h5 ba b--light-gray"></div>
       <Spacer $h3 />
       <div className="w-90">
         <H3>
-          Location: ({location.lat.toFixed(1)}, {location.lng.toFixed(1)})
+          Created By: <span style={{ color: wanderlustTheme.colors.primary.colorHex }}>{createdBy}</span>
+        </H3>
+        <H3>
+          Created At:{' '}
+          <span style={{ color: wanderlustTheme.colors.primary.colorHex }}>
+            {localDate.toLocaleDateString('en-us')}
+          </span>
         </H3>
       </div>
     </ArtModalBody>
