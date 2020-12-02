@@ -20,7 +20,7 @@ type Query {
   art (id: Int!): Art
   arts: [Art!]!
   user (id: Int!): User
-  users: [User!]!
+  users (ids: [Int!]): [User!]!
   nearby (loc: LocationInput!): [Art!]!
 }
 
@@ -69,8 +69,10 @@ input ArtInput {
   name: String!
   creatorId: Int!
   location: LocationInput!
+  # Must be in the form "data:text/plain;base64, 23f9ojesou8q3jl3f"
+  # ie data:mime/type; followed by base64 comma space, then the base64 encoded image, text, etc
+  # Currently accepted formats are text/plain, image/jpeg, image/png
   data: String!
-  type: ArtType!
 }
 
 input LocationInput {

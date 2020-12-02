@@ -1,51 +1,55 @@
-module "mysql" {
-  source = "./modules/mysql"
+module "s3" {
+  source = "./modules/s3"
 }
 
-# module "redis" {
-#   source = "./modules/redis"
+# module "mysql" {
+#   source = "./modules/mysql"
 # }
 
-resource "aws_ecs_cluster" "wanderlust" {
-  name = "wanderlust"
-}
+# # module "redis" {
+# #   source = "./modules/redis"
+# # }
 
-resource "aws_ecr_repository" "wanderlust" {
-  name                 = "wanderlust"
-  image_tag_mutability = "MUTABLE"
-}
+# resource "aws_ecs_cluster" "wanderlust" {
+#   name = "wanderlust"
+# }
 
-module "webserver" {
-  source = "./modules/appserver"
+# resource "aws_ecr_repository" "wanderlust" {
+#   name                 = "wanderlust"
+#   image_tag_mutability = "MUTABLE"
+# }
 
-  appserver_tag  = "app-web"
-  ecr_repository = aws_ecr_repository.wanderlust.repository_url
-  ecs_cluster    = aws_ecs_cluster.wanderlust.id
+# module "webserver" {
+#   source = "./modules/appserver"
 
-  mysql_host = module.mysql.host
-  # redis_host = module.redis.host
+#   appserver_tag  = "app-web"
+#   ecr_repository = aws_ecr_repository.wanderlust.repository_url
+#   ecs_cluster    = aws_ecs_cluster.wanderlust.id
 
-  services      = "BACKGROUND"
-  honeycomb_key = <insert key here>
+#   mysql_host = module.mysql.host
+#   # redis_host = module.redis.host
 
-  # ws_url = module.websocket_api.url
-}
+#   services      = "BACKGROUND"
+#   honeycomb_key = "68afd30230260e068cf58e0971a0db09"
 
-module "rest_api" {
-  source         = "./modules/rest_api"
-  appserver_host = module.webserver.host
-}
+#   # ws_url = module.websocket_api.url
+# }
 
-# module "websocket_api" {
-#   source         = "./modules/websocket_api"
+# module "rest_api" {
+#   source         = "./modules/rest_api"
 #   appserver_host = module.webserver.host
 # }
 
-# module "lambda" {
-#   source = "./modules/lambda"
+# # module "websocket_api" {
+# #   source         = "./modules/websocket_api"
+# #   appserver_host = module.webserver.host
+# # }
 
-#   honeycomb_key = <insert key here>
+# # module "lambda" {
+# #   source = "./modules/lambda"
 
-#   mysql_host = module.mysql.host
-#   redis_host = module.redis.host
-# }
+# #   honeycomb_key = <insert key here>
+
+# #   mysql_host = module.mysql.host
+# #   redis_host = module.redis.host
+# # }

@@ -1,0 +1,87 @@
+/*
+ * MINIMAL CSS RESET
+ */
+
+ html,
+ body,
+ ol,
+ ul,
+ li,
+ table,
+ thead,
+ tbody,
+ tfoot,
+ tr,
+ th,
+ td,
+ pre,
+ h1,
+ h2,
+ h3,
+ h4,
+ div,
+ span,
+ p {
+   margin: 0;
+   padding: 0;
+   border: 0;
+   font-size: 100%;
+   font: inherit;
+   vertical-align: baseline;
+ }
+
+ table {
+   border-collapse: collapse;
+   border-spacing: 0;
+ }
+
+ input,
+ textarea,
+ button {
+   background: none;
+   border: 0;
+ }
+
+ input:focus,
+ textarea:focus,
+ button:focus {
+   outline: none;
+ }
+
+ span.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 600ms linear;
+  background-color: rgba(0, 0, 0, 0.5);
+ }
+
+ /*
+  * GLOBAL STYLES
+  */
+
+ /* html,
+ body {
+   background-color: #111;
+ } */
+
+ /*
+  * CSS3 ANIMATIONS
+  */
+ @keyframes fadein {
+   from {
+     opacity: 0;
+   }
+   to {
+     opacity: 1;
+   }
+ }
+
+ @keyframes ripple {
+   to {
+     transform: scale(4);
+     opacity: 0;
+   }
+ }
+
+/*# sourceMappingURL=/app/js/bundle.css.map */

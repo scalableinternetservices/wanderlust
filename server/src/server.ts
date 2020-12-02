@@ -1,11 +1,4 @@
-require('honeycomb-beeline')({
-  writeKey: process.env.HONEYCOMB_KEY || '68afd30230260e068cf58e0971a0db09',
-  dataset: process.env.APP_NAME || 'wanderlust',
-  serviceName: process.env.APPSERVER_TAG || 'local',
-  enabledInstrumentations: ['express', 'mysql2', 'react-dom/server'],
-  sampleRate: 10,
-})
-
+require('./beeline')
 import assert from 'assert'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -48,7 +41,7 @@ server.express.get('/', (req, res) => {
 
 server.express.get('/app/*', (req, res) => {
   console.log('GET /app')
-  renderApp(req, res)
+  renderApp(req, res, server.executableSchema)
 })
 
 const SESSION_DURATION = 30 * 24 * 60 * 60 * 1000 // 30 days

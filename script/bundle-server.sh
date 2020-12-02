@@ -11,9 +11,11 @@ cp package.json package-lock.json ./server/bin
 cp server/package.json server/package-lock.json ./server/bin/server
 cp web/package.json web/package-lock.json ./server/bin/web
 
+# Copy fix-maps.js
+cp fix-maps.js ./server/bin
 # copy static resources
-cp postinstall.sh ./server/bin/postinstall.sh
-cp web/postinstall.sh ./server/bin/web/postinstall.sh
+# cp postinstall.sh ./server/bin/postinstall.sh
+# cp web/postinstall.sh ./server/bin/web/postinstall.sh
 cp -r ./public ./server/bin
 cp -r ./server/src/db/migrations ./server/bin/server/src/db
 cp ./server/src/graphql/schema.graphql ./server/bin/server/src/graphql/schema.graphql

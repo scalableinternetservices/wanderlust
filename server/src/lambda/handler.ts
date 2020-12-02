@@ -1,7 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context as LambdaContext } from 'aws-lambda'
 import { Request } from 'express'
-import { runUserBatch } from '../loadtest/runner'
-import { userScript } from '../loadtest/userScript'
 import { LambdaFunc, ServiceReq, ServiceResp } from './protocol'
 
 export const handler = async (req: any, ctx: any) => {
@@ -27,7 +25,7 @@ export async function handleServiceReq(req: ServiceReq, ctx: LambdaContext): Pro
 
     case LambdaFunc.LOAD:
       return {
-        result: await runUserBatch(req.args.numUsers, userScript),
+        result: null,
       }
 
     default:
