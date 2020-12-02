@@ -20,10 +20,14 @@ export function MapPage(props: MapPageProps) {
   // let Leaflet: typeof LT | undefined = undefined
 
   const [location, setLocation] = React.useState<{ lat: number; lng: number } | null>(null)
-  const { data, loading } = useQuery<FetchNearbyMap, FetchNearbyMapVariables>(fetchMap, {
+  const { data: data_nearby, loading: loading_nearby } = useQuery<FetchNearbyMap, FetchNearbyMapVariables>(fetchMap, {
     variables: { loc: location ? location : { lat: 0, lng: 0 } },
     ssr: false,
   })
+  // const { data: data_user, loading: loading_user } = useQuery<FetchUserName, FetchUserNameVariables>(fetchCreatedBy, {
+  //   variables: { id: data_nearby?.nearby.id ? data_nearby.nearby.id : -1 },
+  //   ssr: false,
+  // })
 
   if (typeof window !== 'undefined') {
     // Leaflet = require('react-leaflet')
@@ -32,12 +36,12 @@ export function MapPage(props: MapPageProps) {
     // navigator.geolocation.getCurrentPosition(c => setLocation([c.coords.latitude, c.coords.longitude]))
   }
 
-  const loadingText = loading ? <div>loading...</div> : null
+  const loadingText = loading_nearby ? <div>loading...</div> : null
   const artworkCards =
-    !data || data.nearby.length === 0 ? (
+    !data_nearby || data_nearby.nearby.length === 0 ? (
       <div className="f4 avenir pl2">no artwork nearby!</div>
     ) : (
-      data?.nearby.map(art => <ArtworkCard key={art.id} {...art} />)
+      data_nearby?.nearby.map(art => <ArtworkCard key={art.id} {...art} />)
     )
 
   return (
@@ -49,8 +53,8 @@ export function MapPage(props: MapPageProps) {
         getLocation={() => location}
         updateLocation={(lat: number, lng: number) => setLocation({ lat: lat, lng: lng })}
         artworks={
-          data
-            ? data?.nearby.map(
+          data_nearby
+            ? data_nearby?.nearby.map(
                 art =>
                   ({
                     id: art.id,

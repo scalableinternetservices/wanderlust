@@ -10,7 +10,7 @@ export interface HeaderProps {
 
 export const H1 = style<'h1', HeaderProps>('h1', p => headerStyle(1, p))
 export const H2 = style<'h2', HeaderProps>('h2', p => headerStyle(2, p))
-export const H3 = style<'h3', HeaderProps>('h3', 'i', p => headerStyle(3, p))
+export const H3 = style<'h3', HeaderProps>('h3', p => headerStyle(3, p))
 export const H4 = style<'h4', HeaderProps>('h4', p => headerStyle(4, p))
 export const H5 = style<'h5', HeaderProps>('h5', p => headerStyle(5, p))
 

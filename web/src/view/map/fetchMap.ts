@@ -14,3 +14,10 @@ export const fetchMap = gql`
     }
   }
 `
+export const fetchCreatedBy = gql`
+  query FetchUserName($ids: [Int!]!) {
+    userNames(ids: $ids) {
+      username
+    }
+  }
+`

@@ -54,6 +54,28 @@ export interface FetchNearbyMapVariables {
 // @generated
 // This file was automatically generated and should not be edited.
 
+// ====================================================
+// GraphQL query operation: FetchUserName
+// ====================================================
+
+export interface FetchUserName_userNames {
+  __typename: "User";
+  username: string;
+}
+
+export interface FetchUserName {
+  userNames: FetchUserName_userNames[];
+}
+
+export interface FetchUserNameVariables {
+  ids: number[];
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
 //==============================================================
 // START Enums and Input Objects
 //==============================================================

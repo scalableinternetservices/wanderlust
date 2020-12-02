@@ -19,6 +19,7 @@ export interface Query {
   arts: Array<Art>
   user?: Maybe<User>
   users: Array<User>
+  userNames: Array<User>
   nearby: Array<Art>
 }
 
@@ -28,6 +29,10 @@ export interface QueryArtArgs {
 
 export interface QueryUserArgs {
   id: Scalars['Int']
+}
+
+export interface QueryUserNamesArgs {
+  ids: Array<Scalars['Int']>
 }
 
 export interface QueryNearbyArgs {
@@ -209,6 +214,7 @@ export type QueryResolvers<
   arts?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
+  userNames?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserNamesArgs, 'ids'>>
   nearby?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType, RequireFields<QueryNearbyArgs, 'loc'>>
 }
 

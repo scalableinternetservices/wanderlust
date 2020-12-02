@@ -2,11 +2,12 @@ import Backdrop from '@material-ui/core/Backdrop'
 import Modal from '@material-ui/core/Modal'
 import Slide from '@material-ui/core/Slide'
 import * as React from 'react'
-import { H4 } from '../../style/header'
+import { H1, H3, H4 } from '../../style/header'
+import { Spacer } from '../../style/spacer'
 import { style } from '../../style/styled'
 import { ArtworkProps } from './ArtworkProps'
 
-export function ArtworkCard({ name, type, uri }: ArtworkProps) {
+export function ArtworkCard({ name, location, type, uri }: ArtworkProps) {
   // TODO: Fetch art content from S3 using uri property
   const [open, setOpen] = React.useState(false)
 
@@ -24,8 +25,15 @@ export function ArtworkCard({ name, type, uri }: ArtworkProps) {
 
   const body = (
     <ArtModalBody>
-      <h2 id="simple-modal-title">Text in a modal</h2>
-      <p id="simple-modal-description">Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
+      <H1 id="artwork-title">{name}</H1>
+      <Spacer $h3 />
+      <div className="w-90 h5 ba b--silver"></div>
+      <Spacer $h3 />
+      <div className="w-90">
+        <H3>
+          Location: ({location.lat.toFixed(1)}, {location.lng.toFixed(1)})
+        </H3>
+      </div>
     </ArtModalBody>
   )
 
@@ -47,7 +55,7 @@ export function ArtworkCard({ name, type, uri }: ArtworkProps) {
           timeout: 500,
         }}
       >
-        <Slide timeout={{ appear: 600, enter: 400, exit: 300 }} direction="up" in={open} mountOnEnter unmountOnExit>
+        <Slide direction="up" in={open} mountOnEnter unmountOnExit>
           {body}
         </Slide>
       </Modal>
@@ -102,7 +110,7 @@ function createRipple(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
 const ArtContent = style('div', 'avenir f3 w-50 br', { borderRight: 'solid 1px rgba(0, 0, 0, .15)' })
 
-const ArtModalBody = style('div', 'flex flex-column items-center w-50-l w-90 h-75 bg-white br4', {
+const ArtModalBody = style('div', 'flex flex-column items-center w-50-l w-90 h-75 bg-white br4 pa3', {
   margin: 'auto',
   top: '50%',
   outline: 0,
