@@ -42,9 +42,13 @@ export const graphqlRoot: Resolvers<Context> = {
       return (await User.findOne({ where: { id: id } })) || null
       // return users.find(user => user.id === id) || null
     },
-    users: async () => {
-      const thing = await User.find()
-      console.log(thing[0].artworkCreated)
+    users: async (_, { ids }) => {
+      let thing
+      if (!ids) {
+        thing = await User.find()
+      } else {
+        thing = await User.createQueryBuilder('User').where('id IN (:ids)', { ids }).getMany()
+      }
       return thing
     },
     nearby: async (_, { loc }) => {
