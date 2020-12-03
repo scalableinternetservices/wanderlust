@@ -42,13 +42,8 @@ const asyncRoute = (fn: RequestHandler) => (...args: Parameters<RequestHandler>)
   fn(args[0], args[1], args[2]).catch(args[2])
 
 server.express.get('/', (req, res) => {
-  const authToken = req.cookies.authToken
-  if (authToken) {
-    console.log('GET /')
-    res.redirect('/app')
-  } else {
-    res.status(403).send('Forbidden')
-  }
+  console.log('GET /')
+  res.redirect('/app/welcome')
 })
 
 server.express.get('/app/*', (req, res) => {

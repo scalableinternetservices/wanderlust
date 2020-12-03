@@ -1,25 +1,24 @@
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
-import { useEffect, useState } from 'react'
 import { check } from '../../../../common/src/util'
+import { PillButton } from '../../style/button'
 import { H1 } from '../../style/header'
 import { Input } from '../../style/input'
-import { style } from '../../style/styled'
 import { AppRouteParams, getWelcomePath } from '../nav/route'
 import { toastErr } from '../toast/toast'
 
 interface SignupPageProps extends RouteComponentProps, AppRouteParams {}
 
 export function Signup(props: SignupPageProps) {
-  const [email, setEmail] = useState('')
-  const [name, setName] = useState('')
-  const [password, setPassword] = useState('')
-  const [err, setError] = useState({ email: false, name: false, password: false })
+  const [email, setEmail] = React.useState('')
+  const [name, setName] = React.useState('')
+  const [password, setPassword] = React.useState('')
+  const [err, setError] = React.useState({ email: false, name: false, password: false })
 
   // reset error when email/name change
-  useEffect(() => setError({ ...err, email: !validateEmail(email) }), [email])
-  useEffect(() => setError({ ...err, name: false }), [name])
-  useEffect(() => setError({ ...err, password: false }), [password])
+  React.useEffect(() => setError({ ...err, email: !validateEmail(email) }), [email])
+  React.useEffect(() => setError({ ...err, name: false }), [name])
+  React.useEffect(() => setError({ ...err, password: false }), [password])
 
   function login() {
     if (!validate(email, name, password, setError)) {
@@ -76,15 +75,13 @@ export function Signup(props: SignupPageProps) {
         />
       </div>
       <div className="flex justify-center mt3">
-        <SignUpButton onClick={login}>Sign Up</SignUpButton>
+        <PillButton $pillColor="purple" onClick={login}>
+          Sign Up
+        </PillButton>
       </div>
     </div>
   )
 }
-
-const SignUpButton = style('a', 'f6 link dim br-pill ph3 pv2 mb2 dib white w-40 tc', {
-  backgroundColor: '#A26EA1',
-})
 
 function validateEmail(email: string) {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/

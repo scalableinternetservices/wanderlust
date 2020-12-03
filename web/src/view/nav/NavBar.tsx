@@ -1,6 +1,5 @@
 import { useLocation } from '@reach/router'
 import * as React from 'react'
-import { useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { useMediaQuery } from 'react-responsive'
 import { breakpoints } from '../../style/breakpoints'
@@ -42,13 +41,13 @@ export function NavBar() {
     setToast(feedback)
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     addToastListener(onToast)
     return () => removeToastListener(onToast)
   }, []) // only call on mount and unmount
 
   // clear toast after 3 secs whenever it changes to a non-empty value
-  useEffect(() => {
+  React.useEffect(() => {
     if (toast) {
       const timeout = setTimeout(() => setToast(null), 3000)
       return () => clearTimeout(timeout)

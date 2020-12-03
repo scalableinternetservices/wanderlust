@@ -1,7 +1,7 @@
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
+import { PillButton } from '../../style/button'
 import { H2 } from '../../style/header'
-import { style } from '../../style/styled'
 import { UserContext } from '../auth/user'
 import { AppRouteParams, getLoginPath, getPath, getSignupPath, Route } from '../nav/route'
 
@@ -23,20 +23,16 @@ export function WelcomePage(props: WelcomePageProps) {
       <img src={require('../../../../public/imgs/logo.svg')} />
       <div className="flex flex-column">
         <div className="flex justify-center">
-          <LoginButton href={href}>Login</LoginButton>
+          <PillButton $pillColor="purple" href={href}>
+            Login
+          </PillButton>
         </div>
         <div className="flex justify-center">
-          <SignUpButton href={getSignupPath()}>Sign Up</SignUpButton>
+          <PillButton $pillColor="white" href={getSignupPath()}>
+            Sign Up
+          </PillButton>
         </div>
       </div>
     </div>
   )
 }
-
-const LoginButton = style('a', 'f6 link dim br-pill ph3 pv2 mb2 dib white w-40 tc', {
-  backgroundColor: '#A26EA1',
-})
-
-const SignUpButton = style('a', 'f6 link dim br-pill ba bw1 ph3 pv2 mb2 dib w-40 tc', {
-  color: '#A26EA1',
-})
