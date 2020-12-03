@@ -11,11 +11,11 @@ interface InputProps {
   $onSubmit?: (val: string) => void
 }
 
-const InputBase = style('input', 'pa2 input-reset ba bg-transparent w-100 measure', (p: InputProps) => ({
+const InputBase = style('input', 'pa2 input-reset bn w-100 measure', (p: InputProps) => ({
   fontFamily: Fonts.sansBody,
-  border: '1px solid ' + (p.$hasError ? Colors.coral : p.$hasSuccess ? Colors.mint : Colors.charcoal),
+  borderBottom: '2px solid ' + (p.$hasError ? Colors.coral : p.$hasSuccess ? Colors.mint : '#A26EA1'),
   ':focus': {
-    border: '1px solid ' + (p.$hasError ? Colors.coral : p.$hasSuccess ? Colors.mint : Colors.charcoal),
+    borderBottom: '2px solid ' + (p.$hasError ? Colors.coral : p.$hasSuccess ? Colors.mint : '#A26EA1'),
   },
 }))
 
