@@ -20,7 +20,7 @@ type Query {
   art (id: Int!): Art
   arts: [Art!]!
   user (id: Int!): User
-  users: [User!]!
+  users (ids: [Int!]): [User!]!
   nearby (loc: LocationInput!): [Art!]!
 }
 
