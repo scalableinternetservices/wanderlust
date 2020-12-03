@@ -3,6 +3,7 @@ import Modal from '@material-ui/core/Modal'
 import Slide from '@material-ui/core/Slide'
 import * as React from 'react'
 import { wanderlustTheme } from '../../../../common/src/theme'
+import { ArtType } from '../../graphql/query.gen'
 import { H1, H3, H4 } from '../../style/header'
 import { Spacer } from '../../style/spacer'
 import { style } from '../../style/styled'
@@ -24,13 +25,19 @@ export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkPr
     handleModalOpen()
   }
 
+  // Actual content of art
+  const thumbnail = type === ArtType.Image ? <ArtThumbnail alt={name} src={uri} /> : ''
+  const content = type === ArtType.Image ? <ArtContent alt={name} src={uri} /> : ''
+
   const localDate = new Date(parseInt(createdAt))
 
   const body = (
     <ArtModalBody>
-      <H1 id="artwork-title">{name}</H1>
+      <H1 style={{ color: wanderlustTheme.colors.primary.colorHex }} id="artwork-title">
+        {name}
+      </H1>
       <Spacer $h3 />
-      <div className="w-90 h5 ba b--light-gray"></div>
+      <ArtContentContainer>{content}</ArtContentContainer>
       <Spacer $h3 />
       <div className="w-90">
         <H3>
@@ -49,7 +56,7 @@ export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkPr
   return (
     <>
       <div onClick={handleClick} className="flex w5-l w-90 h4 br4 mb3 mr4-l ml4-l shadow-4 overflow-hidden relative">
-        <ArtContent />
+        <ArtThumbnailContainer>{thumbnail}</ArtThumbnailContainer>
         <H4 className="w-50 pl2 pr2 self-center tc truncate">{name}</H4>
       </div>
       <Modal
@@ -117,7 +124,21 @@ function createRipple(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
 /* Custom styling */
 
-const ArtContent = style('div', 'avenir f3 w-50 br', { borderRight: 'solid 1px rgba(0, 0, 0, .15)' })
+const ArtThumbnailContainer = style('div', 'avenir f3 w-50 br', {
+  borderRight: 'solid 1px rgba(0, 0, 0, .15)',
+  position: 'relative',
+})
+
+const ArtThumbnail = style('img', 'w-100 h-100', {
+  position: 'absolute',
+  objectFit: 'cover',
+})
+
+const ArtContentContainer = style('div', 'w-90 ba b--light-gray', {
+  overflow: 'auto',
+})
+
+const ArtContent = style('img', 'w-100 h-auto br2', {})
 
 const ArtModalBody = style('div', 'flex flex-column items-center w-50-l w-90 h-75 bg-white br4 pa3', {
   margin: 'auto',

@@ -9,6 +9,6 @@ baseLng = float(sys.argv[2])
 print("insert into `art` (`name`, `locationLat`, `locationLng`, `uri`, `type`, `creatorId`) values")
 for i in range(0, 10):
   for j in range(0, 10):
-    print(f"  ('ART', {baseLat + (i - 5) * 0.01}, {baseLng + (j - 5) * 0.01}, 'www.google.com', 1, 1),")
+    print(f"  ('ART', {baseLat + (i - 5) * 0.01}, {baseLng + (j - 5) * 0.01}, 'https://picsum.photos/id/1025/500/300', 2, 1),")
 
-print(f"  ('ART', {baseLat + 6 * 0.01}, {baseLng + 6 * 0.01}, 'www.google.com', 1, 1);")
+print(f"  ('ART', {baseLat + 6 * 0.01}, {baseLng + 6 * 0.01}, 'https://picsum.photos/id/1025/500/300', 2, 1);")
