@@ -248,6 +248,10 @@ server.express.post(
   })
 )
 
+server.express.get('/sample.txt', (req, res) => {
+  res.send('ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ')
+})
+
 initORM()
   .then(() => migrate())
   .then(() =>
