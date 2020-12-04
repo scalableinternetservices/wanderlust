@@ -12,11 +12,7 @@ import { Login } from './auth/Login'
 import { Signup } from './auth/Signup'
 import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
-import { HomePage } from './page/HomePage'
-import { LecturesPage } from './page/LecturesPage'
 import { MapPage } from './page/MapPage'
-import { PlaygroundPage } from './page/PlaygroundPage'
-import { ProjectsPage } from './page/ProjectsPage'
 import { WelcomePage } from './page/WelcomePage'
 
 const Styletron = require('styletron-engine-monolithic')
@@ -55,14 +51,8 @@ export function AppBody() {
     <>
       <Router className={bodyClass}>
         <Redirect noThrow from="app" to="map" />
-        <Redirect noThrow from="app/playground" to="surveys" />
         <MapPage path={Route.MAP} />
-        <HomePage path={Route.HOME} />
         <WelcomePage path={Route.WELCOME} />
-        <LecturesPage path={Route.LECTURES} />
-        <ProjectsPage path={Route.PROJECTS} />
-        <PlaygroundPage path={Route.PLAYGROUND} />
-        <PlaygroundPage path={Route.PLAYGROUND_APP} />
         <Login path={Route.LOGIN} />
         <Signup path={Route.SIGNUP} />
       </Router>
