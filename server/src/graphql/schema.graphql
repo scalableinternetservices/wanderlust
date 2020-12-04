@@ -18,40 +18,43 @@ type Query {
   # Returns the logged-in user making the query, or null if anonymous.
   self: User
   art (id: Int!): Art
-  arts: [Art!]!
+  arts (checkSeen: Boolean): [Art!]!
   user (id: Int!): User
   users (ids: [Int!]): [User!]!
-  nearby (loc: LocationInput!): [Art!]!
+  nearby (loc: LocationInput!, checkSeen: Boolean): [Art!]!
 }
 
 type Mutation {
   # Adds an user's art
   addArt (art: ArtInput!): Boolean!
+  # Set logged in user as seeing art (from context)
+  seeArt (id: Int!): Boolean!
 }
 
 # type Subscription {}
 
 type User {
   id: Int!
-	username: String!
-	email: String!
-	artworkCreated: [Art!]!
-	artSeen: [Art!]!
+  username: String!
+  email: String!
+  artworkCreated: [Art!]!
+  artSeen: [Art!]!
 }
 
 type Art{
   id: Int!
-	name: String!
-	creatorId: Int!
-	createdAt: String!
-	location: Location!
-	uri: String!
-	type: ArtType!
+  name: String!
+  creatorId: Int!
+  createdAt: String!
+  location: Location!
+  uri: String!
+  type: ArtType!
+  seen: Boolean
 }
 
 type Location{
-	lat: Float!
-	lng: Float!
+  lat: Float!
+  lng: Float!
 }
 
 enum ArtType{
