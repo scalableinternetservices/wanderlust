@@ -81,5 +81,6 @@ body {
   to {
     transform: scale(4);
     opacity: 0;
+    border-radius: 1rem;
   }
 }
