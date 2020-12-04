@@ -1,15 +1,14 @@
 import { useLocation } from '@reach/router'
 import * as React from 'react'
-import { useContext, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { useMediaQuery } from 'react-responsive'
 import { breakpoints } from '../../style/breakpoints'
 import { MenuIcon } from '../../style/icons'
 import { style } from '../../style/styled'
-import { UserContext } from '../auth/user'
+import { logout } from '../auth/logout'
 import { addToastListener, removeToastListener, Toast, ToastType } from '../toast/toast'
 import { link } from './Link'
-import { getLoginPath, getPath, getSurveyPath, Route } from './route'
+import { getPath, getWelcomePath, Route } from './route'
 
 const title = {
   name: 'wanderlust',
@@ -42,13 +41,13 @@ export function NavBar() {
     setToast(feedback)
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     addToastListener(onToast)
     return () => removeToastListener(onToast)
   }, []) // only call on mount and unmount
 
   // clear toast after 3 secs whenever it changes to a non-empty value
-  useEffect(() => {
+  React.useEffect(() => {
     if (toast) {
       const timeout = setTimeout(() => setToast(null), 3000)
       return () => clearTimeout(timeout)
@@ -73,10 +72,14 @@ export function NavBar() {
           {tabs.map((tab, i) => (
             <NavItem key={i} {...tab} />
           ))}
-
+          {!isSmall && (
+            <LogoutButton onClick={() => logout()} href={getWelcomePath()}>
+              logout
+            </LogoutButton>
+          )}
           {isSmall && <NavMenu show={showMenu} onClick={() => setShowMenu(!showMenu)} />}
         </Nav>
-        <SubNav />
+        {/* <SubNav /> */}
       </div>
       {toast && <ToastContainer $isError={toast.type === ToastType.ERROR}>{toast.message}</ToastContainer>}
     </>
@@ -93,6 +96,9 @@ function NavMenu(props: { show: boolean; onClick: () => void }) {
             {otherTabs.map((tab, i) => (
               <NavItem key={i} {...tab} />
             ))}
+            <LogoutButton onClick={() => logout()} href={getWelcomePath()}>
+              logout
+            </LogoutButton>
           </NavMenuModal>
         </Modal>
       )}
@@ -100,20 +106,23 @@ function NavMenu(props: { show: boolean; onClick: () => void }) {
   )
 }
 
-function SubNav() {
-  const location = useLocation()
-  const { user } = useContext(UserContext)
-  if (!location.pathname.startsWith(getPath(Route.PLAYGROUND))) {
-    // only playground has subnav
-    return null
-  }
-  return (
-    <Nav $isSubNav>
-      <NavItem name="surveys" path={getSurveyPath()} />
-      <NavItem name={user ? 'logout' : 'login'} path={getLoginPath()} />
-    </Nav>
-  )
-}
+// function SubNav() {
+//   const location = useLocation()
+//   const { user } = useContext(UserContext)
+//   if (!location.pathname.startsWith(getPath(Route.PLAYGROUND))) {
+//     // only playground has subnav
+//     return null
+//   }
+//   return (
+//     <Nav $isSubNav>
+//       <NavItem name="surveys" path={getSurveyPath()} />
+//       <NavItem name={user ? 'logout' : 'login'} path={getLoginPath()} />
+//       {!user && <NavItem name="signup" path={getSignupPath()} />}
+//     </Nav>
+//   )
+// }
+
+const LogoutButton = style('a', 'link near-white hover-bg-black-10 pa2 br2')
 
 const Nav = style(
   'nav',

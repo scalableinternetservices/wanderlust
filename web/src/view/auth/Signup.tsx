@@ -1,50 +1,45 @@
-import { navigate, RouteComponentProps } from '@reach/router'
+import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { check } from '../../../../common/src/util'
 import { PillButton } from '../../style/button'
 import { H1 } from '../../style/header'
 import { Input } from '../../style/input'
 import { AppRouteParams, getWelcomePath } from '../nav/route'
-import { handleError } from '../toast/error'
 import { toastErr } from '../toast/toast'
-import { UserContext } from './user'
 
-interface LoginPageProps extends RouteComponentProps, AppRouteParams {}
+interface SignupPageProps extends RouteComponentProps, AppRouteParams {}
 
-export function Login(props: LoginPageProps) {
+export function Signup(props: SignupPageProps) {
   const [email, setEmail] = React.useState('')
+  const [name, setName] = React.useState('')
   const [password, setPassword] = React.useState('')
-  const [err, setError] = React.useState({ email: false, password: false })
-  const { user } = React.useContext(UserContext)
+  const [err, setError] = React.useState({ email: false, name: false, password: false })
 
-  // reset error when email/password change
+  // reset error when email/name change
   React.useEffect(() => setError({ ...err, email: !validateEmail(email) }), [email])
+  React.useEffect(() => setError({ ...err, name: false }), [name])
   React.useEffect(() => setError({ ...err, password: false }), [password])
 
   function login() {
-    if (!validate(email, password, setError)) {
-      toastErr('invalid email/password')
+    if (!validate(email, name, password, setError)) {
+      toastErr('invalid email/name/password')
       return
     }
 
-    fetch('/auth/login', {
+    fetch('/auth/createUser', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, name, password }),
     })
       .then(res => {
         check(res.ok, 'response status ' + res.status)
         return res.text()
       })
-      .then(() => window.location.reload())
+      .then(() => window.location.replace('/'))
       .catch(err => {
         toastErr(err.toString())
-        setError({ email: true, password: true })
+        setError({ email: true, name: true, password: true })
       })
-  }
-
-  if (user) {
-    navigate('/app').catch(handleError)
   }
 
   return (
@@ -52,9 +47,9 @@ export function Login(props: LoginPageProps) {
       <a href={getWelcomePath()}>
         <img src={require('../../../../public/imgs/arrowLeft.svg')} className="mb2" />
       </a>
-      <H1 className="flex">log in</H1>
+      <H1 className="flex">sign up</H1>
       <div>
-        <img className="vh-30 mw5" src={require('../../../../public/imgs/login.svg')} />
+        <img className="vh-30 mw5" src={require('../../../../public/imgs/signup.svg')} />
       </div>
       <div className="mt3">
         <Input
@@ -65,6 +60,9 @@ export function Login(props: LoginPageProps) {
           type="email"
           placeholder="email"
         />
+      </div>
+      <div className="mt3">
+        <Input $hasError={err.name} $onChange={setName} $onSubmit={login} name="name" placeholder="name" />
       </div>
       <div className="mt3">
         <Input
@@ -78,7 +76,7 @@ export function Login(props: LoginPageProps) {
       </div>
       <div className="flex justify-center mt3">
         <PillButton $pillColor="purple" onClick={login}>
-          Sign In
+          Sign Up
         </PillButton>
       </div>
     </div>
@@ -92,11 +90,13 @@ function validateEmail(email: string) {
 
 function validate(
   email: string,
+  name: string,
   password: string,
-  setError: React.Dispatch<React.SetStateAction<{ email: boolean; password: boolean }>>
+  setError: React.Dispatch<React.SetStateAction<{ email: boolean; name: boolean; password: boolean }>>
 ) {
   const validEmail = validateEmail(email)
+  const validName = Boolean(name)
   const validPassword = Boolean(password)
-  setError({ email: !validEmail, password: !validPassword })
-  return validEmail && validPassword
+  setError({ email: !validEmail, name: !validName, password: !validPassword })
+  return validEmail && validName && validPassword
 }
