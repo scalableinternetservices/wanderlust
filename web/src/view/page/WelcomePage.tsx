@@ -12,7 +12,7 @@ export function WelcomePage(props: WelcomePageProps) {
   const { user } = React.useContext(UserContext)
   let href = getLoginPath()
   if (user) {
-    href = getPath(Route.HOME)
+    href = getPath(Route.MAP)
   }
   return (
     <div className="flex-column items-center justify-center">

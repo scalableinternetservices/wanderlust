@@ -12,27 +12,19 @@ import { getPath, getWelcomePath, Route } from './route'
 
 const title = {
   name: 'wanderlust',
-  path: getPath(Route.HOME),
+  path: getPath(Route.MAP),
   title: true,
 }
 
-const otherTabs = [
-  {
-    name: 'lectures',
-    path: getPath(Route.LECTURES),
-  },
-  {
-    name: 'projects',
-    path: getPath(Route.PROJECTS),
-  },
-  {
-    name: 'map',
-    path: getPath(Route.MAP),
-  },
-]
+// const otherTabs = [
+//   {
+//     name: 'map',
+//     path: getPath(Route.MAP),
+//   },
+// ]
 
 export function NavBar() {
-  const location = useLocation()
+  // const location = useLocation()
   const isSmall = useMediaQuery(breakpoints.small)
   const [showMenu, setShowMenu] = React.useState(false)
   const [toast, setToast] = React.useState<Toast | null>(null)
@@ -55,7 +47,7 @@ export function NavBar() {
     return void 0
   }, [toast])
 
-  const tabs = isSmall ? [otherTabs.find(t => location.pathname.startsWith(t.path)) || otherTabs[0]] : otherTabs
+  // const tabs = isSmall ? [otherTabs.find(t => location.pathname.startsWith(t.path)) || otherTabs[0]] : otherTabs
 
   return (
     <>
@@ -69,9 +61,9 @@ export function NavBar() {
           {isSmall && <div style={{ flex: 1 }} />}
 
           {/* layout additional tabs (possibly hidden for small screens) */}
-          {tabs.map((tab, i) => (
+          {/* {tabs.map((tab, i) => (
             <NavItem key={i} {...tab} />
-          ))}
+          ))} */}
           {!isSmall && (
             <LogoutButton onClick={() => logout()} href={getWelcomePath()}>
               logout
@@ -93,9 +85,9 @@ function NavMenu(props: { show: boolean; onClick: () => void }) {
       {props.show && (
         <Modal>
           <NavMenuModal>
-            {otherTabs.map((tab, i) => (
+            {/* {otherTabs.map((tab, i) => (
               <NavItem key={i} {...tab} />
-            ))}
+            ))} */}
             <LogoutButton onClick={() => logout()} href={getWelcomePath()}>
               logout
             </LogoutButton>
@@ -105,22 +97,6 @@ function NavMenu(props: { show: boolean; onClick: () => void }) {
     </NavMenuButton>
   )
 }
-
-// function SubNav() {
-//   const location = useLocation()
-//   const { user } = useContext(UserContext)
-//   if (!location.pathname.startsWith(getPath(Route.PLAYGROUND))) {
-//     // only playground has subnav
-//     return null
-//   }
-//   return (
-//     <Nav $isSubNav>
-//       <NavItem name="surveys" path={getSurveyPath()} />
-//       <NavItem name={user ? 'logout' : 'login'} path={getLoginPath()} />
-//       {!user && <NavItem name="signup" path={getSignupPath()} />}
-//     </Nav>
-//   )
-// }
 
 const LogoutButton = style('a', 'link near-white hover-bg-black-10 pa2 br2')
 
