@@ -16,15 +16,7 @@ const title = {
   title: true,
 }
 
-// const otherTabs = [
-//   {
-//     name: 'map',
-//     path: getPath(Route.MAP),
-//   },
-// ]
-
 export function NavBar() {
-  // const location = useLocation()
   const isSmall = useMediaQuery(breakpoints.small)
   const [showMenu, setShowMenu] = React.useState(false)
   const [toast, setToast] = React.useState<Toast | null>(null)
@@ -47,8 +39,6 @@ export function NavBar() {
     return void 0
   }, [toast])
 
-  // const tabs = isSmall ? [otherTabs.find(t => location.pathname.startsWith(t.path)) || otherTabs[0]] : otherTabs
-
   return (
     <>
       <div className="fixed top-0 left-0 w-100 avenir" style={{ zIndex: 2 }}>
@@ -60,10 +50,6 @@ export function NavBar() {
           {/* push tab to the right on small screens */}
           {isSmall && <div style={{ flex: 1 }} />}
 
-          {/* layout additional tabs (possibly hidden for small screens) */}
-          {/* {tabs.map((tab, i) => (
-            <NavItem key={i} {...tab} />
-          ))} */}
           {!isSmall && (
             <LogoutButton onClick={() => logout()} href={getWelcomePath()}>
               logout
@@ -71,7 +57,6 @@ export function NavBar() {
           )}
           {isSmall && <NavMenu show={showMenu} onClick={() => setShowMenu(!showMenu)} />}
         </Nav>
-        {/* <SubNav /> */}
       </div>
       {toast && <ToastContainer $isError={toast.type === ToastType.ERROR}>{toast.message}</ToastContainer>}
     </>
@@ -85,9 +70,6 @@ function NavMenu(props: { show: boolean; onClick: () => void }) {
       {props.show && (
         <Modal>
           <NavMenuModal>
-            {/* {otherTabs.map((tab, i) => (
-              <NavItem key={i} {...tab} />
-            ))} */}
             <LogoutButton onClick={() => logout()} href={getWelcomePath()}>
               logout
             </LogoutButton>
@@ -143,7 +125,6 @@ const ToastContainer = style<'div', { $isError?: boolean }>(
   'div',
   'avenir f5 fixed bottom-0 white right-0 br3 pa3 bg-black-90 mb3 mr4 mr5-ns mr7-l',
   () => ({
-    // color: p.$theme.textColor(p.$isError),
     zIndex: 100,
   })
 )
