@@ -2,9 +2,9 @@ import Backdrop from '@material-ui/core/Backdrop'
 import Modal from '@material-ui/core/Modal'
 import Slide from '@material-ui/core/Slide'
 import * as React from 'react'
-import { wanderlustTheme } from '../../../../common/src/theme'
+import { Colors } from '../../../../common/src/colors'
 import { ArtType } from '../../graphql/query.gen'
-import { H1, H3, H4 } from '../../style/header'
+import { H1, H3 } from '../../style/header'
 import { Spacer } from '../../style/spacer'
 import { style } from '../../style/styled'
 import { ArtworkProps } from './ArtworkProps'
@@ -12,6 +12,7 @@ import { ArtworkProps } from './ArtworkProps'
 export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkProps) {
   // TODO: Fetch art content from S3 using uri property
   const [open, setOpen] = React.useState(false)
+  const [contentStr, setContent] = React.useState('')
 
   const handleModalOpen = () => {
     setOpen(true)
@@ -26,14 +27,35 @@ export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkPr
   }
 
   // Actual content of art
-  const thumbnail = type === ArtType.Image ? <ArtThumbnail alt={name} src={uri} /> : ''
-  const content = type === ArtType.Image ? <ArtContent alt={name} src={uri} /> : ''
+  if (contentStr.length <= 0 && type === ArtType.Text) {
+    fetch(uri)
+      .then(response => response.text())
+      .then(text => setContent(text))
+      .catch(err => console.log(err))
+  }
+
+  const content =
+    type === ArtType.Text ? (
+      <H3 style={{ overflowWrap: 'break-word', wordWrap: 'break-word', hyphens: 'auto' }} className="mw-100">
+        {contentStr}
+      </H3>
+    ) : (
+      <ArtContent alt={name} src={uri} />
+    )
+  const thumbnail =
+    type === ArtType.Text ? (
+      <H3 style={{ color: Colors.wanderlustPrimary }} className="truncate mw-100 pa2">
+        {contentStr}
+      </H3>
+    ) : (
+      <ArtThumbnail alt={name} src={uri} />
+    )
 
   const localDate = new Date(parseInt(createdAt))
 
   const body = (
     <ArtModalBody>
-      <H1 style={{ color: wanderlustTheme.colors.primary.colorHex }} id="artwork-title">
+      <H1 style={{ color: Colors.wanderlustPrimary }} id="artwork-title">
         {name}
       </H1>
       <Spacer $h3 />
@@ -41,13 +63,10 @@ export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkPr
       <Spacer $h3 />
       <div className="w-90">
         <H3>
-          Created By: <span style={{ color: wanderlustTheme.colors.primary.colorHex }}>{createdBy}</span>
+          Created By: <span style={{ color: Colors.wanderlustPrimary }}>{createdBy}</span>
         </H3>
         <H3>
-          Created At:{' '}
-          <span style={{ color: wanderlustTheme.colors.primary.colorHex }}>
-            {localDate.toLocaleDateString('en-us')}
-          </span>
+          Created At: <span style={{ color: Colors.wanderlustPrimary }}>{localDate.toLocaleDateString('en-us')}</span>
         </H3>
       </div>
     </ArtModalBody>
@@ -57,7 +76,7 @@ export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkPr
     <>
       <div onClick={handleClick} className="flex w5-l w-90 h4 br4 mb3 mr4-l ml4-l shadow-4 overflow-hidden relative">
         <ArtThumbnailContainer>{thumbnail}</ArtThumbnailContainer>
-        <H4 className="w-50 pl2 pr2 self-center tc truncate">{name}</H4>
+        <H3 className="w-50 pl2 pr2 self-center tc truncate">{name}</H3>
       </div>
       <Modal
         className="flex items-center justify-center"
@@ -124,7 +143,7 @@ function createRipple(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
 /* Custom styling */
 
-const ArtThumbnailContainer = style('div', 'avenir f3 w-50 br', {
+const ArtThumbnailContainer = style('div', 'flex items-center justify-center avenir f3 w-50 br', {
   borderRight: 'solid 1px rgba(0, 0, 0, .15)',
   position: 'relative',
 })
@@ -132,9 +151,12 @@ const ArtThumbnailContainer = style('div', 'avenir f3 w-50 br', {
 const ArtThumbnail = style('img', 'w-100 h-100', {
   position: 'absolute',
   objectFit: 'cover',
+  wordWrap: 'break-word',
+  overflowWrap: 'break-word',
+  hyphens: 'auto',
 })
 
-const ArtContentContainer = style('div', 'w-90 ba b--light-gray', {
+const ArtContentContainer = style('div', 'w-90 pa1 ba b--light-gray', {
   overflow: 'auto',
 })
 
