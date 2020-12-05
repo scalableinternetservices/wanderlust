@@ -23,17 +23,10 @@ interface Context {
 
 export const graphqlRoot: Resolvers<Context> = {
   Art: {
-    creator: async self => {
-      const c = await Art.findOne({ where: { id: self.id } })
-      const res = await c!.creator
-      return res as any
-    },
+    creator: self => User.findOne({ id: self.creatorId }) as any,
   },
   User: {
-    artworkCreated: async self => {
-      const user = await User.findOne({ where: { id: self.id } })
-      return (await user!.artworkCreated) as any
-    },
+    artworkCreated: self => User.findOne({ where: { id: self.id } }).then(user => user!.artworkCreated) as any,
     artSeen: self => User.findOne({ where: { id: self.id } }).then(user => user!.artSeen) as any,
     artLiked: self => User.findOne({ where: { id: self.id } }).then(user => user!.artLiked) as any,
   },

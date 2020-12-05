@@ -67,6 +67,7 @@ export interface Art {
   id: Scalars['Int']
   name: Scalars['String']
   creator: User
+  creatorId: Scalars['Int']
   createdAt: Scalars['String']
   location: Location
   uri: Scalars['String']
@@ -251,6 +252,7 @@ export type ArtResolvers<
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>
+  creatorId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   location?: Resolver<ResolversTypes['Location'], ParentType, ContextType>
   uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>

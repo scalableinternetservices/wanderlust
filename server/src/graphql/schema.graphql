@@ -46,6 +46,7 @@ type Art{
   id: Int!
   name: String!
   creator: User!
+  creatorId: Int!
   createdAt: String!
   location: Location!
   uri: String!
