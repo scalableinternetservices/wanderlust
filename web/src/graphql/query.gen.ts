@@ -26,6 +26,11 @@ export interface FetchUserContext {
 // GraphQL query operation: FetchNearbyMap
 // ====================================================
 
+export interface FetchNearbyMap_nearby_creator {
+  __typename: "User";
+  username: string;
+}
+
 export interface FetchNearbyMap_nearby_location {
   __typename: "Location";
   lat: number;
@@ -36,7 +41,7 @@ export interface FetchNearbyMap_nearby {
   __typename: "Art";
   id: number;
   createdAt: string;
-  creatorId: number;
+  creator: FetchNearbyMap_nearby_creator;
   name: string;
   location: FetchNearbyMap_nearby_location;
   type: ArtType;

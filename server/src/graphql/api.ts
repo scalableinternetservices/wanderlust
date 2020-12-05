@@ -22,36 +22,33 @@ interface Context {
 }
 
 export const graphqlRoot: Resolvers<Context> = {
-  Query: {
-    self: async (_, args, ctx) => {
-      return ctx.user || null
+  Art: {
+    creator: async self => {
+      const c = await Art.findOne({ where: { id: self.id } })
+      const res = await c!.creator
+      return res as any
     },
+  },
+  User: {
+    artworkCreated: async self => {
+      const user = await User.findOne({ where: { id: self.id } })
+      return (await user!.artworkCreated) as any
+    },
+    artSeen: self => User.findOne({ where: { id: self.id } }).then(user => user!.artSeen) as any,
+    artLiked: self => User.findOne({ where: { id: self.id } }).then(user => user!.artLiked) as any,
+  },
+  Query: {
+    self: (_, args, ctx) => (ctx.user as any) || null,
     art: async (_, { id }) => {
       const thing = (await Art.findOne({ where: { id: id } })) || null
-      console.log(thing)
-      return thing
-      // return arts.find(art => art.id === id) || null
+      return thing as any
     },
-    arts: async (_, { checkSeen }, ctx) => {
-      // BUG: Change this to use art object seen by.
-      // Blocked on decoupling type systems
-
-
-      let response: Art[] = await Art.find({ take: 128 })
-      if (checkSeen) {
-        // This statement requires a semicolon
-        const seenArt: Set<number> = new Set();
-        (await User.findOne())?.artSeen.forEach(art => { seenArt.add(art.id) })
-        response.forEach((art: any) => {
-          art.seen = seenArt.has(art.id)
-        })
-      }
-      return response
+    arts: async (_, args, ctx) => {
+      const response: Art[] = await Art.find({ take: 128 })
+      return response as any
     },
     user: async (_, { id }) => {
-      // We will use this line when the database is updated
-      return (await User.findOne({ where: { id: id } })) || null
-      // return users.find(user => user.id === id) || null
+      return ((await User.findOne({ where: { id: id } })) as any) || null
     },
     users: async (_, { ids }) => {
       let thing
@@ -60,9 +57,9 @@ export const graphqlRoot: Resolvers<Context> = {
       } else {
         thing = await User.createQueryBuilder('User').where('id IN (:ids)', { ids }).getMany()
       }
-      return thing
+      return thing as any
     },
-    nearby: async (_, { loc, checkSeen }) => {
+    nearby: async (_, { loc }) => {
       // This can be made more flexible
       const result = await getManager()
         .createQueryBuilder(Art, 'art')
@@ -72,15 +69,17 @@ export const graphqlRoot: Resolvers<Context> = {
         })
         .limit(25)
         .getMany()
-      if (checkSeen) {
-        // This statement requires a semicolon
-        const seenArt: Set<number> = new Set();
-        (await User.findOne())?.artSeen.forEach(art => { seenArt.add(art.id) })
-        result.forEach((art: any) => {
-          art.seen = seenArt.has(art.id)
-        })
-      }
-      return result
+      // if (checkSeen) {
+      //   // This statement requires a semicolon
+      //   const seenArt: Set<number> = new Set()
+      //   ;(await User.findOne())?.artSeen.forEach(art => {
+      //     seenArt.add(art.id)
+      //   })
+      //   result.forEach((art: any) => {
+      //     art.seen = seenArt.has(art.id)
+      //   })
+      // }
+      return result as any
     },
   },
   Mutation: {
@@ -90,7 +89,7 @@ export const graphqlRoot: Resolvers<Context> = {
       const creator = _ctx.user
       const newArt = new Art()
       newArt.name = name
-      newArt.creator = creator
+      newArt.creator = creator as any
       newArt.location = location
       newArt.numReports = 0
 
@@ -102,7 +101,7 @@ export const graphqlRoot: Resolvers<Context> = {
       return true
     },
     seeArt: async (_, { id }, ctx) => {
-      const user = ctx.user || await User.findOne(1)
+      const user = ctx.user || (await User.findOne(1))
       if (!user) {
         return false
       }
@@ -110,9 +109,9 @@ export const graphqlRoot: Resolvers<Context> = {
       if (!art) {
         return false
       }
-      user.artSeen.push(art)
-      user.save()
+      ;(await user.artSeen).push(art)
+      await user.save()
       return true
-    }
+    },
   },
 }

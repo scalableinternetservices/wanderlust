@@ -33,7 +33,7 @@ export class Art extends BaseEntity {
 
   @ManyToOne(() => User, user => user.artworkCreated)
   @JoinColumn({ name: 'creatorId' })
-  creator: User
+  creator: Promise<User>
 
   @Column({ nullable: false })
   creatorId: number

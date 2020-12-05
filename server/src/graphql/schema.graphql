@@ -18,10 +18,10 @@ type Query {
   # Returns the logged-in user making the query, or null if anonymous.
   self: User
   art (id: Int!): Art
-  arts (checkSeen: Boolean): [Art!]!
+  arts: [Art!]!
   user (id: Int!): User
   users (ids: [Int!]): [User!]!
-  nearby (loc: LocationInput!, checkSeen: Boolean): [Art!]!
+  nearby (loc: LocationInput!): [Art!]!
 }
 
 type Mutation {
@@ -39,12 +39,13 @@ type User {
   email: String!
   artworkCreated: [Art!]!
   artSeen: [Art!]!
+  artLiked: [Art!]!
 }
 
 type Art{
   id: Int!
   name: String!
-  creatorId: Int!
+  creator: User!
   createdAt: String!
   location: Location!
   uri: String!

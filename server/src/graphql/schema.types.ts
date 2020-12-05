@@ -26,10 +26,6 @@ export interface QueryArtArgs {
   id: Scalars['Int']
 }
 
-export interface QueryArtsArgs {
-  checkSeen?: Maybe<Scalars['Boolean']>
-}
-
 export interface QueryUserArgs {
   id: Scalars['Int']
 }
@@ -40,7 +36,6 @@ export interface QueryUsersArgs {
 
 export interface QueryNearbyArgs {
   loc: LocationInput
-  checkSeen?: Maybe<Scalars['Boolean']>
 }
 
 export interface Mutation {
@@ -64,13 +59,14 @@ export interface User {
   email: Scalars['String']
   artworkCreated: Array<Art>
   artSeen: Array<Art>
+  artLiked: Array<Art>
 }
 
 export interface Art {
   __typename?: 'Art'
   id: Scalars['Int']
   name: Scalars['String']
-  creatorId: Scalars['Int']
+  creator: User
   createdAt: Scalars['String']
   location: Location
   uri: Scalars['String']
@@ -187,8 +183,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>
   Int: ResolverTypeWrapper<Scalars['Int']>
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>
   Mutation: ResolverTypeWrapper<{}>
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>
   User: ResolverTypeWrapper<User>
   String: ResolverTypeWrapper<Scalars['String']>
   Art: ResolverTypeWrapper<Art>
@@ -204,8 +200,8 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Query: {}
   Int: Scalars['Int']
-  Boolean: Scalars['Boolean']
   Mutation: {}
+  Boolean: Scalars['Boolean']
   User: User
   String: Scalars['String']
   Art: Art
@@ -221,7 +217,7 @@ export type QueryResolvers<
 > = {
   self?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
   art?: Resolver<Maybe<ResolversTypes['Art']>, ParentType, ContextType, RequireFields<QueryArtArgs, 'id'>>
-  arts?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType, RequireFields<QueryArtsArgs, never>>
+  arts?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, never>>
   nearby?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType, RequireFields<QueryNearbyArgs, 'loc'>>
@@ -244,6 +240,7 @@ export type UserResolvers<
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   artworkCreated?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
   artSeen?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
+  artLiked?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 
@@ -253,7 +250,7 @@ export type ArtResolvers<
 > = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
-  creatorId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   location?: Resolver<ResolversTypes['Location'], ParentType, ContextType>
   uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>

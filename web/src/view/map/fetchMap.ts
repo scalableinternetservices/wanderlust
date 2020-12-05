@@ -5,7 +5,9 @@ export const fetchMap = gql`
     nearby(loc: $loc) {
       id
       createdAt
-      creatorId
+      creator {
+        username
+      }
       name
       location {
         lat

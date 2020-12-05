@@ -7,7 +7,7 @@ import {
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
 } from 'typeorm'
 import { Art } from './Art'
 
@@ -35,18 +35,18 @@ export class User extends BaseEntity /*implements GraphqlUser*/ {
   email: string
 
   @Column({
-    nullable: false
+    nullable: false,
   })
   password: string
 
-  @OneToMany(() => Art, art => art.creator, { eager: true })
-  artworkCreated!: Art[]
+  @OneToMany(() => Art, art => art.creator)
+  artworkCreated: Promise<Art[]>
+
+  @ManyToMany(() => Art)
+  @JoinTable()
+  artLiked: Promise<Art[]>
 
   @ManyToMany(() => Art, { eager: true })
   @JoinTable()
-  artLiked!: Art[]
-
-  @ManyToMany(() => Art, { eager: true })
-  @JoinTable()
-  artSeen!: Art[]
+  artSeen: Promise<Art[]>
 }
