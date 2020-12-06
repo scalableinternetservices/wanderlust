@@ -40,7 +40,7 @@ server.express.get('/', (req, res) => {
 })
 
 server.express.get('/app/*', (req, res) => {
-  const authToken = req.cookies.authToken
+  const authToken = req.cookies.authToken || req.header('x-authtoken')
   if (req.url == '/app/welcome' || req.url == '/app/login' || req.url == '/app/signup' || authToken) {
     console.log('GET /app')
     // Check whether or not to run background process
@@ -114,7 +114,7 @@ server.express.post(
   '/auth/logout',
   asyncRoute(async (req, res) => {
     console.log('POST /auth/logout')
-    const authToken = req.cookies.authToken
+    const authToken = req.cookies.authToken || req.header('x-authtoken')
     if (authToken) {
       await Session.delete({ authToken })
     }
