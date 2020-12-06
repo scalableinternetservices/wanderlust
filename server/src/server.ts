@@ -46,10 +46,6 @@ server.express.get('/app/*', (req, res) => {
   const authToken = req.cookies.authToken || req.header('x-authtoken')
   if (req.url == '/app/welcome' || req.url == '/app/login' || req.url == '/app/signup' || authToken) {
     console.log('GET /app')
-
-    // Uncomment this line to test performance with background process
-    runBackgroundProcess()
-
     renderApp(req, res, server.executableSchema)
   } else {
     res.status(403).send('Forbidden')
@@ -290,15 +286,3 @@ initORM()
     )
   )
   .catch(err => console.error(err))
-
-// Background process that incrementally runs a computation
-// Uncomment this function to test performance with background process
-function runBackgroundProcess() {
-  setInterval(() => {
-    for (let i = 0; i < 10; i++) {
-      const data =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ'
-      require('crypto').createHash('sha256').update(data).digest('base64')
-    }
-  }, 100)
-}
