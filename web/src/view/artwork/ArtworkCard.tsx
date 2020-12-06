@@ -4,13 +4,16 @@ import Slide from '@material-ui/core/Slide'
 import * as React from 'react'
 import { Colors } from '../../../../common/src/colors'
 import { ArtType } from '../../graphql/query.gen'
+import { PillButton } from '../../style/button'
 import { H1, H3 } from '../../style/header'
 import { Spacer } from '../../style/spacer'
 import { style } from '../../style/styled'
 import { ArtworkProps } from './ArtworkProps'
 
 export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkProps) {
-  // TODO: Fetch art content from S3 using uri property
+  // Uncomment this line to test performance while a background process is running
+  runBackgroundProcess()
+
   const [open, setOpen] = React.useState(false)
   const [contentStr, setContent] = React.useState('')
 
@@ -55,20 +58,24 @@ export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkPr
 
   const body = (
     <ArtModalBody>
-      <H1 style={{ color: Colors.wanderlustPrimary }} id="artwork-title">
-        {name}
-      </H1>
-      <Spacer $h3 />
-      <ArtContentContainer>{content}</ArtContentContainer>
-      <Spacer $h3 />
-      <div className="w-90">
-        <H3>
-          Created By: <span style={{ color: Colors.wanderlustPrimary }}>{createdBy}</span>
-        </H3>
-        <H3>
-          Created At: <span style={{ color: Colors.wanderlustPrimary }}>{localDate.toLocaleDateString('en-us')}</span>
-        </H3>
+      <div className="w-90 flex flex-column items-center">
+        <H1 style={{ color: Colors.wanderlustPrimary }} id="artwork-title">
+          {name}
+        </H1>
+        <Spacer $h3 />
+        <ArtContentContainer>{content}</ArtContentContainer>
+        <Spacer $h3 />
+        <div>
+          <H3>
+            Created By: <span style={{ color: Colors.wanderlustPrimary }}>{createdBy}</span>
+          </H3>
+          <H3>
+            Created At: <span style={{ color: Colors.wanderlustPrimary }}>{localDate.toLocaleDateString('en-us')}</span>
+          </H3>
+        </div>
+        <Spacer $h4 />
       </div>
+      <PillButton $pillColor="purple">Mark as visited</PillButton>
     </ArtModalBody>
   )
 
@@ -158,12 +165,24 @@ const ArtThumbnail = style('img', 'w-100 h-100', {
 
 const ArtContentContainer = style('div', 'w-90 pa1 ba b--light-gray', {
   overflow: 'auto',
+  maxHeight: '50%',
 })
 
 const ArtContent = style('img', 'w-100 h-auto br2', {})
 
-const ArtModalBody = style('div', 'flex flex-column items-center w-50-l w-90 h-75 bg-white br4 pa3', {
+const ArtModalBody = style('div', 'flex flex-column items-center justify-between w-50-l w-90 bg-white br4 pa3', {
   margin: 'auto',
   top: '50%',
+  minHeight: '50%',
+  maxHeight: '100%',
   outline: 0,
+  overflow: 'auto',
 })
+
+// Background process that incrementally runs a computation
+function runBackgroundProcess() {
+  setInterval(() => {
+    const data = 'hash-me'
+    require('crypto').createHash('sha256').update(data).digest('base64')
+  }, 100)
+}
