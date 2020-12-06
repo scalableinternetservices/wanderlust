@@ -46,10 +46,10 @@ server.express.get('/app/*', (req, res) => {
   const authToken = req.cookies.authToken || req.header('x-authtoken')
   if (req.url == '/app/welcome' || req.url == '/app/login' || req.url == '/app/signup' || authToken) {
     console.log('GET /app')
-    // Check whether or not to run background process
-    if (req.url === '/app/welcome') {
-      console.log(req.params)
-    }
+
+    // Uncomment this line to test performance with background process
+    runBackgroundProcess()
+
     renderApp(req, res, server.executableSchema)
   } else {
     res.status(403).send('Forbidden')
@@ -247,7 +247,7 @@ server.express.post(
     const authToken = req.cookies.authToken || req.header('x-authtoken')
     if (authToken) {
       console.log(beeline.traceActive())
-      let span = beeline.startSpan({
+      const span = beeline.startSpan({
         name: 'Get Session',
       })
       const cachedSession = await redis.get(authToken)
@@ -255,7 +255,7 @@ server.express.post(
       if (cachedSession) {
         session = JSON.parse(cachedSession) as Session
       } else {
-        session = session || await Session.findOne({ where: { authToken }, relations: ['user'] })
+        session = session || (await Session.findOne({ where: { authToken }, relations: ['user'] }))
         await redis.set(authToken, JSON.stringify(session), 'EX', 15)
       }
       if (session) {
@@ -290,3 +290,15 @@ initORM()
     )
   )
   .catch(err => console.error(err))
+
+// Background process that incrementally runs a computation
+// Uncomment this function to test performance with background process
+function runBackgroundProcess() {
+  setInterval(() => {
+    for (let i = 0; i < 10; i++) {
+      const data =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      require('crypto').createHash('sha256').update(data).digest('base64')
+    }
+  }, 100)
+}
