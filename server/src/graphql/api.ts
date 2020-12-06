@@ -32,10 +32,21 @@ export const graphqlRoot: Resolvers<Context> = {
       return thing
       // return arts.find(art => art.id === id) || null
     },
-    arts: async () => {
-      const thing = await Art.find()
-      console.log(thing)
-      return thing
+    arts: async (_, { checkSeen }, ctx) => {
+      // BUG: Change this to use art object seen by.
+      // Blocked on decoupling type systems
+
+
+      let response: Art[] = await Art.find({ take: 128 })
+      if (checkSeen) {
+        // This statement requires a semicolon
+        const seenArt: Set<number> = new Set();
+        (await User.findOne())?.artSeen.forEach(art => { seenArt.add(art.id) })
+        response.forEach((art: any) => {
+          art.seen = seenArt.has(art.id)
+        })
+      }
+      return response
     },
     user: async (_, { id }) => {
       // We will use this line when the database is updated
@@ -51,7 +62,7 @@ export const graphqlRoot: Resolvers<Context> = {
       }
       return thing
     },
-    nearby: async (_, { loc }) => {
+    nearby: async (_, { loc, checkSeen }) => {
       // This can be made more flexible
       const result = await getManager()
         .createQueryBuilder(Art, 'art')
@@ -61,6 +72,14 @@ export const graphqlRoot: Resolvers<Context> = {
         })
         .limit(25)
         .getMany()
+      if (checkSeen) {
+        // This statement requires a semicolon
+        const seenArt: Set<number> = new Set();
+        (await User.findOne())?.artSeen.forEach(art => { seenArt.add(art.id) })
+        result.forEach((art: any) => {
+          art.seen = seenArt.has(art.id)
+        })
+      }
       return result
     },
   },
@@ -82,5 +101,18 @@ export const graphqlRoot: Resolvers<Context> = {
       await newArt.save({ reload: false, transaction: false })
       return true
     },
+    seeArt: async (_, { id }, ctx) => {
+      const user = ctx.user || await User.findOne(1)
+      if (!user) {
+        return false
+      }
+      const art = await Art.findOne(id)
+      if (!art) {
+        return false
+      }
+      user.artSeen.push(art)
+      user.save()
+      return true
+    }
   },
 }

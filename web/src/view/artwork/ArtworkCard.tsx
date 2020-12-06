@@ -2,13 +2,17 @@ import Backdrop from '@material-ui/core/Backdrop'
 import Modal from '@material-ui/core/Modal'
 import Slide from '@material-ui/core/Slide'
 import * as React from 'react'
-import { H4 } from '../../style/header'
+import { Colors } from '../../../../common/src/colors'
+import { ArtType } from '../../graphql/query.gen'
+import { H1, H3 } from '../../style/header'
+import { Spacer } from '../../style/spacer'
 import { style } from '../../style/styled'
 import { ArtworkProps } from './ArtworkProps'
 
-export function ArtworkCard({ name, type, uri }: ArtworkProps) {
+export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkProps) {
   // TODO: Fetch art content from S3 using uri property
   const [open, setOpen] = React.useState(false)
+  const [contentStr, setContent] = React.useState('')
 
   const handleModalOpen = () => {
     setOpen(true)
@@ -22,18 +26,57 @@ export function ArtworkCard({ name, type, uri }: ArtworkProps) {
     handleModalOpen()
   }
 
+  // Actual content of art
+  if (contentStr.length <= 0 && type === ArtType.Text) {
+    fetch(uri)
+      .then(response => response.text())
+      .then(text => setContent(text))
+      .catch(err => console.log(err))
+  }
+
+  const content =
+    type === ArtType.Text ? (
+      <H3 style={{ overflowWrap: 'break-word', wordWrap: 'break-word', hyphens: 'auto' }} className="mw-100">
+        {contentStr}
+      </H3>
+    ) : (
+      <ArtContent alt={name} src={uri} />
+    )
+  const thumbnail =
+    type === ArtType.Text ? (
+      <H3 style={{ color: Colors.wanderlustPrimary }} className="truncate mw-100 pa2">
+        {contentStr}
+      </H3>
+    ) : (
+      <ArtThumbnail alt={name} src={uri} />
+    )
+
+  const localDate = new Date(parseInt(createdAt))
+
   const body = (
     <ArtModalBody>
-      <h2 id="simple-modal-title">Text in a modal</h2>
-      <p id="simple-modal-description">Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
+      <H1 style={{ color: Colors.wanderlustPrimary }} id="artwork-title">
+        {name}
+      </H1>
+      <Spacer $h3 />
+      <ArtContentContainer>{content}</ArtContentContainer>
+      <Spacer $h3 />
+      <div className="w-90">
+        <H3>
+          Created By: <span style={{ color: Colors.wanderlustPrimary }}>{createdBy}</span>
+        </H3>
+        <H3>
+          Created At: <span style={{ color: Colors.wanderlustPrimary }}>{localDate.toLocaleDateString('en-us')}</span>
+        </H3>
+      </div>
     </ArtModalBody>
   )
 
   return (
     <>
       <div onClick={handleClick} className="flex w5-l w-90 h4 br4 mb3 mr4-l ml4-l shadow-4 overflow-hidden relative">
-        <ArtContent />
-        <H4 className="w-50 pl2 pr2 self-center tc truncate">{name}</H4>
+        <ArtThumbnailContainer>{thumbnail}</ArtThumbnailContainer>
+        <H3 className="w-50 pl2 pr2 self-center tc truncate">{name}</H3>
       </div>
       <Modal
         className="flex items-center justify-center"
@@ -47,7 +90,7 @@ export function ArtworkCard({ name, type, uri }: ArtworkProps) {
           timeout: 500,
         }}
       >
-        <Slide timeout={{ appear: 600, enter: 400, exit: 300 }} direction="up" in={open} mountOnEnter unmountOnExit>
+        <Slide direction="up" in={open} mountOnEnter unmountOnExit>
           {body}
         </Slide>
       </Modal>
@@ -100,9 +143,26 @@ function createRipple(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
 /* Custom styling */
 
-const ArtContent = style('div', 'avenir f3 w-50 br', { borderRight: 'solid 1px rgba(0, 0, 0, .15)' })
+const ArtThumbnailContainer = style('div', 'flex items-center justify-center avenir f3 w-50 br', {
+  borderRight: 'solid 1px rgba(0, 0, 0, .15)',
+  position: 'relative',
+})
 
-const ArtModalBody = style('div', 'flex flex-column items-center w-50-l w-90 h-75 bg-white br4', {
+const ArtThumbnail = style('img', 'w-100 h-100', {
+  position: 'absolute',
+  objectFit: 'cover',
+  wordWrap: 'break-word',
+  overflowWrap: 'break-word',
+  hyphens: 'auto',
+})
+
+const ArtContentContainer = style('div', 'w-90 pa1 ba b--light-gray', {
+  overflow: 'auto',
+})
+
+const ArtContent = style('img', 'w-100 h-auto br2', {})
+
+const ArtModalBody = style('div', 'flex flex-column items-center w-50-l w-90 h-75 bg-white br4 pa3', {
   margin: 'auto',
   top: '50%',
   outline: 0,

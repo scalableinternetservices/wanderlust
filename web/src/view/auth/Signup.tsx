@@ -35,7 +35,7 @@ export function Signup(props: SignupPageProps) {
         check(res.ok, 'response status ' + res.status)
         return res.text()
       })
-      .then(() => window.location.replace('/'))
+      .then(() => window.location.replace('/app/map'))
       .catch(err => {
         toastErr(err.toString())
         setError({ email: true, name: true, password: true })
