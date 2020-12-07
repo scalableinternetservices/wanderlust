@@ -1,5 +1,3 @@
-import * as React from 'react'
-import { useState } from 'react'
 // import { UserContext } from './user'
 // import ImageUploader from 'react-images-upload'
 
@@ -9,11 +7,8 @@ export function Upload(){
 
   function upload () {
 
-  }
 
   return (
     <input type="file" name="file" onChange={this.onChangeHandler}/>
   )
 
-
-}
