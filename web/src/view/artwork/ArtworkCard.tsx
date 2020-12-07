@@ -8,7 +8,7 @@ import { PillButton } from '../../style/button'
 import { H1, H3 } from '../../style/header'
 import { Spacer } from '../../style/spacer'
 import { style } from '../../style/styled'
-import { ArtworkHandlerProps, ArtworkProps } from './ArtworkProps'
+import { ArtworkCardProps, ArtworkProps } from './ArtworkProps'
 
 export function ArtworkCard({
   id,
@@ -18,7 +18,8 @@ export function ArtworkCard({
   type,
   uri,
   markSeen,
-}: ArtworkProps & ArtworkHandlerProps) {
+  $seen,
+}: ArtworkProps & ArtworkCardProps) {
   const [open, setOpen] = React.useState(false)
   const [contentStr, setContent] = React.useState('')
 
@@ -92,12 +93,14 @@ export function ArtworkCard({
     </ArtModalBody>
   )
 
+  const ArtworkCardContainer = getArtworkCardContainer($seen)
+
   return (
     <>
-      <div onClick={handleClick} className="flex w5-l w-90 h4 br4 mb3 mr4-l ml4-l shadow-4 overflow-hidden relative">
+      <ArtworkCardContainer onClick={handleClick}>
         <ArtThumbnailContainer>{thumbnail}</ArtThumbnailContainer>
         <H3 className="w-50 pl2 pr2 self-center tc truncate">{name}</H3>
-      </div>
+      </ArtworkCardContainer>
       <Modal
         className="flex items-center justify-center"
         open={open}
@@ -162,6 +165,21 @@ function createRipple(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 }
 
 /* Custom styling */
+function getArtworkCardContainer(seen = false) {
+  const rgbaVal = hexToRgba(Colors.wanderlustPrimary, 0.5)
+  const color = seen ? rgbaVal : 'rgba( 0, 0, 0, 0.2 )'
+
+  return style('div', 'flex w5-l w-90 h4 br4 mb3 mr4-l ml4-l overflow-hidden relative', {
+    boxShadow: '2px 2px 8px 0px ' + color,
+  })
+}
+
+function hexToRgba(hex: string, alpha: number) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  return result
+    ? `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, ${alpha})`
+    : null
+}
 
 const ArtThumbnailContainer = style('div', 'flex items-center justify-center avenir f3 w-50 br', {
   borderRight: 'solid 1px rgba(0, 0, 0, .15)',

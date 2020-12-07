@@ -38,13 +38,13 @@ interface ClientMapProps {
 }
 
 function ClientMap({ Leaflet, L, location, artworks }: ClientMapProps) {
+  // custom icon setup
   const iconOptions: L.BaseIconOptions = {
-    iconUrl:
-      'https://github.com/scalableinternetservices/wanderlust/blob/master/web/src/view/map/images/pink-star.png?raw=true',
-    iconSize: [41, 41],
+    iconUrl: 'https://github.com/scalableinternetservices/wanderlust/blob/master/public/imgs/map-icon.png?raw=true',
+    iconSize: [30, 41],
     iconAnchor: [12, 41],
+    popupAnchor: [4, 0],
   }
-
   const personIcon = new L.Icon(iconOptions)
 
   return (
@@ -56,13 +56,14 @@ function ClientMap({ Leaflet, L, location, artworks }: ClientMapProps) {
       {artworks.map(art => {
         if (art.seen) {
           iconOptions.iconUrl =
-            'https://github.com/scalableinternetservices/wanderlust/blob/master/web/src/view/map/images/purple-star.png?raw=true'
-          iconOptions.iconSize = [41, 41]
+            'https://github.com/scalableinternetservices/wanderlust/blob/master/public/imgs/purple-star.png?raw=true'
         } else {
           iconOptions.iconUrl =
-            'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png'
-          iconOptions.iconSize = [25, 41]
+            'https://github.com/scalableinternetservices/wanderlust/blob/master/public/imgs/gray-star.png?raw=true'
         }
+        iconOptions.iconSize = [41, 41]
+        iconOptions.popupAnchor = [8, 0]
+
         return (
           <Leaflet.Marker icon={new L.Icon(iconOptions)} position={[art.location.lat, art.location.lng]} key={art.id}>
             <Leaflet.Popup>{art.name}</Leaflet.Popup>

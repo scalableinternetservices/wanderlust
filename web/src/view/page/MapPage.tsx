@@ -56,8 +56,6 @@ export function MapPage(props: MapPageProps) {
 
   const loadingText = loading_nearby ? <div>loading...</div> : null
 
-  console.log(data_nearby)
-
   if (data_nearby && data_nearby?.nearby.length > 0 && artworks.length <= 0) {
     setArtworks(
       data_nearby.nearby.map(
@@ -80,7 +78,12 @@ export function MapPage(props: MapPageProps) {
     !artworks || artworks.length === 0 ? (
       <div className="f4 avenir pl2">no artwork nearby!</div>
     ) : (
-      artworks.map(art => <ArtworkCard key={art.id} markSeen={markSeen} {...art} />)
+      artworks.map(art => {
+        if (art.seen) {
+          return <ArtworkCard $seen key={art.id} markSeen={markSeen} {...art} />
+        }
+        return <ArtworkCard key={art.id} markSeen={markSeen} {...art} />
+      })
     )
 
   return (
@@ -90,7 +93,7 @@ export function MapPage(props: MapPageProps) {
       <Spacer $h4 />
       <Map
         getLocation={() => location}
-        updateLocation={(lat: number, lng: number) => setLocation({ lat: lat, lng: lng })}
+        updateLocation={(lat: number, lng: number) => setLocation({ lat, lng })}
         artworks={artworks}
       />
 
