@@ -3,9 +3,6 @@ import { createConnection } from 'typeorm'
 import { Art } from '../entities/Art'
 import { Location } from '../entities/Location'
 import { Session } from '../entities/Session'
-import { Survey } from '../entities/Survey'
-import { SurveyAnswer } from '../entities/SurveyAnswer'
-import { SurveyQuestion } from '../entities/SurveyQuestion'
 import { User } from '../entities/User'
 
 const baseConfig = {
@@ -22,7 +19,7 @@ export async function initORM() {
     username: process.env.MYSQL_USER || 'root',
     synchronize: true,
     logging: false,
-    entities: [User, Session, Survey, SurveyQuestion, SurveyAnswer, Art, Location],
+    entities: [User, Session, Art, Location],
     legacySpatialSupport: false,
     extra: {
       connectionLimit: 5,

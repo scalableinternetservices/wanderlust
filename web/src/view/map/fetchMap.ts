@@ -4,6 +4,9 @@ export const fetchMap = gql`
   query FetchNearbyMap($loc: LocationInput!) {
     nearby(loc: $loc) {
       id
+      createdAt
+      creatorId
+      seen
       name
       location {
         lat
@@ -11,6 +14,13 @@ export const fetchMap = gql`
       }
       type
       uri
+    }
+  }
+`
+export const fetchCreatedBy = gql`
+  query FetchUserName($ids: [Int!]) {
+    users(ids: $ids) {
+      username
     }
   }
 `

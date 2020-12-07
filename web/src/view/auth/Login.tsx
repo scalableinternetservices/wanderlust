@@ -1,22 +1,25 @@
+import { navigate, RouteComponentProps } from '@reach/router'
 import * as React from 'react'
-import { useContext, useEffect, useState } from 'react'
 import { check } from '../../../../common/src/util'
-import { Button } from '../../style/button'
+import { PillButton } from '../../style/button'
+import { H1 } from '../../style/header'
 import { Input } from '../../style/input'
-import { Spacer } from '../../style/spacer'
+import { AppRouteParams, getWelcomePath } from '../nav/route'
 import { handleError } from '../toast/error'
 import { toastErr } from '../toast/toast'
 import { UserContext } from './user'
 
-export function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [err, setError] = useState({ email: false, password: false })
-  const { user } = useContext(UserContext)
+interface LoginPageProps extends RouteComponentProps, AppRouteParams {}
+
+export function Login(props: LoginPageProps) {
+  const [email, setEmail] = React.useState('')
+  const [password, setPassword] = React.useState('')
+  const [err, setError] = React.useState({ email: false, password: false })
+  const { user } = React.useContext(UserContext)
 
   // reset error when email/password change
-  useEffect(() => setError({ ...err, email: !validateEmail(email) }), [email])
-  useEffect(() => setError({ ...err, password: false }), [password])
+  React.useEffect(() => setError({ ...err, email: !validateEmail(email) }), [email])
+  React.useEffect(() => setError({ ...err, password: false }), [password])
 
   function login() {
     if (!validate(email, password, setError)) {
@@ -41,48 +44,44 @@ export function Login() {
   }
 
   if (user) {
-    return <Logout />
+    navigate('/app').catch(handleError)
   }
 
   return (
-    <>
-      <div className="mt3">
-        <label className="db fw4 lh-copy f6" htmlFor="email">
-          Email address
-        </label>
-        <Input $hasError={err.email} $onChange={setEmail} $onSubmit={login} name="email" type="email" />
+    <div className="flex-column items-center justify-center pl4 pr4">
+      <a href={getWelcomePath()}>
+        <img src={require('../../../../public/imgs/arrowLeft.svg')} className="mb2" />
+      </a>
+      <H1 className="flex">log in</H1>
+      <div>
+        <img className="vh-30 mw5" src={require('../../../../public/imgs/login.svg')} />
       </div>
       <div className="mt3">
-        <label className="db fw4 lh-copy f6" htmlFor="password">
-          Password
-        </label>
-        <Input $hasError={err.password} $onChange={setPassword} $onSubmit={login} name="password" type="password" />
+        <Input
+          $hasError={err.email}
+          $onChange={setEmail}
+          $onSubmit={login}
+          name="email"
+          type="email"
+          placeholder="email"
+        />
       </div>
       <div className="mt3">
-        <Button onClick={login}>Sign In</Button>
+        <Input
+          $hasError={err.password}
+          $onChange={setPassword}
+          $onSubmit={login}
+          name="password"
+          type="password"
+          placeholder="password"
+        />
       </div>
-    </>
-  )
-}
-
-function Logout() {
-  function logout() {
-    return fetch('/auth/logout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then(res => {
-        check(res.ok, 'response status ' + res.status)
-        window.location.reload()
-      })
-      .catch(handleError)
-  }
-
-  return (
-    <>
-      <Spacer $h5 />
-      <Button onClick={logout}>Logout</Button>
-    </>
+      <div className="flex justify-center mt3">
+        <PillButton $pillColor="purple" onClick={login}>
+          Sign In
+        </PillButton>
+      </div>
+    </div>
   )
 }
 
@@ -98,7 +97,6 @@ function validate(
 ) {
   const validEmail = validateEmail(email)
   const validPassword = Boolean(password)
-  console.log('valid', validEmail, validPassword)
   setError({ email: !validEmail, password: !validPassword })
   return validEmail && validPassword
 }

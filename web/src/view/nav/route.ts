@@ -5,37 +5,23 @@
  * Some routes are special values that map to one of the other routes depending on current location context.
  */
 export enum Route {
-  HOME = 'app/index',
-  LECTURES = 'app/lectures',
-  PROJECTS = 'app/projects',
-  PLAYGROUND = 'app/playground',
-  PLAYGROUND_APP = 'app/playground/:app',
+  WELCOME = 'app/welcome',
+  LOGIN = 'app/login',
+  SIGNUP = 'app/signup',
   UPLOAD = 'app/upload',
-  WELCOME = 'welcome',
   MAP = 'app/map',
 }
 
-export enum PlaygroundApp {
-  SURVEYS = 'surveys',
-  LOGIN = 'login',
-  SIGNUP = 'signup',
-}
-
-export function getSurveyPath(surveyId?: number) {
-  const path = getPath(Route.PLAYGROUND_APP, { app: PlaygroundApp.SURVEYS })
-  return path + (surveyId ? `?surveyId=${surveyId}` : '')
-}
-
 export function getLoginPath() {
-  return getPath(Route.PLAYGROUND_APP, { app: PlaygroundApp.LOGIN })
+  return getPath(Route.LOGIN)
 }
 
 export function getSignupPath() {
-  return getPath(Route.PLAYGROUND_APP, { app: PlaygroundApp.SIGNUP })
+  return getPath(Route.SIGNUP)
 }
 
-export function getPlaygroundPath() {
-  return getPath(Route.PLAYGROUND)
+export function getWelcomePath() {
+  return getPath(Route.WELCOME)
 }
 
 /**
@@ -70,7 +56,6 @@ export function getPath(route: Route, arg?: Partial<ReturnType<typeof routeParam
  */
 export interface AppRouteParams {
   userId?: string
-  app?: PlaygroundApp
 }
 
 /**
@@ -79,6 +64,5 @@ export interface AppRouteParams {
 export function routeParams(params: AppRouteParams) {
   return {
     userId: Number(params.userId || 0),
-    app: params.app,
   }
 }

@@ -8,6 +8,7 @@ export interface ButtonProps {
   $width?: number
   $small?: boolean
   $block?: boolean
+  $pillColor: 'purple' | 'white'
 }
 
 type Props = ButtonProps & JSX.IntrinsicElements['a']
@@ -15,6 +16,25 @@ type Props = ButtonProps & JSX.IntrinsicElements['a']
 export const Button: React.FC<Props> = (props: Props) => {
   return <ButtonBase {...props} />
 }
+
+export const PillButton = style<'a', ButtonProps>('a', 'f6 link dim br-pill ph3 pv2 mb2 dib w-50 tc', p => {
+  const { $pillColor } = p
+
+  if ($pillColor == 'purple') {
+    return {
+      backgroundColor: Colors.wanderlustPrimary,
+      color: Colors.white,
+      fontFamily: 'poppins',
+    }
+  } else {
+    return {
+      color: Colors.wanderlustPrimary,
+      borderStyle: 'solid',
+      borderWidth: '.125rem',
+      fontFamily: 'poppins',
+    }
+  }
+})
 
 const ButtonBase = style<'a', ButtonProps>('a', 'pointer link dim br3 ph3 pv2 black', p => {
   // return {}

@@ -36,12 +36,17 @@ const asyncRoute = (fn: RequestHandler) => (...args: Parameters<RequestHandler>)
 
 server.express.get('/', (req, res) => {
   console.log('GET /')
-  res.redirect('/app')
+  res.redirect('/app/welcome')
 })
 
 server.express.get('/app/*', (req, res) => {
-  console.log('GET /app')
-  renderApp(req, res, server.executableSchema)
+  const authToken = req.cookies.authToken
+  if (req.url == '/app/welcome' || req.url == '/app/login' || req.url == '/app/signup' || authToken) {
+    console.log('GET /app')
+    renderApp(req, res, server.executableSchema)
+  } else {
+    res.status(403).send('Forbidden')
+  }
 })
 
 const SESSION_DURATION = 30 * 24 * 60 * 60 * 1000 // 30 days
@@ -54,6 +59,7 @@ server.express.post(
     let user = new User()
     user.email = req.body.email
     user.username = req.body.name
+    user.password = req.body.password
 
     // save the User model to the database, refresh `user` to get ID
     user = await user.save()
@@ -73,8 +79,8 @@ server.express.post(
     const email = req.body.email
     const password = req.body.password
 
-    const user = await User.findOne({ where: { email } })
-    if (!user || password !== Config.adminPassword) {
+    const user = await User.findOne({ email, password })
+    if (!user) {
       res.status(403).send('Forbidden')
       return
     }
@@ -241,6 +247,12 @@ server.express.post(
     next()
   })
 )
+
+server.express.get('/sample.txt', (req, res) => {
+  res.send(
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  )
+})
 
 initORM()
   .then(() => migrate())

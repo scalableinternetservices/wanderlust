@@ -8,14 +8,17 @@ import { getApolloClient } from '../graphql/apolloClient'
 import { FetchUserContext } from '../graphql/query.gen'
 import { style } from '../style/styled'
 import { fetchUser } from './auth/fetchUser'
+import { Login } from './auth/Login'
+import { Signup } from './auth/Signup'
 import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
-import { HomePage } from './page/HomePage'
-import { LecturesPage } from './page/LecturesPage'
 import { MapPage } from './page/MapPage'
+<<<<<<< HEAD
 import { PlaygroundPage } from './page/PlaygroundPage'
 import { ProjectsPage } from './page/ProjectsPage'
 import { UploadPage } from './page/UploadPage'
+=======
+>>>>>>> 3fc7ff6f66a5ea5677c38614478714f96d4f3157
 import { WelcomePage } from './page/WelcomePage'
 
 const Styletron = require('styletron-engine-monolithic')
@@ -54,15 +57,15 @@ export function AppBody() {
     <>
       <Router className={bodyClass}>
         <Redirect noThrow from="app" to="map" />
-        <Redirect noThrow from="app/playground" to="surveys" />
         <MapPage path={Route.MAP} />
+<<<<<<< HEAD
         <HomePage path={Route.HOME} />
         <UploadPage path={Route.UPLOAD} />
+=======
+>>>>>>> 3fc7ff6f66a5ea5677c38614478714f96d4f3157
         <WelcomePage path={Route.WELCOME} />
-        <LecturesPage path={Route.LECTURES} />
-        <ProjectsPage path={Route.PROJECTS} />
-        <PlaygroundPage path={Route.PLAYGROUND} />
-        <PlaygroundPage path={Route.PLAYGROUND_APP} />
+        <Login path={Route.LOGIN} />
+        <Signup path={Route.SIGNUP} />
       </Router>
       <Footer>
         <FooterText>&copy; 2020 Wanderlust</FooterText>

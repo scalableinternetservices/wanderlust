@@ -1,22 +1,22 @@
 import { useLocation } from '@reach/router'
 import * as React from 'react'
-import { useContext, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { useMediaQuery } from 'react-responsive'
 import { breakpoints } from '../../style/breakpoints'
 import { MenuIcon } from '../../style/icons'
 import { style } from '../../style/styled'
-import { UserContext } from '../auth/user'
+import { logout } from '../auth/logout'
 import { addToastListener, removeToastListener, Toast, ToastType } from '../toast/toast'
 import { link } from './Link'
-import { getLoginPath, getPath, getSignupPath, getSurveyPath, Route } from './route'
+import { getPath, getWelcomePath, Route } from './route'
 
 const title = {
   name: 'wanderlust',
-  path: getPath(Route.HOME),
+  path: getPath(Route.MAP),
   title: true,
 }
 
+<<<<<<< HEAD
 const otherTabs = [
   {
     name: 'lectures',
@@ -40,8 +40,9 @@ const otherTabs = [
   },
 ]
 
+=======
+>>>>>>> 3fc7ff6f66a5ea5677c38614478714f96d4f3157
 export function NavBar() {
-  const location = useLocation()
   const isSmall = useMediaQuery(breakpoints.small)
   const [showMenu, setShowMenu] = React.useState(false)
   const [toast, setToast] = React.useState<Toast | null>(null)
@@ -50,21 +51,19 @@ export function NavBar() {
     setToast(feedback)
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     addToastListener(onToast)
     return () => removeToastListener(onToast)
   }, []) // only call on mount and unmount
 
   // clear toast after 3 secs whenever it changes to a non-empty value
-  useEffect(() => {
+  React.useEffect(() => {
     if (toast) {
       const timeout = setTimeout(() => setToast(null), 3000)
       return () => clearTimeout(timeout)
     }
     return void 0
   }, [toast])
-
-  const tabs = isSmall ? [otherTabs.find(t => location.pathname.startsWith(t.path)) || otherTabs[0]] : otherTabs
 
   return (
     <>
@@ -77,14 +76,13 @@ export function NavBar() {
           {/* push tab to the right on small screens */}
           {isSmall && <div style={{ flex: 1 }} />}
 
-          {/* layout additional tabs (possibly hidden for small screens) */}
-          {tabs.map((tab, i) => (
-            <NavItem key={i} {...tab} />
-          ))}
-
+          {!isSmall && (
+            <LogoutButton onClick={() => logout()} href={getWelcomePath()}>
+              logout
+            </LogoutButton>
+          )}
           {isSmall && <NavMenu show={showMenu} onClick={() => setShowMenu(!showMenu)} />}
         </Nav>
-        <SubNav />
       </div>
       {toast && <ToastContainer $isError={toast.type === ToastType.ERROR}>{toast.message}</ToastContainer>}
     </>
@@ -98,9 +96,9 @@ function NavMenu(props: { show: boolean; onClick: () => void }) {
       {props.show && (
         <Modal>
           <NavMenuModal>
-            {otherTabs.map((tab, i) => (
-              <NavItem key={i} {...tab} />
-            ))}
+            <LogoutButton onClick={() => logout()} href={getWelcomePath()}>
+              logout
+            </LogoutButton>
           </NavMenuModal>
         </Modal>
       )}
@@ -108,25 +106,11 @@ function NavMenu(props: { show: boolean; onClick: () => void }) {
   )
 }
 
-function SubNav() {
-  const location = useLocation()
-  const { user } = useContext(UserContext)
-  if (!location.pathname.startsWith(getPath(Route.PLAYGROUND))) {
-    // only playground has subnav
-    return null
-  }
-  return (
-    <Nav $isSubNav>
-      <NavItem name="surveys" path={getSurveyPath()} />
-      <NavItem name={user ? 'logout' : 'login'} path={getLoginPath()} />
-      {!user && <NavItem name="signup" path={getSignupPath()} />}
-    </Nav>
-  )
-}
+const LogoutButton = style('a', 'link near-white hover-bg-black-10 pa2 br2')
 
 const Nav = style(
   'nav',
-  'flex white items-center list pa1 ph4 ph5-ns ph7-l avenir f4',
+  'flex white items-center list w-100 pa1 ph4 ph5-ns ph7-l avenir f4',
   (p: { $isSubNav?: boolean }) => ({
     background: '#a26ea1',
     opacity: '0.9',
@@ -167,7 +151,6 @@ const ToastContainer = style<'div', { $isError?: boolean }>(
   'div',
   'avenir f5 fixed bottom-0 white right-0 br3 pa3 bg-black-90 mb3 mr4 mr5-ns mr7-l',
   () => ({
-    // color: p.$theme.textColor(p.$isError),
     zIndex: 100,
   })
 )
