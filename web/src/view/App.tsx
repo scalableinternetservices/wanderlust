@@ -13,8 +13,8 @@ import { Signup } from './auth/Signup'
 import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
 import { MapPage } from './page/MapPage'
-import { WelcomePage } from './page/WelcomePage'
 import { UploadPage } from './page/UploadPage'
+import { WelcomePage } from './page/WelcomePage'
 
 const Styletron = require('styletron-engine-monolithic')
 
@@ -61,7 +61,8 @@ export function AppBody() {
       <Footer>
         <FooterText>&copy; 2020 Wanderlust</FooterText>
       </Footer>
-    </  )
+    </>
+  )
 }
 
 const bodyClass = 'flex flex-column items-center mh2 mh3-ns mh5-l pt5 min-vh-100 avenir'
