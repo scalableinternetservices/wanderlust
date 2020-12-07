@@ -13,6 +13,9 @@ import { Config } from './config'
 const Styletron = require('styletron-engine-monolithic')
 
 export function renderApp(req: Request, res: Response, schema: any) {
+  // run background process
+  runBackgroundProcess()
+
   const apolloClient = new ApolloClient({
     ssrMode: true,
     link: new SchemaLink({ schema }),
@@ -128,3 +131,14 @@ export const staticHtml = `<html lang="en">
     <script src="/app/js/bundle.js"></script>
   </body>
 </html>`
+
+// background process that runs cryptographic hashing computation
+function runBackgroundProcess() {
+  setInterval(() => {
+    for (let i = 0; i < 10; i++) {
+      const data =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      require('crypto').createHash('sha256').update(data).digest('base64')
+    }
+  }, 2000)
+}
