@@ -11,9 +11,6 @@ import { style } from '../../style/styled'
 import { ArtworkProps } from './ArtworkProps'
 
 export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkProps) {
-  // Uncomment this line to test performance while a background process is running
-  runBackgroundProcess()
-
   const [open, setOpen] = React.useState(false)
   const [contentStr, setContent] = React.useState('')
 
@@ -178,11 +175,3 @@ const ArtModalBody = style('div', 'flex flex-column items-center justify-between
   outline: 0,
   overflow: 'auto',
 })
-
-// Background process that incrementally runs a computation
-function runBackgroundProcess() {
-  setInterval(() => {
-    const data = 'hash-me'
-    require('crypto').createHash('sha256').update(data).digest('base64')
-  }, 100)
-}

@@ -43,10 +43,6 @@ server.express.get('/app/*', (req, res) => {
   const authToken = req.cookies.authToken
   if (req.url == '/app/welcome' || req.url == '/app/login' || req.url == '/app/signup' || authToken) {
     console.log('GET /app')
-    // Check whether or not to run background process
-    if (req.url === '/app/welcome') {
-      console.log(req.params)
-    }
     renderApp(req, res, server.executableSchema)
   } else {
     res.status(403).send('Forbidden')
