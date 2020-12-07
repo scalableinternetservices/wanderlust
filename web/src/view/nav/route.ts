@@ -20,6 +20,10 @@ export function getSignupPath() {
   return getPath(Route.SIGNUP)
 }
 
+export function getUploadPath() {
+  return getPath(Route.UPLOAD)
+}
+
 export function getWelcomePath() {
   return getPath(Route.WELCOME)
 }

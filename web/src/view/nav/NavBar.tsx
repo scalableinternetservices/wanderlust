@@ -8,7 +8,7 @@ import { style } from '../../style/styled'
 import { logout } from '../auth/logout'
 import { addToastListener, removeToastListener, Toast, ToastType } from '../toast/toast'
 import { link } from './Link'
-import { getPath, getWelcomePath, Route } from './route'
+import { getPath, getUploadPath, getWelcomePath, Route } from './route'
 
 const title = {
   name: 'wanderlust',
@@ -49,11 +49,15 @@ export function NavBar() {
 
           {/* push tab to the right on small screens */}
           {isSmall && <div style={{ flex: 1 }} />}
-
           {!isSmall && (
-            <LogoutButton onClick={() => logout()} href={getWelcomePath()}>
+            <NavBarButton href={getUploadPath()}>
+              share
+            </NavBarButton>
+          )}
+          {!isSmall && (
+            <NavBarButton onClick={() => logout()} href={getWelcomePath()}>
               logout
-            </LogoutButton>
+            </NavBarButton>
           )}
           {isSmall && <NavMenu show={showMenu} onClick={() => setShowMenu(!showMenu)} />}
         </Nav>
@@ -70,9 +74,12 @@ function NavMenu(props: { show: boolean; onClick: () => void }) {
       {props.show && (
         <Modal>
           <NavMenuModal>
-            <LogoutButton onClick={() => logout()} href={getWelcomePath()}>
+            <NavBarButton href={getUploadPath()}>
+              share
+            </NavBarButton>
+            <NavBarButton onClick={() => logout()} href={getWelcomePath()}>
               logout
-            </LogoutButton>
+            </NavBarButton>
           </NavMenuModal>
         </Modal>
       )}
@@ -80,7 +87,8 @@ function NavMenu(props: { show: boolean; onClick: () => void }) {
   )
 }
 
-const LogoutButton = style('a', 'link near-white hover-bg-black-10 pa2 br2')
+const NavBarButton = style('a', 'link near-white hover-bg-black-10 pa2 br2')
+
 
 const Nav = style(
   'nav',
