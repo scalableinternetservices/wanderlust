@@ -19,13 +19,7 @@ export function UploadPage(props: UploadPageProps) {
       <div className="flex flex-column">
         <div className="flex justify-center">
           <AttachButton>Attach file</AttachButton>
-          <Spacer $h1 />
-          <Spacer $h1 />
-          <Spacer $h1 />
-          <Spacer $h1 />
-          <Spacer $h1 />
         </div>
-
         <div className="flex justify-center">
           <SubmitButton>Submit</SubmitButton>
         </div>

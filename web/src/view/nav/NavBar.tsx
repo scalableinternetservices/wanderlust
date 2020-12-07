@@ -16,32 +16,6 @@ const title = {
   title: true,
 }
 
-<<<<<<< HEAD
-const otherTabs = [
-  {
-    name: 'lectures',
-    path: getPath(Route.LECTURES),
-  },
-  {
-    name: 'projects',
-    path: getPath(Route.PROJECTS),
-  },
-  {
-    name: 'map',
-    path: getPath(Route.MAP),
-  },
-  {
-    name: 'log out',
-    path: getPath(Route.WELCOME),
-  },
-  {
-    name: 'upload',
-    path: getPath(Route.UPLOAD),
-  },
-]
-
-=======
->>>>>>> 3fc7ff6f66a5ea5677c38614478714f96d4f3157
 export function NavBar() {
   const isSmall = useMediaQuery(breakpoints.small)
   const [showMenu, setShowMenu] = React.useState(false)

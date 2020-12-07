@@ -13,13 +13,8 @@ import { Signup } from './auth/Signup'
 import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
 import { MapPage } from './page/MapPage'
-<<<<<<< HEAD
-import { PlaygroundPage } from './page/PlaygroundPage'
-import { ProjectsPage } from './page/ProjectsPage'
-import { UploadPage } from './page/UploadPage'
-=======
->>>>>>> 3fc7ff6f66a5ea5677c38614478714f96d4f3157
 import { WelcomePage } from './page/WelcomePage'
+import { UploadPage } from './page/UploadPage'
 
 const Styletron = require('styletron-engine-monolithic')
 
@@ -58,20 +53,15 @@ export function AppBody() {
       <Router className={bodyClass}>
         <Redirect noThrow from="app" to="map" />
         <MapPage path={Route.MAP} />
-<<<<<<< HEAD
-        <HomePage path={Route.HOME} />
-        <UploadPage path={Route.UPLOAD} />
-=======
->>>>>>> 3fc7ff6f66a5ea5677c38614478714f96d4f3157
         <WelcomePage path={Route.WELCOME} />
+        <UploadPage path={Route.UPLOAD} />
         <Login path={Route.LOGIN} />
         <Signup path={Route.SIGNUP} />
       </Router>
       <Footer>
         <FooterText>&copy; 2020 Wanderlust</FooterText>
       </Footer>
-    </>
-  )
+    </  )
 }
 
 const bodyClass = 'flex flex-column items-center mh2 mh3-ns mh5-l pt5 min-vh-100 avenir'
