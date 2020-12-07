@@ -58,6 +58,7 @@ export function MapPage(props: MapPageProps) {
             id: art.id,
             createdBy: art.creatorId.toString(), // TODO: Change this to actual user name
             createdAt: art.createdAt,
+            seen: art.seen,
             location: art.location,
             name: art.name,
             type: art.type,
