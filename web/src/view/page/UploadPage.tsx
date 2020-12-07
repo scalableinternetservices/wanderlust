@@ -70,7 +70,7 @@ export function UploadPage(props: UploadPageProps) {
         <br></br>
         <div className="flex justify-center">
           <PillButton $pillColor="purple" onClick={fileUploadHandler}>
-            Submit
+            Share
           </PillButton>
         </div>
       </div>
