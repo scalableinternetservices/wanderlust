@@ -10,3 +10,7 @@ export interface ArtworkProps {
   type: ArtType
   uri: string
 }
+
+export interface ArtworkHandlerProps {
+  markSeen(artId: number): void
+}

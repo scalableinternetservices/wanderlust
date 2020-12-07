@@ -46,7 +46,7 @@ export interface QueryNearbyArgs {
 export interface Mutation {
   __typename?: 'Mutation'
   addArt: Scalars['Boolean']
-  seeArt: Scalars['Boolean']
+  seeArt?: Maybe<SeeArtResponse>
 }
 
 export interface MutationAddArtArgs {
@@ -55,6 +55,12 @@ export interface MutationAddArtArgs {
 
 export interface MutationSeeArtArgs {
   id: Scalars['Int']
+}
+
+export interface SeeArtResponse {
+  __typename?: 'SeeArtResponse'
+  id: Scalars['Int']
+  seen: Scalars['Boolean']
 }
 
 export interface User {
@@ -189,6 +195,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']>
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>
   Mutation: ResolverTypeWrapper<{}>
+  SeeArtResponse: ResolverTypeWrapper<SeeArtResponse>
   User: ResolverTypeWrapper<User>
   String: ResolverTypeWrapper<Scalars['String']>
   Art: ResolverTypeWrapper<Art>
@@ -206,6 +213,7 @@ export type ResolversParentTypes = {
   Int: Scalars['Int']
   Boolean: Scalars['Boolean']
   Mutation: {}
+  SeeArtResponse: SeeArtResponse
   User: User
   String: Scalars['String']
   Art: Art
@@ -232,7 +240,21 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
 > = {
   addArt?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddArtArgs, 'art'>>
-  seeArt?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSeeArtArgs, 'id'>>
+  seeArt?: Resolver<
+    Maybe<ResolversTypes['SeeArtResponse']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationSeeArtArgs, 'id'>
+  >
+}
+
+export type SeeArtResponseResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['SeeArtResponse'] = ResolversParentTypes['SeeArtResponse']
+> = {
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
+  seen?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 
 export type UserResolvers<
@@ -274,6 +296,7 @@ export type LocationResolvers<
 export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>
   Mutation?: MutationResolvers<ContextType>
+  SeeArtResponse?: SeeArtResponseResolvers<ContextType>
   User?: UserResolvers<ContextType>
   Art?: ArtResolvers<ContextType>
   Location?: LocationResolvers<ContextType>

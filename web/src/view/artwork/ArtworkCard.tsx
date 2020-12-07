@@ -8,9 +8,17 @@ import { PillButton } from '../../style/button'
 import { H1, H3 } from '../../style/header'
 import { Spacer } from '../../style/spacer'
 import { style } from '../../style/styled'
-import { ArtworkProps } from './ArtworkProps'
+import { ArtworkHandlerProps, ArtworkProps } from './ArtworkProps'
 
-export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkProps) {
+export function ArtworkCard({
+  id,
+  name,
+  createdBy,
+  createdAt,
+  type,
+  uri,
+  markSeen,
+}: ArtworkProps & ArtworkHandlerProps) {
   const [open, setOpen] = React.useState(false)
   const [contentStr, setContent] = React.useState('')
 
@@ -72,7 +80,15 @@ export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkPr
         </div>
         <Spacer $h4 />
       </div>
-      <PillButton $pillColor="purple">Mark as visited</PillButton>
+      <PillButton
+        $pillColor="purple"
+        onClick={() => {
+          markSeen(id)
+          handleModalClose()
+        }}
+      >
+        Mark as visited
+      </PillButton>
     </ArtModalBody>
   )
 
