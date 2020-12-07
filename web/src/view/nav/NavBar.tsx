@@ -84,7 +84,7 @@ const LogoutButton = style('a', 'link near-white hover-bg-black-10 pa2 br2')
 
 const Nav = style(
   'nav',
-  'flex white items-center list pa1 ph4 ph5-ns ph7-l avenir f4',
+  'flex white items-center list w-100 pa1 ph4 ph5-ns ph7-l avenir f4',
   (p: { $isSubNav?: boolean }) => ({
     background: '#a26ea1',
     opacity: '0.9',

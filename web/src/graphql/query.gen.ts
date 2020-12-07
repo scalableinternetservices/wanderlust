@@ -37,6 +37,7 @@ export interface FetchNearbyMap_nearby {
   id: number;
   createdAt: string;
   creatorId: number;
+  seen: boolean | null;
   name: string;
   location: FetchNearbyMap_nearby_location;
   type: ArtType;
