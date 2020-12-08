@@ -130,16 +130,14 @@ export function UploadPage(props: UploadPageProps) {
         )}
         <Spacer $h2 />
         <br></br>
-        <div className="flex justify-center">
-          <img src={selected_file_url}></img>
-        </div>
+        {radioValue == 'image-type' && (
+          <div className="flex justify-center">
+            <img src={selected_file_url}></img>
+          </div>
+        )}
         <Spacer $h1 />
         {radioValue == 'image-type' && selected_file_url == '' && (
           <>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
             <br></br>
             <br></br>
             <br></br>
