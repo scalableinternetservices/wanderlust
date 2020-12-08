@@ -1,8 +1,10 @@
 import { ApolloProvider, useQuery } from '@apollo/client'
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 import { Redirect, Router } from '@reach/router'
 import * as React from 'react'
 import { hydrate, render } from 'react-dom'
 import { Provider as StyletronProvider } from 'styletron-react'
+import { Colors } from '../../../common/src/colors'
 import { appContext } from '../../../common/src/context'
 import { getApolloClient } from '../graphql/apolloClient'
 import { FetchUserContext } from '../graphql/query.gen'
@@ -23,10 +25,39 @@ export function init() {
     hydrate: document.getElementsByClassName('_styletron_hydrate_'),
   })
 
+  // Create MUI theme
+  const theme = createMuiTheme({
+    palette: {
+      primary: {
+        main: Colors.wanderlustPrimary,
+      },
+      secondary: {
+        main: Colors.wanderlustSecondary,
+      },
+    },
+    typography: {
+      fontFamily: [
+        'Poppins',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
+    },
+  })
+
   renderFn(
     <ApolloProvider client={getApolloClient()}>
       <StyletronProvider value={engine}>
-        <App />
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
       </StyletronProvider>
     </ApolloProvider>,
     document.getElementById('app')

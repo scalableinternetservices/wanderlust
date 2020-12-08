@@ -27,3 +27,9 @@ export const fetchCreatedBy = gql`
     }
   }
 `
+
+export const markArtSeen = gql`
+  mutation SeeArt($id: Int!) {
+    seeArt(id: $id)
+  }
+`

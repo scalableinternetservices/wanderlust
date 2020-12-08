@@ -10,3 +10,8 @@ export interface ArtworkProps {
   type: ArtType
   uri: string
 }
+
+export interface ArtworkCardProps {
+  markSeen(artId: number): void
+  $seen?: boolean
+}

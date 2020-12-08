@@ -85,6 +85,23 @@ export interface FetchUserNameVariables {
 // @generated
 // This file was automatically generated and should not be edited.
 
+// ====================================================
+// GraphQL mutation operation: SeeArt
+// ====================================================
+
+export interface SeeArt {
+  seeArt: boolean;
+}
+
+export interface SeeArtVariables {
+  id: number;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
 //==============================================================
 // START Enums and Input Objects
 //==============================================================

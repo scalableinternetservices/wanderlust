@@ -66,7 +66,6 @@ export const graphqlRoot: Resolvers<Context> = {
           lat: loc.lat,
           lng: loc.lng,
         })
-        .limit(25)
         .getMany()
       return result as any
     },
