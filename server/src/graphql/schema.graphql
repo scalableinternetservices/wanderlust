@@ -28,7 +28,14 @@ type Mutation {
   # Adds an user's art
   addArt (art: ArtInput!): Boolean!
   # Set logged in user as seeing art (from context)
-  seeArt (id: Int!): Boolean!
+  seeArt (id: Int!): SeeArtResponse
+}
+
+# type SeeArtResponse {}
+
+type SeeArtResponse {
+  id: Int!
+  seen: Boolean!
 }
 
 # type Subscription {}

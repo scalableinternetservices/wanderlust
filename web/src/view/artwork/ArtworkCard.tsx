@@ -4,13 +4,22 @@ import Slide from '@material-ui/core/Slide'
 import * as React from 'react'
 import { Colors } from '../../../../common/src/colors'
 import { ArtType } from '../../graphql/query.gen'
+import { PillButton } from '../../style/button'
 import { H1, H3 } from '../../style/header'
 import { Spacer } from '../../style/spacer'
 import { style } from '../../style/styled'
-import { ArtworkProps } from './ArtworkProps'
+import { ArtworkCardProps, ArtworkProps } from './ArtworkProps'
 
-export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkProps) {
-  // TODO: Fetch art content from S3 using uri property
+export function ArtworkCard({
+  id,
+  name,
+  createdBy,
+  createdAt,
+  type,
+  uri,
+  markSeen,
+  $seen,
+}: ArtworkProps & ArtworkCardProps) {
   const [open, setOpen] = React.useState(false)
   const [contentStr, setContent] = React.useState('')
 
@@ -26,14 +35,13 @@ export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkPr
     handleModalOpen()
   }
 
-  // Actual content of art
+  // actual content of art
   if (contentStr.length <= 0 && type === ArtType.Text) {
     fetch(uri)
       .then(response => response.text())
       .then(text => setContent(text))
       .catch(err => console.log(err))
   }
-
   const content =
     type === ArtType.Text ? (
       <H3 style={{ overflowWrap: 'break-word', wordWrap: 'break-word', hyphens: 'auto' }} className="mw-100">
@@ -50,34 +58,58 @@ export function ArtworkCard({ name, createdBy, createdAt, type, uri }: ArtworkPr
     ) : (
       <ArtThumbnail alt={name} src={uri} />
     )
+  const ArtworkCardContainer = getArtworkCardContainer($seen)
 
+  // generate readable data
   const localDate = new Date(parseInt(createdAt))
-
+  // css styling for a disabled pill button
+  const disabledStyles = $seen
+    ? {
+        opacity: '0.65',
+        cursor: 'not-allowed',
+      }
+    : {}
+  // body for modal
   const body = (
     <ArtModalBody>
-      <H1 style={{ color: Colors.wanderlustPrimary }} id="artwork-title">
-        {name}
-      </H1>
-      <Spacer $h3 />
-      <ArtContentContainer>{content}</ArtContentContainer>
-      <Spacer $h3 />
-      <div className="w-90">
-        <H3>
-          Created By: <span style={{ color: Colors.wanderlustPrimary }}>{createdBy}</span>
-        </H3>
-        <H3>
-          Created At: <span style={{ color: Colors.wanderlustPrimary }}>{localDate.toLocaleDateString('en-us')}</span>
-        </H3>
+      <div className="w-90 flex flex-column items-center">
+        <H1 style={{ color: Colors.wanderlustPrimary }} id="artwork-title">
+          {name}
+        </H1>
+        <Spacer $h3 />
+        <ArtContentContainer>{content}</ArtContentContainer>
+        <Spacer $h3 />
+        <div>
+          <H3>
+            Created By: <span style={{ color: Colors.wanderlustPrimary }}>{createdBy}</span>
+          </H3>
+          <H3>
+            Created At: <span style={{ color: Colors.wanderlustPrimary }}>{localDate.toLocaleDateString('en-us')}</span>
+          </H3>
+        </div>
+        <Spacer $h4 />
       </div>
+      <PillButton
+        $pillColor="purple"
+        style={disabledStyles}
+        onClick={() => {
+          if (!$seen) {
+            markSeen(id)
+            handleModalClose()
+          }
+        }}
+      >
+        Mark as visited
+      </PillButton>
     </ArtModalBody>
   )
 
   return (
     <>
-      <div onClick={handleClick} className="flex w5-l w-90 h4 br4 mb3 mr4-l ml4-l shadow-4 overflow-hidden relative">
+      <ArtworkCardContainer onClick={handleClick}>
         <ArtThumbnailContainer>{thumbnail}</ArtThumbnailContainer>
         <H3 className="w-50 pl2 pr2 self-center tc truncate">{name}</H3>
-      </div>
+      </ArtworkCardContainer>
       <Modal
         className="flex items-center justify-center"
         open={open}
@@ -142,6 +174,21 @@ function createRipple(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 }
 
 /* Custom styling */
+function getArtworkCardContainer(seen = false) {
+  const rgbaVal = hexToRgba(Colors.wanderlustPrimary, 0.5)
+  const color = seen ? rgbaVal : 'rgba( 0, 0, 0, 0.2 )'
+
+  return style('div', 'flex w5-l w-90 h4 br4 mb3 mr4-l ml4-l overflow-hidden relative', {
+    boxShadow: '2px 2px 8px 0px ' + color,
+  })
+}
+
+function hexToRgba(hex: string, alpha: number) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  return result
+    ? `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, ${alpha})`
+    : null
+}
 
 const ArtThumbnailContainer = style('div', 'flex items-center justify-center avenir f3 w-50 br', {
   borderRight: 'solid 1px rgba(0, 0, 0, .15)',
@@ -158,12 +205,16 @@ const ArtThumbnail = style('img', 'w-100 h-100', {
 
 const ArtContentContainer = style('div', 'w-90 pa1 ba b--light-gray', {
   overflow: 'auto',
+  maxHeight: '50%',
 })
 
 const ArtContent = style('img', 'w-100 h-auto br2', {})
 
-const ArtModalBody = style('div', 'flex flex-column items-center w-50-l w-90 h-75 bg-white br4 pa3', {
+const ArtModalBody = style('div', 'flex flex-column items-center justify-between w-50-l w-90 bg-white br4 pa3', {
   margin: 'auto',
   top: '50%',
+  minHeight: '50%',
+  maxHeight: '100%',
   outline: 0,
+  overflow: 'auto',
 })

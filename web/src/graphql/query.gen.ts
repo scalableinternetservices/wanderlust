@@ -37,6 +37,7 @@ export interface FetchNearbyMap_nearby {
   id: number;
   createdAt: string;
   creatorId: number;
+  seen: boolean | null;
   name: string;
   location: FetchNearbyMap_nearby_location;
   type: ArtType;
@@ -49,6 +50,7 @@ export interface FetchNearbyMap {
 
 export interface FetchNearbyMapVariables {
   loc: LocationInput;
+  checkSeen?: boolean | null;
 }
 
 /* tslint:disable */
@@ -71,6 +73,29 @@ export interface FetchUserName {
 
 export interface FetchUserNameVariables {
   ids?: number[] | null;
+}
+
+/* tslint:disable */
+/* eslint-disable */
+// @generated
+// This file was automatically generated and should not be edited.
+
+// ====================================================
+// GraphQL mutation operation: SeeArt
+// ====================================================
+
+export interface SeeArt_seeArt {
+  __typename: "SeeArtResponse";
+  id: number;
+  seen: boolean;
+}
+
+export interface SeeArt {
+  seeArt: SeeArt_seeArt | null;
+}
+
+export interface SeeArtVariables {
+  id: number;
 }
 
 /* tslint:disable */

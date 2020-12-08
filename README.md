@@ -6,6 +6,9 @@ Welcome to Geo Exploration!
 |:--:|:--:|:--:|:--:|:--:|
 | *Connie Chen* | *Robert Geil* | *Megha Ilango* | *Eugene Lo* | *Timothy Rediehs* |
 
+## Wiki for Optimization Write Ups
+[Wanderlust Wiki](https://github.com/scalableinternetservices/wanderlust/wiki)
+
 ## Website Flow
 [Link to Figma](https://www.figma.com/file/psXHkp6BKMsGRi1Zo1VSYB/Website-Flow?node-id=0%3A1)
 

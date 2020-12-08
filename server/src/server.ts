@@ -252,7 +252,7 @@ server.express.post(
         session = JSON.parse(cachedSession) as Session
       } else {
         session = session || await Session.findOne({ where: { authToken }, relations: ['user'] })
-        await redis.set(authToken, JSON.stringify(session), 'EX', 15)
+        await redis.set(authToken, JSON.stringify(session), 'EX', 60)
       }
       if (session) {
         const reqAny = req as any
@@ -265,7 +265,9 @@ server.express.post(
 )
 
 server.express.get('/sample.txt', (req, res) => {
-  res.send('ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ')
+  res.send(
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  )
 })
 
 initORM()
