@@ -8,6 +8,7 @@ export enum Route {
   WELCOME = 'app/welcome',
   LOGIN = 'app/login',
   SIGNUP = 'app/signup',
+  UPLOAD = 'app/upload',
   MAP = 'app/map',
 }
 
@@ -19,8 +20,16 @@ export function getSignupPath() {
   return getPath(Route.SIGNUP)
 }
 
+export function getUploadPath() {
+  return getPath(Route.UPLOAD)
+}
+
 export function getWelcomePath() {
   return getPath(Route.WELCOME)
+}
+
+export function getMapPath() {
+  return getPath(Route.MAP)
 }
 
 /**

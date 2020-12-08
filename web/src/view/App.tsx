@@ -15,6 +15,7 @@ import { Signup } from './auth/Signup'
 import { UserContext, UserCtx } from './auth/user'
 import { Route } from './nav/route'
 import { MapPage } from './page/MapPage'
+import { UploadPage } from './page/UploadPage'
 import { WelcomePage } from './page/WelcomePage'
 
 const Styletron = require('styletron-engine-monolithic')
@@ -84,6 +85,7 @@ export function AppBody() {
         <Redirect noThrow from="app" to="map" />
         <MapPage path={Route.MAP} />
         <WelcomePage path={Route.WELCOME} />
+        <UploadPage path={Route.UPLOAD} />
         <Login path={Route.LOGIN} />
         <Signup path={Route.SIGNUP} />
       </Router>
