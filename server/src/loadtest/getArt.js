@@ -1,12 +1,12 @@
 import http from 'k6/http'
 import { check, sleep } from 'k6'
 let host = `http://${__ENV.HOST || 'localhost:3000'}`
-function getUploadPage() {
+function getPage() {
   let res = http.get(host)
   check(res, { 'status was 200': r => r.status == 200 })
 }
 
-function uploadArtwork() {
+function getArtwork() {
   let query = `
     query arts {
       arts {
@@ -21,7 +21,6 @@ function uploadArtwork() {
     },
   }
   let res = http.post(`${host}/graphql`, JSON.stringify({ query: query }), params)
-  console.log(res.body)
   check(res, { 'status was 200': r => r.status == 200 })
 }
 
@@ -34,7 +33,7 @@ export let options = {
 }
 
 export default function () {
-  getUploadPage()
+  getPage()
   sleep(Math.random() * 4)
-  uploadArtwork()
+  getArtwork()
 }
