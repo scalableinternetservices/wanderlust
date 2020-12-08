@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs'
 import { PubSub } from 'graphql-yoga'
 import path from 'path'
-import { getManager } from 'typeorm'
+import { getConnection, getManager, QueryFailedError } from 'typeorm'
 import { Art } from '../entities/Art'
 import { User } from '../entities/User'
 import { storeFile } from '../s3/storeFile'
@@ -24,22 +24,29 @@ interface Context {
 export const graphqlRoot: Resolvers<Context> = {
   Art: {
     creator: self => User.findOne({ id: self.creatorId }) as any,
+    views: self => Art.findOne({ id: self.id }).then(art => art!.views) as any,
+    likes: self => Art.findOne({ id: self.id }).then(art => art!.likes) as any,
+    seen: async (self, _, ctx) => {
+      if (!ctx.user) return null
+      const count = await getConnection()
+        .createQueryBuilder()
+        .select('1')
+        .from('art_views_user', 'avu')
+        .where('artId = :aid', { aid: self.id })
+        .andWhere('userId = :uid', { uid: ctx.user.id })
+        .getCount()
+      return count === 1
+    },
   },
   User: {
     artworkCreated: self => User.findOne({ where: { id: self.id } }).then(user => user!.artworkCreated) as any,
-    artSeen: self => User.findOne({ where: { id: self.id } }).then(user => user!.artSeen) as any,
-    artLiked: self => User.findOne({ where: { id: self.id } }).then(user => user!.artLiked) as any,
+    artSeen: self => User.findOne({ where: { id: self.id } }).then(user => user!.artworkSeen) as any,
+    artLiked: self => User.findOne({ where: { id: self.id } }).then(user => user!.artworkLiked) as any,
   },
   Query: {
     self: (_, args, ctx) => (ctx.user as any) || null,
-    art: async (_, { id }) => {
-      const thing = (await Art.findOne({ where: { id: id } })) || null
-      return thing as any
-    },
-    arts: async (_, args, ctx) => {
-      const response: Art[] = await Art.find({ take: 128 })
-      return response as any
-    },
+    art: async (_, { id }) => Art.findOne({ where: { id: id } }) as any,
+    arts: async () => Art.find({ take: 128 }) as any,
     user: async (_, { id }) => {
       return ((await User.findOne({ where: { id: id } })) as any) || null
     },
@@ -53,7 +60,6 @@ export const graphqlRoot: Resolvers<Context> = {
       return thing as any
     },
     nearby: async (_, { loc }) => {
-      // This can be made more flexible
       const result = await getManager()
         .createQueryBuilder(Art, 'art')
         .where('(abs(art.location.lat - :lat) < 0.02) AND (abs(art.location.lng - :lng) < 0.02)', {
@@ -62,16 +68,6 @@ export const graphqlRoot: Resolvers<Context> = {
         })
         .limit(25)
         .getMany()
-      // if (checkSeen) {
-      //   // This statement requires a semicolon
-      //   const seenArt: Set<number> = new Set()
-      //   ;(await User.findOne())?.artSeen.forEach(art => {
-      //     seenArt.add(art.id)
-      //   })
-      //   result.forEach((art: any) => {
-      //     art.seen = seenArt.has(art.id)
-      //   })
-      // }
       return result as any
     },
   },
@@ -94,16 +90,29 @@ export const graphqlRoot: Resolvers<Context> = {
       return true
     },
     seeArt: async (_, { id }, ctx) => {
-      const user = ctx.user || (await User.findOne(1))
-      if (!user) {
-        return false
-      }
-      const art = await Art.findOne(id)
-      if (!art) {
-        return false
-      }
-      ;(await user.artSeen).push(art)
-      await user.save()
+      const user = ctx.user
+      if (!user) return false
+      await getConnection()
+        .createQueryBuilder()
+        .relation(Art, 'views')
+        .of(id)
+        .add(user)
+        .catch(e => {
+          if (!(e instanceof QueryFailedError && e.message.match(/Duplicate entry/))) throw e
+        })
+      return true
+    },
+    likeArt: async (_, { id }, ctx) => {
+      const user = ctx.user
+      if (!user) return false
+      await getConnection()
+        .createQueryBuilder()
+        .relation(Art, 'likes')
+        .of(id)
+        .add(user)
+        .catch(e => {
+          if (!(e instanceof QueryFailedError && e.message.match(/Duplicate entry/))) throw e
+        })
       return true
     },
   },

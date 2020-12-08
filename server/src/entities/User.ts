@@ -3,7 +3,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -42,11 +41,9 @@ export class User extends BaseEntity /*implements GraphqlUser*/ {
   @OneToMany(() => Art, art => art.creator)
   artworkCreated: Promise<Art[]>
 
-  @ManyToMany(() => Art)
-  @JoinTable()
-  artLiked: Promise<Art[]>
+  @ManyToMany(() => Art, art => art.views)
+  artworkSeen: Promise<Art[]>
 
-  @ManyToMany(() => Art, { eager: true })
-  @JoinTable()
-  artSeen: Promise<Art[]>
+  @ManyToMany(() => Art, art => art.likes)
+  artworkLiked: Promise<Art[]>
 }

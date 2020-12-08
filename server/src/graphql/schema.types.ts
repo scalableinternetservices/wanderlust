@@ -42,6 +42,7 @@ export interface Mutation {
   __typename?: 'Mutation'
   addArt: Scalars['Boolean']
   seeArt: Scalars['Boolean']
+  likeArt: Scalars['Boolean']
 }
 
 export interface MutationAddArtArgs {
@@ -49,6 +50,10 @@ export interface MutationAddArtArgs {
 }
 
 export interface MutationSeeArtArgs {
+  id: Scalars['Int']
+}
+
+export interface MutationLikeArtArgs {
   id: Scalars['Int']
 }
 
@@ -72,6 +77,8 @@ export interface Art {
   location: Location
   uri: Scalars['String']
   type: ArtType
+  views: Array<User>
+  likes: Array<User>
   seen?: Maybe<Scalars['Boolean']>
 }
 
@@ -230,6 +237,7 @@ export type MutationResolvers<
 > = {
   addArt?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddArtArgs, 'art'>>
   seeArt?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSeeArtArgs, 'id'>>
+  likeArt?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationLikeArtArgs, 'id'>>
 }
 
 export type UserResolvers<
@@ -257,6 +265,8 @@ export type ArtResolvers<
   location?: Resolver<ResolversTypes['Location'], ParentType, ContextType>
   uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   type?: Resolver<ResolversTypes['ArtType'], ParentType, ContextType>
+  views?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
+  likes?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
   seen?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }

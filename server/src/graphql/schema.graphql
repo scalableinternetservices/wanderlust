@@ -29,6 +29,7 @@ type Mutation {
   addArt (art: ArtInput!): Boolean!
   # Set logged in user as seeing art (from context)
   seeArt (id: Int!): Boolean!
+  likeArt (id: Int!): Boolean!
 }
 
 # type Subscription {}
@@ -51,6 +52,8 @@ type Art{
   location: Location!
   uri: String!
   type: ArtType!
+  views: [User!]!
+  likes: [User!]!
   seen: Boolean
 }
 
