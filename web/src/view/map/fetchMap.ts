@@ -1,11 +1,14 @@
 import { gql } from '@apollo/client'
 
 export const fetchMap = gql`
-  query FetchNearbyMap($loc: LocationInput!, $checkSeen: Boolean) {
-    nearby(loc: $loc, checkSeen: $checkSeen) {
+  query FetchNearbyMap($loc: LocationInput!) {
+    nearby(loc: $loc) {
       id
       createdAt
-      creatorId
+      creator {
+        username
+        id
+      }
       seen
       name
       location {
@@ -27,9 +30,6 @@ export const fetchCreatedBy = gql`
 
 export const markArtSeen = gql`
   mutation SeeArt($id: Int!) {
-    seeArt(id: $id) {
-      id
-      seen
-    }
+    seeArt(id: $id)
   }
 `

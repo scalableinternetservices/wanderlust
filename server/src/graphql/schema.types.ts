@@ -26,10 +26,6 @@ export interface QueryArtArgs {
   id: Scalars['Int']
 }
 
-export interface QueryArtsArgs {
-  checkSeen?: Maybe<Scalars['Boolean']>
-}
-
 export interface QueryUserArgs {
   id: Scalars['Int']
 }
@@ -40,13 +36,13 @@ export interface QueryUsersArgs {
 
 export interface QueryNearbyArgs {
   loc: LocationInput
-  checkSeen?: Maybe<Scalars['Boolean']>
 }
 
 export interface Mutation {
   __typename?: 'Mutation'
   addArt: Scalars['Boolean']
-  seeArt?: Maybe<SeeArtResponse>
+  seeArt: Scalars['Boolean']
+  likeArt: Scalars['Boolean']
 }
 
 export interface MutationAddArtArgs {
@@ -57,10 +53,8 @@ export interface MutationSeeArtArgs {
   id: Scalars['Int']
 }
 
-export interface SeeArtResponse {
-  __typename?: 'SeeArtResponse'
+export interface MutationLikeArtArgs {
   id: Scalars['Int']
-  seen: Scalars['Boolean']
 }
 
 export interface User {
@@ -70,17 +64,21 @@ export interface User {
   email: Scalars['String']
   artworkCreated: Array<Art>
   artSeen: Array<Art>
+  artLiked: Array<Art>
 }
 
 export interface Art {
   __typename?: 'Art'
   id: Scalars['Int']
   name: Scalars['String']
+  creator: User
   creatorId: Scalars['Int']
   createdAt: Scalars['String']
   location: Location
   uri: Scalars['String']
   type: ArtType
+  views: Array<User>
+  likes: Array<User>
   seen?: Maybe<Scalars['Boolean']>
 }
 
@@ -193,9 +191,8 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>
   Int: ResolverTypeWrapper<Scalars['Int']>
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>
   Mutation: ResolverTypeWrapper<{}>
-  SeeArtResponse: ResolverTypeWrapper<SeeArtResponse>
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>
   User: ResolverTypeWrapper<User>
   String: ResolverTypeWrapper<Scalars['String']>
   Art: ResolverTypeWrapper<Art>
@@ -211,9 +208,8 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Query: {}
   Int: Scalars['Int']
-  Boolean: Scalars['Boolean']
   Mutation: {}
-  SeeArtResponse: SeeArtResponse
+  Boolean: Scalars['Boolean']
   User: User
   String: Scalars['String']
   Art: Art
@@ -229,7 +225,7 @@ export type QueryResolvers<
 > = {
   self?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
   art?: Resolver<Maybe<ResolversTypes['Art']>, ParentType, ContextType, RequireFields<QueryArtArgs, 'id'>>
-  arts?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType, RequireFields<QueryArtsArgs, never>>
+  arts?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, never>>
   nearby?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType, RequireFields<QueryNearbyArgs, 'loc'>>
@@ -240,21 +236,8 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']
 > = {
   addArt?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddArtArgs, 'art'>>
-  seeArt?: Resolver<
-    Maybe<ResolversTypes['SeeArtResponse']>,
-    ParentType,
-    ContextType,
-    RequireFields<MutationSeeArtArgs, 'id'>
-  >
-}
-
-export type SeeArtResponseResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['SeeArtResponse'] = ResolversParentTypes['SeeArtResponse']
-> = {
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
-  seen?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>
+  seeArt?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationSeeArtArgs, 'id'>>
+  likeArt?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationLikeArtArgs, 'id'>>
 }
 
 export type UserResolvers<
@@ -266,6 +249,7 @@ export type UserResolvers<
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   artworkCreated?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
   artSeen?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
+  artLiked?: Resolver<Array<ResolversTypes['Art']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
 
@@ -275,11 +259,14 @@ export type ArtResolvers<
 > = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>
   creatorId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   location?: Resolver<ResolversTypes['Location'], ParentType, ContextType>
   uri?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   type?: Resolver<ResolversTypes['ArtType'], ParentType, ContextType>
+  views?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
+  likes?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
   seen?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType>
 }
@@ -296,7 +283,6 @@ export type LocationResolvers<
 export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>
   Mutation?: MutationResolvers<ContextType>
-  SeeArtResponse?: SeeArtResponseResolvers<ContextType>
   User?: UserResolvers<ContextType>
   Art?: ArtResolvers<ContextType>
   Location?: LocationResolvers<ContextType>

@@ -1,4 +1,14 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 import { ArtType } from '../graphql/schema.types'
 import { Location } from './Location'
 import { User } from './User'
@@ -33,8 +43,16 @@ export class Art extends BaseEntity {
 
   @ManyToOne(() => User, user => user.artworkCreated)
   @JoinColumn({ name: 'creatorId' })
-  creator: User
+  creator: Promise<User>
 
   @Column({ nullable: false })
   creatorId: number
+
+  @ManyToMany(() => User, user => user.artworkLiked)
+  @JoinTable()
+  likes: Promise<User[]>
+
+  @ManyToMany(() => User, user => user.artworkSeen)
+  @JoinTable()
+  views: Promise<User[]>
 }

@@ -27,6 +27,12 @@ export interface FetchUserContext {
 // GraphQL query operation: FetchNearbyMap
 // ====================================================
 
+export interface FetchNearbyMap_nearby_creator {
+  __typename: "User";
+  username: string;
+  id: number;
+}
+
 export interface FetchNearbyMap_nearby_location {
   __typename: "Location";
   lat: number;
@@ -37,7 +43,7 @@ export interface FetchNearbyMap_nearby {
   __typename: "Art";
   id: number;
   createdAt: string;
-  creatorId: number;
+  creator: FetchNearbyMap_nearby_creator;
   seen: boolean | null;
   name: string;
   location: FetchNearbyMap_nearby_location;
@@ -51,7 +57,6 @@ export interface FetchNearbyMap {
 
 export interface FetchNearbyMapVariables {
   loc: LocationInput;
-  checkSeen?: boolean | null;
 }
 
 /* tslint:disable */
@@ -85,14 +90,8 @@ export interface FetchUserNameVariables {
 // GraphQL mutation operation: SeeArt
 // ====================================================
 
-export interface SeeArt_seeArt {
-  __typename: "SeeArtResponse";
-  id: number;
-  seen: boolean;
-}
-
 export interface SeeArt {
-  seeArt: SeeArt_seeArt | null;
+  seeArt: boolean;
 }
 
 export interface SeeArtVariables {

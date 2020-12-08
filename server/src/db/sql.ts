@@ -22,7 +22,7 @@ export async function initORM() {
     entities: [User, Session, Art, Location],
     legacySpatialSupport: false,
     extra: {
-      connectionLimit: 5,
+      connectionLimit: 56,
     },
   })
 }

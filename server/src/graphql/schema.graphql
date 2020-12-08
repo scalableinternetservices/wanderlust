@@ -18,24 +18,18 @@ type Query {
   # Returns the logged-in user making the query, or null if anonymous.
   self: User
   art (id: Int!): Art
-  arts (checkSeen: Boolean): [Art!]!
+  arts: [Art!]!
   user (id: Int!): User
   users (ids: [Int!]): [User!]!
-  nearby (loc: LocationInput!, checkSeen: Boolean): [Art!]!
+  nearby (loc: LocationInput!): [Art!]!
 }
 
 type Mutation {
   # Adds an user's art
   addArt (art: ArtInput!): Boolean!
   # Set logged in user as seeing art (from context)
-  seeArt (id: Int!): SeeArtResponse
-}
-
-# type SeeArtResponse {}
-
-type SeeArtResponse {
-  id: Int!
-  seen: Boolean!
+  seeArt (id: Int!): Boolean!
+  likeArt (id: Int!): Boolean!
 }
 
 # type Subscription {}
@@ -46,16 +40,20 @@ type User {
   email: String!
   artworkCreated: [Art!]!
   artSeen: [Art!]!
+  artLiked: [Art!]!
 }
 
 type Art{
   id: Int!
   name: String!
+  creator: User!
   creatorId: Int!
   createdAt: String!
   location: Location!
   uri: String!
   type: ArtType!
+  views: [User!]!
+  likes: [User!]!
   seen: Boolean
 }
 

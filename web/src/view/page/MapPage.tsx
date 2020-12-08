@@ -25,7 +25,7 @@ export function MapPage(props: MapPageProps) {
 
   // graphql
   const { data: data_nearby, loading: loading_nearby } = useQuery<FetchNearbyMap, FetchNearbyMapVariables>(fetchMap, {
-    variables: { loc: location ? location : { lat: 0, lng: 0 }, checkSeen: true },
+    variables: { loc: location ? location : { lat: 0, lng: 0 } },
     ssr: false,
   })
   const [seeArt] = useMutation<SeeArt, SeeArtVariables>(markArtSeen)
@@ -35,10 +35,10 @@ export function MapPage(props: MapPageProps) {
     seeArt({ variables: { id: artId } })
       .then(response => {
         const data = response.data
-        if (data && data?.seeArt?.seen) {
+        if (data && data?.seeArt) {
           setArtworks(
             artworks.map(art => {
-              if (art.id === data?.seeArt?.id) {
+              if (art.id === artId) {
                 art.seen = true
               }
               return art
@@ -64,7 +64,7 @@ export function MapPage(props: MapPageProps) {
         (art, i) =>
           ({
             id: art.id,
-            createdBy: art.creatorId.toString(), // TODO: Change this to actual user name
+            createdBy: art.creator.username,
             createdAt: art.createdAt,
             seen: art.seen,
             location: art.location,
