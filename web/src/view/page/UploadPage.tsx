@@ -1,6 +1,6 @@
 import { gql, useMutation, useQuery } from '@apollo/client'
 import { FormControl, FormControlLabel, Radio, RadioGroup } from '@material-ui/core'
-import { RouteComponentProps } from '@reach/router'
+import { navigate, RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { FetchUserContext } from '../../graphql/query.gen'
 import { PillButton } from '../../style/button'
@@ -147,7 +147,7 @@ export function UploadPage(props: UploadPageProps) {
         )}
         <br></br>
         <div className="flex justify-center">
-          <PillButton $pillColor="purple" onClick={fileUploadHandler} href={getMapPath()}>
+          <PillButton $pillColor="purple" onClick={() => fileUploadHandler().then(() => navigate(getMapPath()))}>
             Share
           </PillButton>
         </div>
