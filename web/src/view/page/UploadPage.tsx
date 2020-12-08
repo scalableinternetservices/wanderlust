@@ -1,4 +1,5 @@
 import { gql, useMutation, useQuery } from '@apollo/client'
+import { FormControl, FormControlLabel, Radio, RadioGroup } from '@material-ui/core'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { FetchUserContext } from '../../graphql/query.gen'
@@ -21,9 +22,11 @@ const UPLOAD_ART = gql`
 
 export function UploadPage(props: UploadPageProps) {
   const [selected_file_url, setFileURL] = React.useState('')
-  const [image_string, setImageString] = React.useState('') //BASE64_ENCODED_STRING_OF_IMAGE_OR_TEXT
+  const [art_string, setArtString] = React.useState('') //BASE64_ENCODED_STRING_OF_IMAGE_OR_TEXT
   const [type, setType] = React.useState('') //accepted types are image/png, image/jpeg, and text/plain
   const [name, setName] = React.useState('')
+  const [text, setText] = React.useState('')
+  const [radioValue, setRadioValue] = React.useState('image-type')
   const { data } = useQuery<FetchUserContext>(fetchUser)
   const [uploadArt] = useMutation(UPLOAD_ART)
   const author = !!data && !!data.self ? data.self.username : 'anonymous'
@@ -38,7 +41,7 @@ export function UploadPage(props: UploadPageProps) {
       reader.onload = function (event) {
         if (event && event.target && event.target.result) {
           const binaryString = event.target.result as string
-          setImageString(btoa(binaryString))
+          setArtString(btoa(binaryString))
         }
       }
       reader.readAsBinaryString(files[0])
@@ -47,12 +50,16 @@ export function UploadPage(props: UploadPageProps) {
 
   const fileUploadHandler = async () => {
     let lat, lng
+    if (radioValue === 'text-type') {
+      console.log(text)
+      setArtString(btoa(text))
+    }
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(c => {
         lat = c.coords.latitude
         lng = c.coords.longitude
         if (lat && lng) {
-          const data = 'data:' + type + ';base64, ' + image_string
+          const data = 'data:' + type + ';base64, ' + art_string
           const art = {
             name: name,
             creatorId: creator_id,
@@ -67,8 +74,17 @@ export function UploadPage(props: UploadPageProps) {
           })
         } else {
           console.log('cannot share: not able to retrieve location')
+          alert('Art was was not shared: unable to access location')
         }
       })
+    }
+  }
+
+  const handleViewChange = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
+    console.log(value)
+    setRadioValue(value)
+    if (value === 'text-type') {
+      setType('text/plain')
     }
   }
 
@@ -85,11 +101,33 @@ export function UploadPage(props: UploadPageProps) {
         </div>
         <Spacer $h2 />
         <div className="flex-justify-left">
-          <H5>image: </H5>
+          <H5>type: </H5>
         </div>
-        <div className="flex justify-center">
-          <input type="file" accept=".jpeg, .jpg, .png" onChange={fileSelectedHandler}></input>
-        </div>
+        <FormControl component="fieldset">
+          <RadioGroup row aria-label="view" name="view-by" value={radioValue} onChange={handleViewChange}>
+            <FormControlLabel value="image-type" control={<Radio color="secondary" />} label="Image" />
+            <FormControlLabel value="text-type" control={<Radio color="secondary" />} label="Text" />
+          </RadioGroup>
+        </FormControl>
+        <Spacer $h2 />
+        {radioValue === 'image-type' && (
+          <>
+            <div className="flex-justify-left">
+              <H5>image: </H5>
+            </div>
+            <div className="flex justify-center">
+              <input type="file" accept=".jpeg, .jpg, .png" onChange={fileSelectedHandler}></input>
+            </div>
+          </>
+        )}
+        {radioValue == 'text-type' && (
+          <>
+            <div className="flex justify-left">
+              <H5>text: </H5>
+              <Input $onChange={setText} name="art-text" type="text" placeholder="enter" />
+            </div>
+          </>
+        )}
         <Spacer $h2 />
         <br></br>
         <div className="flex justify-center">
