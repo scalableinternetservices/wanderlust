@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { gql, useMutation, useQuery } from '@apollo/client'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { FetchUserContext } from '../../graphql/query.gen'
@@ -12,20 +12,24 @@ import { Page } from './Page'
 
 interface UploadPageProps extends RouteComponentProps, AppRouteParams {}
 
+//defining mutation for later use
+const UPLOAD_ART = gql`
+  mutation UploadArtwork($art: ArtInput!) {
+    addArt(art: $art)
+  }
+`
+
 export function UploadPage(props: UploadPageProps) {
   const [selected_file_url, setFileURL] = React.useState('')
   const [image_string, setImageString] = React.useState('') //BASE64_ENCODED_STRING_OF_IMAGE_OR_TEXT
   const [type, setType] = React.useState('') //accepted types are image/png, image/jpeg, and text/plain
   const [name, setName] = React.useState('')
   const { data } = useQuery<FetchUserContext>(fetchUser)
+  const [uploadArt] = useMutation(UPLOAD_ART)
   const author = !!data && !!data.self ? data.self.username : 'anonymous'
   const creator_id = !!data && !!data.self ? data.self.id : 0
 
   // if (!!data && !!data.self) console.log(data)
-  // const UPLOAD_ART = `
-  // mutation UploadArtwork($art: ArtInput!) {
-  //   addArt(art: $art)
-  // }`
 
   const fileSelectedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
@@ -43,7 +47,7 @@ export function UploadPage(props: UploadPageProps) {
     }
   }
 
-  const fileUploadHandler = () => {
+  const fileUploadHandler = async () => {
     // //TODO: send to backend??
     // //i have the name, image URL
     //author
@@ -53,7 +57,7 @@ export function UploadPage(props: UploadPageProps) {
     //location
     let lat, lng
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(c => {
+      await navigator.geolocation.getCurrentPosition(c => {
         lat = c.coords.latitude
         lng = c.coords.longitude
       })
@@ -65,7 +69,7 @@ export function UploadPage(props: UploadPageProps) {
     //type: based on file extension
     console.log(type)
     //string
-    console.log(image_string)
+    // console.log(image_string)
     // const art = {
     //   art: {
     //     name: name,
@@ -77,6 +81,21 @@ export function UploadPage(props: UploadPageProps) {
     //     data: 'data:/' + type + ';base64, ' + image_string,
     //   },
     // }
+    const data = 'data:/' + type + ';base64, ' + image_string
+    const art = {
+      art: {
+        name: 'test',
+        creatorId: creator_id,
+        location: {
+          lat: 37.316703201609194,
+          lng: -122.02732279862566,
+        },
+        data: data,
+      },
+    }
+    void uploadArt({
+      variables: { art: art },
+    })
   }
 
   return (
