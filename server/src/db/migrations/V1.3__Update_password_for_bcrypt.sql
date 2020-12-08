@@ -1,0 +1,1 @@
+UPDATE user SET password = '$2a$10$DKbYssg1pvZAWOVSQ2av4eCxeAhve8GsMT9CeovVa3grS2ildp8Be' WHERE email = 'trediehs@g.ucla.edu';
