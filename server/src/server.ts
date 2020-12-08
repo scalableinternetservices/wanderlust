@@ -27,7 +27,7 @@ const server = new GraphQLServer({
 })
 
 server.express.use(cookieParser())
-server.express.use(json())
+server.express.use(json({ limit: '50mb' }))
 server.express.use(raw())
 server.express.use('/app', cors(), expressStatic(path.join(__dirname, '../../public')))
 
@@ -263,6 +263,7 @@ initORM()
         endpoint: '/graphql',
         subscriptions: '/graphqlsubscription',
         playground: '/graphql',
+        bodyParserOptions: { limit: '50mb', type: 'application/json' },
       },
       () => {
         console.log(`server started on http://localhost:${Config.appserverPort}/`)
