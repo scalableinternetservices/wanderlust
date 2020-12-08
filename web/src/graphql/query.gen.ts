@@ -29,6 +29,7 @@ export interface FetchUserContext {
 export interface FetchNearbyMap_nearby_creator {
   __typename: "User";
   username: string;
+  id: number;
 }
 
 export interface FetchNearbyMap_nearby_location {
@@ -42,6 +43,7 @@ export interface FetchNearbyMap_nearby {
   id: number;
   createdAt: string;
   creator: FetchNearbyMap_nearby_creator;
+  seen: boolean | null;
   name: string;
   location: FetchNearbyMap_nearby_location;
   type: ArtType;

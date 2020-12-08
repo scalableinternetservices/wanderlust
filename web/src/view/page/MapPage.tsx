@@ -58,6 +58,7 @@ export function MapPage(props: MapPageProps) {
             id: art.id,
             createdBy: art.creator.username,
             createdAt: art.createdAt,
+            seen: art.seen,
             location: art.location,
             name: art.name,
             type: art.type,

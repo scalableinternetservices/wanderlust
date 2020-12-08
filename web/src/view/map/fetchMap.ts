@@ -7,7 +7,9 @@ export const fetchMap = gql`
       createdAt
       creator {
         username
+        id
       }
+      seen
       name
       location {
         lat
