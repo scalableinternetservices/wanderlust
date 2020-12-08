@@ -25,7 +25,7 @@ export function Map({ getLocation, updateLocation, artworks }: MapProps) {
   }
 
   const location = getLocation()
-  console.log(location)
+
   if (!location || !Leaflet || !L) return <div>Please enable location services!</div>
   return <ClientMap Leaflet={Leaflet} L={L} location={location} artworks={artworks} />
 }
@@ -38,15 +38,13 @@ interface ClientMapProps {
 }
 
 function ClientMap({ Leaflet, L, location, artworks }: ClientMapProps) {
+  // custom icon setup
   const iconOptions: L.BaseIconOptions = {
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
+    iconUrl: 'https://github.com/scalableinternetservices/wanderlust/blob/master/public/imgs/map-icon.png?raw=true',
+    iconSize: [30, 41],
     iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
+    popupAnchor: [4, 0],
   }
-
   const personIcon = new L.Icon(iconOptions)
 
   return (
@@ -55,19 +53,26 @@ function ClientMap({ Leaflet, L, location, artworks }: ClientMapProps) {
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Leaflet.Marker icon={personIcon} position={[location.lat, location.lng]}>
-        <Leaflet.Popup>You are here!</Leaflet.Popup>
-      </Leaflet.Marker>
       {artworks.map(art => {
-        iconOptions.iconUrl = art.seen
-          ? 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png'
-          : 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png'
+        if (art.seen) {
+          iconOptions.iconUrl =
+            'https://github.com/scalableinternetservices/wanderlust/blob/master/public/imgs/purple-star.png?raw=true'
+        } else {
+          iconOptions.iconUrl =
+            'https://github.com/scalableinternetservices/wanderlust/blob/master/public/imgs/gray-star.png?raw=true'
+        }
+        iconOptions.iconSize = [41, 41]
+        iconOptions.popupAnchor = [8, 0]
+
         return (
           <Leaflet.Marker icon={new L.Icon(iconOptions)} position={[art.location.lat, art.location.lng]} key={art.id}>
             <Leaflet.Popup>{art.name}</Leaflet.Popup>
           </Leaflet.Marker>
         )
       })}
+      <Leaflet.Marker icon={personIcon} position={[location.lat, location.lng]}>
+        <Leaflet.Popup>You are here!</Leaflet.Popup>
+      </Leaflet.Marker>
     </Leaflet.Map>
   )
 }
