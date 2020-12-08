@@ -28,6 +28,10 @@ export function getWelcomePath() {
   return getPath(Route.WELCOME)
 }
 
+export function getMapPath() {
+  return getPath(Route.MAP)
+}
+
 /**
  * Example: getPath(ROUTES.TASK) returns "/leasing/tasks" while getPath(ROUTES.TASK, {taskId: 5}) returns "leasing/tasks/task/5".
  *

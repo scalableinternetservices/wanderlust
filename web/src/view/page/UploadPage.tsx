@@ -7,7 +7,7 @@ import { H2, H5 } from '../../style/header'
 import { Input } from '../../style/input'
 import { Spacer } from '../../style/spacer'
 import { fetchUser } from '../auth/fetchUser'
-import { AppRouteParams } from '../nav/route'
+import { AppRouteParams, getMapPath } from '../nav/route'
 import { Page } from './Page'
 
 interface UploadPageProps extends RouteComponentProps, AppRouteParams {}
@@ -48,54 +48,30 @@ export function UploadPage(props: UploadPageProps) {
   }
 
   const fileUploadHandler = async () => {
-    // //TODO: send to backend??
-    // //i have the name, image URL
-    //author
-    console.log(author)
-    //name
-    console.log(name)
-    //location
     let lat, lng
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
-      await navigator.geolocation.getCurrentPosition(c => {
+      navigator.geolocation.getCurrentPosition(c => {
         lat = c.coords.latitude
         lng = c.coords.longitude
+        if (lat && lng) {
+          const data = 'data:' + type + ';base64, ' + image_string
+          const art = {
+            name: name,
+            creatorId: creator_id,
+            location: {
+              lat: lat,
+              lng: lng,
+            },
+            data: data,
+          }
+          void uploadArt({
+            variables: { art: art },
+          })
+        } else {
+          console.log('cannot share: not able to retrieve location')
+        }
       })
     }
-    console.log(lat)
-    console.log(lng)
-    //creator id
-    console.log(creator_id)
-    //type: based on file extension
-    console.log(type)
-    //string
-    // console.log(image_string)
-    // const art = {
-    //   art: {
-    //     name: name,
-    //     creatorId: creator_id, //get logged in user
-    //     location: {
-    //       lat: lat, //get location
-    //       lng: lng,
-    //     },
-    //     data: 'data:/' + type + ';base64, ' + image_string,
-    //   },
-    // }
-    const data = 'data:/' + type + ';base64, ' + image_string
-    const art = {
-      art: {
-        name: 'test',
-        creatorId: creator_id,
-        location: {
-          lat: 37.316703201609194,
-          lng: -122.02732279862566,
-        },
-        data: data,
-      },
-    }
-    void uploadArt({
-      variables: { art: art },
-    })
   }
 
   return (
@@ -137,7 +113,7 @@ export function UploadPage(props: UploadPageProps) {
         )}
         <br></br>
         <div className="flex justify-center">
-          <PillButton $pillColor="purple" onClick={fileUploadHandler}>
+          <PillButton $pillColor="purple" onClick={fileUploadHandler} href={getMapPath()}>
             Share
           </PillButton>
         </div>
