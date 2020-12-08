@@ -1,10 +1,11 @@
-require('./beeline')
+const beeline = require('./beeline').default()
 import assert from 'assert'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { json, raw, RequestHandler, static as expressStatic } from 'express'
 import { getOperationAST, parse as parseGraphql, specifiedRules, subscribe as gqlSubscribe, validate } from 'graphql'
 import { GraphQLServer } from 'graphql-yoga'
+import Redis from 'ioredis'
 import { forAwaitEach, isAsyncIterable } from 'iterall'
 import path from 'path'
 import 'reflect-metadata'
@@ -20,10 +21,12 @@ import { ConnectionManager } from './graphql/ConnectionManager'
 import { expressLambdaProxy } from './lambda/handler'
 import { renderApp } from './render'
 
+const redis = new Redis()
+
 const server = new GraphQLServer({
   typeDefs: getSchema(),
   resolvers: graphqlRoot as any,
-  context: ctx => ({ ...ctx, pubsub, user: (ctx.request as any)?.user || null }),
+  context: ctx => ({ ...ctx, pubsub, user: (ctx.request as any)?.user || null, redis: Redis }),
 })
 
 server.express.use(cookieParser())
@@ -40,7 +43,7 @@ server.express.get('/', (req, res) => {
 })
 
 server.express.get('/app/*', (req, res) => {
-  const authToken = req.cookies.authToken
+  const authToken = req.cookies.authToken || req.header('x-authtoken')
   if (req.url == '/app/welcome' || req.url == '/app/login' || req.url == '/app/signup' || authToken) {
     console.log('GET /app')
     renderApp(req, res, server.executableSchema)
@@ -110,9 +113,10 @@ server.express.post(
   '/auth/logout',
   asyncRoute(async (req, res) => {
     console.log('POST /auth/logout')
-    const authToken = req.cookies.authToken
+    const authToken = req.cookies.authToken || req.header('x-authtoken')
     if (authToken) {
       await Session.delete({ authToken })
+      await redis.del(authToken)
     }
     res.status(200).cookie('authToken', '', { maxAge: 0 }).send('Success!')
   })
@@ -238,11 +242,23 @@ server.express.post(
   asyncRoute(async (req, res, next) => {
     const authToken = req.cookies.authToken || req.header('x-authtoken')
     if (authToken) {
-      const session = await Session.findOne({ where: { authToken }, relations: ['user'] })
+      console.log(beeline.traceActive())
+      let span = beeline.startSpan({
+        name: 'Get Session',
+      })
+      const cachedSession = await redis.get(authToken)
+      let session
+      if (cachedSession) {
+        session = JSON.parse(cachedSession) as Session
+      } else {
+        session = session || await Session.findOne({ where: { authToken }, relations: ['user'] })
+        await redis.set(authToken, JSON.stringify(session), 'EX', 60)
+      }
       if (session) {
         const reqAny = req as any
         reqAny.user = session.user
       }
+      beeline.finishSpan(span)
     }
     next()
   })
