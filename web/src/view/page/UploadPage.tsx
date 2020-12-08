@@ -29,8 +29,6 @@ export function UploadPage(props: UploadPageProps) {
   const author = !!data && !!data.self ? data.self.username : 'anonymous'
   const creator_id = !!data && !!data.self ? data.self.id : 0
 
-  // if (!!data && !!data.self) console.log(data)
-
   const fileSelectedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
     if (files) {
