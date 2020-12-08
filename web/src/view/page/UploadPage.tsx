@@ -50,16 +50,16 @@ export function UploadPage(props: UploadPageProps) {
 
   const fileUploadHandler = async () => {
     let lat, lng
+    let data64 = art_string
     if (type === 'text/plain') {
-      setArtString(btoa(text))
-      console.log(atob(art_string))
+      data64 = btoa(text)
     }
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(c => {
         lat = c.coords.latitude
         lng = c.coords.longitude
         if (lat && lng) {
-          const data = 'data:' + type + ';base64, ' + art_string
+          const data = 'data:' + type + ';base64, ' + data64
           const art = {
             name: name,
             creatorId: creator_id,
