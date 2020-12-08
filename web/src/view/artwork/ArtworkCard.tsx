@@ -35,14 +35,13 @@ export function ArtworkCard({
     handleModalOpen()
   }
 
-  // Actual content of art
+  // actual content of art
   if (contentStr.length <= 0 && type === ArtType.Text) {
     fetch(uri)
       .then(response => response.text())
       .then(text => setContent(text))
       .catch(err => console.log(err))
   }
-
   const content =
     type === ArtType.Text ? (
       <H3 style={{ overflowWrap: 'break-word', wordWrap: 'break-word', hyphens: 'auto' }} className="mw-100">
@@ -59,9 +58,18 @@ export function ArtworkCard({
     ) : (
       <ArtThumbnail alt={name} src={uri} />
     )
+  const ArtworkCardContainer = getArtworkCardContainer($seen)
 
+  // generate readable data
   const localDate = new Date(parseInt(createdAt))
-
+  // css styling for a disabled pill button
+  const disabledStyles = $seen
+    ? {
+        opacity: '0.65',
+        cursor: 'not-allowed',
+      }
+    : {}
+  // body for modal
   const body = (
     <ArtModalBody>
       <div className="w-90 flex flex-column items-center">
@@ -83,17 +91,18 @@ export function ArtworkCard({
       </div>
       <PillButton
         $pillColor="purple"
+        style={disabledStyles}
         onClick={() => {
-          markSeen(id)
-          handleModalClose()
+          if (!$seen) {
+            markSeen(id)
+            handleModalClose()
+          }
         }}
       >
         Mark as visited
       </PillButton>
     </ArtModalBody>
   )
-
-  const ArtworkCardContainer = getArtworkCardContainer($seen)
 
   return (
     <>

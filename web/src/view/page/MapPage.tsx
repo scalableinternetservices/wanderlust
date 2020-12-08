@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client'
+import { FormControl, FormControlLabel, Radio, RadioGroup } from '@material-ui/core'
 import { RouteComponentProps } from '@reach/router'
 import * as React from 'react'
 import { FetchNearbyMap, FetchNearbyMapVariables, SeeArt, SeeArtVariables } from '../../graphql/query.gen'
@@ -20,6 +21,7 @@ export function MapPage(props: MapPageProps) {
   // hooks
   const [location, setLocation] = React.useState<{ lat: number; lng: number } | null>(null)
   const [artworks, setArtworks] = React.useState<Artwork[]>([])
+  const [radioValue, setRadioValue] = React.useState('not-visited')
 
   // graphql
   const { data: data_nearby, loading: loading_nearby } = useQuery<FetchNearbyMap, FetchNearbyMapVariables>(fetchMap, {
@@ -46,15 +48,15 @@ export function MapPage(props: MapPageProps) {
       })
       .catch(err => console.log(err))
   }
-
-  if (typeof window !== 'undefined') {
-    // Leaflet = require('react-leaflet')
-  }
-  if (typeof navigator !== 'undefined') {
-    // navigator.geolocation.getCurrentPosition(c => setLocation([c.coords.latitude, c.coords.longitude]))
+  // on change handler function for radio button
+  const handleViewChange = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
+    console.log(value)
+    setRadioValue(value)
   }
 
+  // elements
   const loadingText = loading_nearby ? <div>loading...</div> : null
+  const noArtworksText = !artworks || artworks.length === 0 ? 'no artwork nearby!' : null
 
   if (data_nearby && data_nearby?.nearby.length > 0 && artworks.length <= 0) {
     setArtworks(
@@ -74,17 +76,10 @@ export function MapPage(props: MapPageProps) {
     )
   }
 
-  const artworkCards =
-    !artworks || artworks.length === 0 ? (
-      <div className="f4 avenir pl2">no artwork nearby!</div>
-    ) : (
-      artworks.map(art => {
-        if (art.seen) {
-          return <ArtworkCard $seen key={art.id} markSeen={markSeen} {...art} />
-        }
-        return <ArtworkCard key={art.id} markSeen={markSeen} {...art} />
-      })
-    )
+  const artworkCards = artworks.map(art => {
+    return <ArtworkCard $seen={art.seen} key={art.id} markSeen={markSeen} {...art} />
+  })
+  const unvisitedArtworkCards = artworkCards.filter((art, i) => !artworks[i].seen)
 
   return (
     <Page>
@@ -99,11 +94,19 @@ export function MapPage(props: MapPageProps) {
 
       <Spacer $h3 />
       <H2>artwork near you</H2>
-      <Spacer $h4 />
+      <Spacer $h2 />
+      <FormControl component="fieldset">
+        <RadioGroup row aria-label="view" name="view-by" value={radioValue} onChange={handleViewChange}>
+          <FormControlLabel value="not-visited" control={<Radio color="secondary" />} label="Not visited" />
+          <FormControlLabel value="all" control={<Radio color="secondary" />} label="All" />
+        </RadioGroup>
+      </FormControl>
+      <Spacer $h2 />
 
       <div className="w-90-l center flex flex-wrap-l flex-row-l flex-column justify-center-l justify-around items-center">
         {loadingText}
-        {artworkCards}
+        {noArtworksText}
+        {radioValue === 'not-visited' ? unvisitedArtworkCards : artworkCards}
       </div>
 
       {/* <div id="map-container" style={{ height: 180 }}>
