@@ -50,9 +50,9 @@ export function UploadPage(props: UploadPageProps) {
 
   const fileUploadHandler = async () => {
     let lat, lng
-    if (radioValue === 'text-type') {
-      console.log(text)
+    if (type === 'text/plain') {
       setArtString(btoa(text))
+      console.log(atob(art_string))
     }
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(c => {
@@ -134,7 +134,7 @@ export function UploadPage(props: UploadPageProps) {
           <img src={selected_file_url}></img>
         </div>
         <Spacer $h1 />
-        {selected_file_url == '' && (
+        {radioValue == 'image-type' && selected_file_url == '' && (
           <>
             <br></br>
             <br></br>
