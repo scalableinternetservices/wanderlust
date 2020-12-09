@@ -72,8 +72,8 @@ export function UploadPage(props: UploadPageProps) {
         variables: { art: art },
       })
     } else {
-      console.log('waiting for location')
-      setTimeout(fileUploadHandler, 250)
+      console.log('art not shared: location services were not enabled')
+      alert('Art not shared: location services were not enabled')
     }
   }
 
@@ -146,18 +146,18 @@ export function UploadPage(props: UploadPageProps) {
             <br></br>
             <br></br>
             <br></br>
-            <br></br>
           </>
         )}
         <br></br>
         <div className="flex justify-center">
           <Share getLocation={() => location} setLocation={(lat: number, lng: number) => setLocation({ lat, lng })} />
         </div>
+        <Spacer $h1 />
         <div className="flex justify-center">
           <PillButton
             $pillColor="purple"
             style={disabledStyles}
-            onClick={() => fileUploadHandler().then(() => navigate(getMapPath()))}
+            onClick={() => location != null && fileUploadHandler().then(() => navigate(getMapPath()))}
           >
             Share
           </PillButton>
