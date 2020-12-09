@@ -31,8 +31,8 @@ function getMainPageQuery() {
   }
   let variables = {
     loc: {
-      lat: 34.0156128 + Math.random() * 0.001 - 0.0005,
-      lng: -118.5030432 + Math.random() * 0.001 - 0.0005,
+      lat: 34.0156128 + Math.random() * 2 - 1,
+      lng: -118.5030432 + Math.random() * 2 - 1,
     },
   }
   let res = http.post(`${host}/graphql`, JSON.stringify({ query: query, variables: variables }), params)
@@ -42,8 +42,8 @@ function getMainPageQuery() {
 
 export let options = {
   stages: [
-    { duration: '30s', target: 250 },
-    { duration: '30s', target: 250 },
+    { duration: '30s', target: 50 },
+    { duration: '30s', target: 50 },
     { duration: '30s', target: 0 },
   ],
 }

@@ -62,10 +62,15 @@ export const graphqlRoot: Resolvers<Context> = {
     nearby: async (_, { loc }) => {
       const result = await getManager()
         .createQueryBuilder(Art, 'art')
-        .where('(abs(art.location.lat - :lat) < 0.02) AND (abs(art.location.lng - :lng) < 0.02)', {
-          lat: loc.lat,
-          lng: loc.lng,
-        })
+        .where(
+          'art.location.lat > :latLB AND art.location.lat < :latUB AND art.location.lng > :lngLB AND art.location.lng < :lngUB',
+          {
+            latLB: loc.lat - 0.02,
+            latUB: loc.lat + 0.02,
+            lngLB: loc.lng - 0.02,
+            lngUB: loc.lng + 0.02,
+          }
+        )
         .getMany()
       return result as any
     },
