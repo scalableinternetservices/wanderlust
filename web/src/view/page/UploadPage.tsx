@@ -74,7 +74,7 @@ export function UploadPage(props: UploadPageProps) {
           })
         } else {
           console.log('cannot share: not able to retrieve location')
-          alert('Art was was not shared: unable to access location')
+          alert('Art was not shared: unable to access location')
         }
       })
     }
