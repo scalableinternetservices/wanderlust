@@ -81,7 +81,6 @@ export function UploadPage(props: UploadPageProps) {
   }
 
   const handleViewChange = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
-    console.log(value)
     setRadioValue(value)
     if (value === 'text-type') {
       setType('text/plain')
@@ -120,7 +119,7 @@ export function UploadPage(props: UploadPageProps) {
             </div>
           </>
         )}
-        {radioValue == 'text-type' && (
+        {radioValue === 'text-type' && (
           <>
             <div className="flex justify-left">
               <H5>text: </H5>
@@ -130,13 +129,13 @@ export function UploadPage(props: UploadPageProps) {
         )}
         <Spacer $h2 />
         <br></br>
-        {radioValue == 'image-type' && (
+        {radioValue === 'image-type' && (
           <div className="flex justify-center">
             <img src={selected_file_url}></img>
           </div>
         )}
         <Spacer $h1 />
-        {radioValue == 'image-type' && selected_file_url == '' && (
+        {radioValue === 'image-type' && selected_file_url === '' && (
           <>
             <br></br>
             <br></br>
