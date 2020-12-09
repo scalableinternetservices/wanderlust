@@ -120,7 +120,7 @@ export function UploadPage(props: UploadPageProps) {
             </div>
           </>
         )}
-        {radioValue == 'text-type' && (
+        {radioValue === 'text-type' && (
           <>
             <div className="flex justify-left">
               <H5>text: </H5>
