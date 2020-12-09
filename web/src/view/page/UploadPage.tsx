@@ -9,6 +9,7 @@ import { Input } from '../../style/input'
 import { Spacer } from '../../style/spacer'
 import { fetchUser } from '../auth/fetchUser'
 import { AppRouteParams, getMapPath } from '../nav/route'
+import { Share } from '../upload/Share'
 import { Page } from './Page'
 
 interface UploadPageProps extends RouteComponentProps, AppRouteParams {}
@@ -21,12 +22,15 @@ const UPLOAD_ART = gql`
 `
 
 export function UploadPage(props: UploadPageProps) {
+  //hooks
   const [selected_file_url, setFileURL] = React.useState('')
   const [art_string, setArtString] = React.useState('') //BASE64_ENCODED_STRING_OF_IMAGE_OR_TEXT
   const [type, setType] = React.useState('') //accepted types are image/png, image/jpeg, and text/plain
   const [name, setName] = React.useState('')
   const [text, setText] = React.useState('')
   const [radioValue, setRadioValue] = React.useState('image-type')
+  const [location, setLocation] = React.useState<{ lat: number; lng: number } | null>(null)
+  //metadata
   const { data } = useQuery<FetchUserContext>(fetchUser)
   const [uploadArt] = useMutation(UPLOAD_ART)
   const author = !!data && !!data.self ? data.self.username : 'anonymous'
@@ -49,34 +53,27 @@ export function UploadPage(props: UploadPageProps) {
   }
 
   const fileUploadHandler = async () => {
-    let lat, lng
     let data64 = art_string
     if (type === 'text/plain') {
       data64 = btoa(text)
     }
-    if (typeof navigator !== 'undefined' && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(c => {
-        lat = c.coords.latitude
-        lng = c.coords.longitude
-        if (lat && lng) {
-          const data = 'data:' + type + ';base64, ' + data64
-          const art = {
-            name: name,
-            creatorId: creator_id,
-            location: {
-              lat: lat,
-              lng: lng,
-            },
-            data: data,
-          }
-          void uploadArt({
-            variables: { art: art },
-          })
-        } else {
-          console.log('cannot share: not able to retrieve location')
-          alert('Art was not shared: unable to access location')
-        }
+    if (location) {
+      const data = 'data:' + type + ';base64, ' + data64
+      const art = {
+        name: name,
+        creatorId: creator_id,
+        location: {
+          lat: location.lat,
+          lng: location.lng,
+        },
+        data: data,
+      }
+      void uploadArt({
+        variables: { art: art },
       })
+    } else {
+      console.log('waiting for location')
+      setTimeout(fileUploadHandler, 250)
     }
   }
 
@@ -86,6 +83,14 @@ export function UploadPage(props: UploadPageProps) {
       setType('text/plain')
     }
   }
+
+  const disabledStyles =
+    location == null
+      ? {
+          opacity: '0.65',
+          cursor: 'not-allowed',
+        }
+      : {}
 
   return (
     <Page>
@@ -146,7 +151,14 @@ export function UploadPage(props: UploadPageProps) {
         )}
         <br></br>
         <div className="flex justify-center">
-          <PillButton $pillColor="purple" onClick={() => fileUploadHandler().then(() => navigate(getMapPath()))}>
+          <Share getLocation={() => location} setLocation={(lat: number, lng: number) => setLocation({ lat, lng })} />
+        </div>
+        <div className="flex justify-center">
+          <PillButton
+            $pillColor="purple"
+            style={disabledStyles}
+            onClick={() => fileUploadHandler().then(() => navigate(getMapPath()))}
+          >
             Share
           </PillButton>
         </div>
