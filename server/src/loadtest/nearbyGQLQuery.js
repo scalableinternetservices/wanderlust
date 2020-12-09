@@ -26,7 +26,7 @@ function getMainPageQuery() {
   let params = {
     headers: {
       'Content-Type': 'application/json',
-      'User-Agent': 'robert/k6',
+      'User-Agent': `${__ENV.TESTER || 'loadtest'}/k6`,
     },
   }
   let variables = {
