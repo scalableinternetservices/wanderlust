@@ -2,6 +2,7 @@ import { readFileSync } from 'fs'
 import { PubSub } from 'graphql-yoga'
 import path from 'path'
 import { getConnection, getManager, QueryFailedError } from 'typeorm'
+import { Loaders } from '../dataloaders/dataloader'
 import { Art } from '../entities/Art'
 import { User } from '../entities/User'
 import { storeFile } from '../s3/storeFile'
@@ -18,12 +19,13 @@ interface Context {
   user?: User
   request: Request
   response: Response
+  loaders: Loaders
   pubsub: PubSub
 }
 
 export const graphqlRoot: Resolvers<Context> = {
   Art: {
-    creator: self => User.findOne({ id: self.creatorId }) as any,
+    creator: (self, _, ctx) => ctx.loaders.user.load(self.creatorId) as any,
     views: self => Art.findOne({ id: self.id }).then(art => art!.views) as any,
     likes: self => Art.findOne({ id: self.id }).then(art => art!.likes) as any,
     seen: async (self, _, ctx) => {
@@ -45,27 +47,30 @@ export const graphqlRoot: Resolvers<Context> = {
   },
   Query: {
     self: (_, args, ctx) => (ctx.user as any) || null,
-    art: async (_, { id }) => Art.findOne({ where: { id: id } }) as any,
-    arts: async () => Art.find({ take: 128 }) as any,
-    user: async (_, { id }) => {
-      return ((await User.findOne({ where: { id: id } })) as any) || null
-    },
-    users: async (_, { ids }) => {
-      let thing
+    art: (_, { id }, ctx) => ctx.loaders.art.load(id) as any,
+    arts: () => Art.find({ take: 128 }) as any,
+    user: (_, { id }, ctx) => ctx.loaders.user.load(id) as any,
+    users: async (_, { ids }, ctx) => {
+      let users
       if (!ids) {
-        thing = await User.find()
+        users = await User.find()
       } else {
-        thing = await User.createQueryBuilder('User').where('id IN (:ids)', { ids }).getMany()
+        users = await ctx.loaders.user.loadMany(ids)
       }
-      return thing as any
+      return users as any
     },
     nearby: async (_, { loc }) => {
       const result = await getManager()
         .createQueryBuilder(Art, 'art')
-        .where('(abs(art.location.lat - :lat) < 0.02) AND (abs(art.location.lng - :lng) < 0.02)', {
-          lat: loc.lat,
-          lng: loc.lng,
-        })
+        .where(
+          'art.location.lat > :latLB AND art.location.lat < :latUB AND art.location.lng > :lngLB AND art.location.lng < :lngUB',
+          {
+            latLB: loc.lat - 0.02,
+            latUB: loc.lat + 0.02,
+            lngLB: loc.lng - 0.02,
+            lngUB: loc.lng + 0.02,
+          }
+        )
         .getMany()
       return result as any
     },

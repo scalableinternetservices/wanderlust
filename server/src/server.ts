@@ -13,6 +13,7 @@ import 'reflect-metadata'
 import { v4 as uuidv4 } from 'uuid'
 import { checkEqual, Unpromise } from '../../common/src/util'
 import { Config } from './config'
+import { Loaders } from './dataloaders/dataloader'
 import { migrate } from './db/migrate'
 import { initORM } from './db/sql'
 import { Session } from './entities/Session'
@@ -27,7 +28,7 @@ const redis = new Redis()
 const server = new GraphQLServer({
   typeDefs: getSchema(),
   resolvers: graphqlRoot as any,
-  context: ctx => ({ ...ctx, pubsub, user: (ctx.request as any)?.user || null, redis: Redis }),
+  context: ctx => ({ ...ctx, pubsub, user: (ctx.request as any)?.user || null, redis: Redis, loaders: Loaders() }),
 })
 
 server.express.use(cookieParser())
@@ -249,8 +250,7 @@ server.express.post(
   asyncRoute(async (req, res, next) => {
     const authToken = req.cookies.authToken || req.header('x-authtoken')
     if (authToken) {
-      console.log(beeline.traceActive())
-      let span = beeline.startSpan({
+      const span = beeline.startSpan({
         name: 'Get Session',
       })
       const cachedSession = await redis.get(authToken)
@@ -258,7 +258,7 @@ server.express.post(
       if (cachedSession) {
         session = JSON.parse(cachedSession) as Session
       } else {
-        session = session || await Session.findOne({ where: { authToken }, relations: ['user'] })
+        session = session || (await Session.findOne({ where: { authToken }, relations: ['user'] }))
         await redis.set(authToken, JSON.stringify(session), 'EX', 60)
       }
       if (session) {
