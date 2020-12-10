@@ -23,7 +23,7 @@ import { ConnectionManager } from './graphql/ConnectionManager'
 import { expressLambdaProxy } from './lambda/handler'
 import { renderApp } from './render'
 
-const redis = new Redis()
+const redis = new Redis({ host: process.env.REDIS_HOST || 'redis' })
 
 const server = new GraphQLServer({
   typeDefs: getSchema(),
