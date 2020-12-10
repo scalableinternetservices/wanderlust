@@ -1,5 +1,6 @@
 const beeline = require('./beeline').default()
 import assert from 'assert'
+import bcrypt from 'bcryptjs'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { json, raw, RequestHandler, static as expressStatic } from 'express'
@@ -62,7 +63,8 @@ server.express.post(
     let user = new User()
     user.email = req.body.email
     user.username = req.body.name
-    user.password = req.body.password
+    const hash = bcrypt.hashSync(req.body.password)
+    user.password = hash
 
     // save the User model to the database, refresh `user` to get ID
     user = await user.save()
@@ -82,8 +84,13 @@ server.express.post(
     const email = req.body.email
     const password = req.body.password
 
-    const user = await User.findOne({ email, password })
+    const user = await User.findOne({ email })
     if (!user) {
+      res.status(404).send('Not Found')
+      return
+    }
+    const match = bcrypt.compareSync(password, user.password)
+    if (!match) {
       res.status(403).send('Forbidden')
       return
     }
