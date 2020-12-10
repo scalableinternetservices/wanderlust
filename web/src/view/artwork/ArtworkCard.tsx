@@ -44,7 +44,10 @@ export function ArtworkCard({
   }
   const content =
     type === ArtType.Text ? (
-      <H3 style={{ overflowWrap: 'break-word', wordWrap: 'break-word', hyphens: 'auto' }} className="mw-100">
+      <H3
+        style={{ overflowWrap: 'break-word', wordWrap: 'break-word', hyphens: 'auto', whiteSpace: 'pre-wrap' }}
+        className="mw-100"
+      >
         {contentStr}
       </H3>
     ) : (
